@@ -3023,6 +3023,113 @@
       border-radius: 4px !important;
     }
   
+
+    /* ==================================================== */
+    /* QUICK-BUY BUTTON & HEADER FIXES                     */
+    /* ==================================================== */
+    .quick-buy-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      background: #1e293b !important;
+      border: 1.5px solid #475569 !important;
+      color: #94a3b8 !important;
+      padding: 3px 8px !important;
+      border-radius: 6px !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      transition: all 0.15s ease !important;
+      white-space: nowrap !important;
+      max-width: 190px !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    .quick-buy-btn.can-buy {
+      background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #15803d 100%) !important;
+      border-color: #4ade80 !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    }
+
+    .quick-buy-btn.can-buy:active {
+      transform: scale(0.94) !important;
+      filter: brightness(1.25) !important;
+    }
+
+    .quick-buy-btn.locked {
+      opacity: 0.65 !important;
+      cursor: not-allowed !important;
+    }
+
+    .qb-badge {
+      background: rgba(0, 0, 0, 0.35) !important;
+      padding: 1px 4px !important;
+      border-radius: 3px !important;
+      font-size: 8px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.4px !important;
+    }
+
+    .qb-icon {
+      font-size: 11px !important;
+    }
+
+    .qb-name {
+      font-weight: 800 !important;
+      max-width: 80px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+
+    .qb-cost {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-weight: 800 !important;
+      color: #fef08a !important;
+      font-size: 9px !important;
+    }
+
+    /* PREVENT HEADER ITEMS FROM EVER WRAPPING OR OVERLAPPING */
+    #header {
+      flex-wrap: nowrap !important;
+      overflow: hidden !important;
+    }
+
+    .header-branding {
+      flex-shrink: 0 !important;
+    }
+
+    .header-telemetry {
+      flex-shrink: 1 !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+    }
+
+    .header-actions {
+      flex-shrink: 0 !important;
+    }
+
+    /* DRAWER HANDLE BAR LAYOUT WITH QUICK-BUY */
+    .drawer-handle-bar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+      padding: 0 8px !important;
+    }
+
+    .drawer-title-group {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      flex-shrink: 0 !important;
+      cursor: pointer !important;
+    }
+  
   </style>
 </head>
 <body>
@@ -3219,13 +3326,22 @@
       <div class="drawer-handle-bar" id="drawer-toggle">
         <div class="drawer-title-group">
           <span class="drawer-folder-icon">📂</span>
-          <span class="drawer-title-text">REDACTION DEPT</span>
-          <span class="dept-badge">CHAOS</span>
-        </div>
-        <div class="drawer-actions">
-          <span id="drawer-rps-summary" class="drawer-rps-val">Workforce: 0 RPS</span>
+          <span class="drawer-title-text">STORE</span>
           <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
         </div>
+
+        <!-- QUICK-BUY: MOST EXPENSIVE AFFORDABLE UPGRADE (ONE-TAP WITHOUT OPENING MENU) -->
+        <button id="quick-buy-btn" class="quick-buy-btn locked" type="button" title="Quick-Buy Most Expensive Affordable Upgrade">
+          <span class="qb-badge">⚡ BUY</span>
+          <span id="quick-buy-icon" class="qb-icon">🖊️</span>
+          <span id="quick-buy-name" class="qb-name">Unpaid Intern</span>
+          <span id="quick-buy-cost" class="qb-cost">(15)</span>
+        </button>
+
+        <div class="drawer-actions">
+          <span id="drawer-rps-summary" class="drawer-rps-val">+0.0 RPS</span>
+        </div>
+      </div>
       </div>
 
       <!-- PRESTIGE BANNER CARD IN DRAWER -->
@@ -5069,6 +5185,7 @@
 
       function rebuildTickerText() {
         updateNewsHeadlinesPool();
+        updateQuickBuyUI();
         const separator = "  •••  ";
         const content = currentHeadlinesList.join(separator) + separator;
         chyronText.textContent = content + content;
@@ -5116,11 +5233,11 @@
         if (hooverPrestigeBtn) {
           if (canP) {
             hooverPrestigeBtn.classList.remove('locked');
-            hooverPrestigeBtn.textContent = '🔥 BURN HOOVER BLDG';
+            hooverPrestigeBtn.innerHTML = '🏛️🔥 <span id="header-prestige-status">READY</span>';
             hooverPrestigeBtn.title = 'Prestige Ready! Burn Hoover Building for +1x Multiplier';
           } else {
             hooverPrestigeBtn.classList.add('locked');
-            hooverPrestigeBtn.textContent = `🔒 BURN HOOVER (${formatNumber(reqLines)})`;
+            hooverPrestigeBtn.innerHTML = `🏛️ <span id="header-prestige-status">${formatNumber(reqLines)}</span>`;
             hooverPrestigeBtn.title = `Locked: Requires ${formatNumber(reqLines)} lines & ${reqClicks} manual clicks`;
           }
         }
@@ -5527,7 +5644,112 @@
       requestAnimationFrame(gameLoop);
 
     })();
-  </script>
+  
+      // ==========================================================
+      // QUICK-BUY ENGINE: BUY MOST EXPENSIVE AFFORDABLE UPGRADE
+      // ==========================================================
+      const quickBuyBtn = document.getElementById('quick-buy-btn');
+      const quickBuyIcon = document.getElementById('quick-buy-icon');
+      const quickBuyName = document.getElementById('quick-buy-name');
+      const quickBuyCost = document.getElementById('quick-buy-cost');
+
+      function updateQuickBuyUI() {
+        if (!quickBuyBtn) return;
+
+        // Raid lockout check
+        if (state.raidPenaltyRemaining > 0) {
+          quickBuyBtn.disabled = true;
+          quickBuyBtn.classList.add('locked');
+          quickBuyBtn.classList.remove('can-buy');
+          const badge = quickBuyBtn.querySelector('.qb-badge');
+          if (badge) badge.textContent = '🚨 SEIZED';
+          if (quickBuyName) quickBuyName.textContent = 'Audited';
+          if (quickBuyCost) quickBuyCost.textContent = `(${Math.ceil(state.raidPenaltyRemaining)}s)`;
+          return;
+        }
+
+        // Find generator with HIGHEST cost that player can afford
+        let bestGen = null;
+        let maxCost = -1;
+
+        for (let i = 0; i < generators.length; i++) {
+          const g = generators[i];
+          const cost = getGeneratorCost(g);
+          if (state.redactions >= cost) {
+            if (cost > maxCost) {
+              maxCost = cost;
+              bestGen = g;
+            }
+          }
+        }
+
+        const badge = quickBuyBtn.querySelector('.qb-badge');
+
+        if (bestGen) {
+          quickBuyBtn.disabled = false;
+          quickBuyBtn.classList.remove('locked');
+          quickBuyBtn.classList.add('can-buy');
+          quickBuyBtn.dataset.genId = bestGen.id;
+
+          if (badge) badge.textContent = '⚡ BUY';
+          if (quickBuyIcon) quickBuyIcon.textContent = bestGen.icon;
+          if (quickBuyName) quickBuyName.textContent = bestGen.name;
+          if (quickBuyCost) quickBuyCost.textContent = formatNumber(maxCost);
+          quickBuyBtn.title = `Quick-Buy: ${bestGen.name} (${formatNumber(maxCost)})`;
+        } else {
+          // Cannot afford any yet: show next cheapest
+          const cheapest = generators[0];
+          const cheapCost = getGeneratorCost(cheapest);
+          quickBuyBtn.disabled = true;
+          quickBuyBtn.classList.remove('can-buy');
+          quickBuyBtn.classList.add('locked');
+          quickBuyBtn.dataset.genId = cheapest.id;
+
+          if (badge) badge.textContent = 'NEXT';
+          if (quickBuyIcon) quickBuyIcon.textContent = cheapest.icon;
+          if (quickBuyName) quickBuyName.textContent = cheapest.name;
+          if (quickBuyCost) quickBuyCost.textContent = formatNumber(cheapCost);
+          quickBuyBtn.title = `Need ${formatNumber(cheapCost - state.redactions)} more lines for ${cheapest.name}`;
+        }
+      }
+
+      if (quickBuyBtn) {
+        quickBuyBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // DO NOT toggle or open the drawer menu
+          if (state.raidPenaltyRemaining > 0) return;
+
+          const genId = quickBuyBtn.dataset.genId;
+          const gen = generators.find(g => g.id === genId);
+          if (!gen) return;
+
+          const cost = getGeneratorCost(gen);
+          if (state.redactions >= cost) {
+            getAudioContext();
+            state.redactions -= cost;
+            gen.count++;
+            playStampSound();
+
+            const prestigeMult = getPrestigeMultiplier();
+            const gainRate = gen.rps * prestigeMult;
+            const rect = quickBuyBtn.getBoundingClientRect();
+            const deskRect = canvas.getBoundingClientRect();
+            const spawnX = Math.max(20, Math.min(deskRect.width - 120, rect.left - deskRect.left + rect.width / 2 - 40));
+            const spawnY = Math.max(40, rect.top - deskRect.top - 20);
+
+            spawnFloatText(
+              spawnX,
+              spawnY,
+              `+${gen.icon} ${gen.name} (+${gainRate >= 100 ? formatNumber(gainRate) : gainRate}/s)`,
+              'combo'
+            );
+
+            updateUI();
+            renderGenerators();
+          }
+        });
+      }
+
+    </script>
   <!-- FEDERAL RAID QTE OVERLAY -->
   <div id="raid-overlay" class="raid-overlay hidden">
     <div class="raid-modal">
