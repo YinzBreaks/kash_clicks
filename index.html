@@ -288,9 +288,9 @@
 
     /* 3. TACTICAL MICRO-STRIP (DEF-CLERK & FUME in 20px) */
     #threat-bar-container {
-      height: 20px;
+      height: 18px;
       padding: 0 10px;
-      background: #060912;
+      background: #040711;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
@@ -304,34 +304,38 @@
     .micro-threat-group {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       font-size: 8px;
       font-weight: 800;
       white-space: nowrap;
     }
 
-    .threat-prefix { color: var(--text-muted); }
+    .threat-prefix {
+      color: var(--text-muted);
+      display: none;
+    }
 
     .threat-tier-label {
-      font-size: 7.5px;
+      font-size: 8px;
       font-weight: 900;
       padding: 1px 4px;
       border-radius: 2px;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.5px;
     }
 
     .threat-track {
-      width: 45px;
-      height: 5px;
+      width: 55px;
+      height: 4px;
       background: #000;
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .threat-fill {
       height: 100%;
-      border-radius: 3px;
+      border-radius: 2px;
       transition: width 0.25s ease-out, background-color 0.3s;
     }
 
@@ -343,26 +347,13 @@
     }
 
     .micro-stats-panel {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
-      font-weight: 800;
-      color: #cbd5e1;
-      white-space: nowrap;
-    }
-
-    .micro-stats-panel .stat-block {
-      display: flex;
-      align-items: center;
-      gap: 2px;
+      display: none !important;
     }
 
     .micro-fume-section {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       font-size: 8px;
       font-weight: 800;
       color: #a855f7;
@@ -370,10 +361,10 @@
     }
 
     .fume-track {
-      width: 40px;
-      height: 5px;
+      width: 50px;
+      height: 4px;
       background: #000;
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
       border: 1px solid #334155;
     }
@@ -382,7 +373,7 @@
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #10b981, #06b6d4, #a855f7);
-      border-radius: 3px;
+      border-radius: 2px;
       transition: width 0.08s linear;
     }
 
@@ -492,14 +483,7 @@
     }
 
     .doc-meta.compact {
-      font-family: 'Courier New', monospace;
-      font-size: 7.5px;
-      color: #78716c;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 3px;
-      line-height: 1.1;
+      display: none !important;
     }
 
     .crisis-fire-banner {
@@ -540,28 +524,34 @@
       min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
+      justify-content: flex-start;
+      gap: 3px;
       position: relative;
       z-index: 5;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 3px 0;
     }
 
     .text-line {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 13.5px;
+      font-size: 12px;
       font-weight: 800;
+      height: 28px;
       min-height: 28px;
+      max-height: 32px;
       display: flex;
       align-items: center;
-      padding: 2px 6px;
+      padding: 0 6px;
       border-radius: 3px;
-      margin: 1px 0;
-      letter-spacing: 0.2px;
+      margin: 0;
+      letter-spacing: 0.1px;
       cursor: crosshair;
       position: relative;
       color: #1c1917;
       border: 1px dashed transparent;
       transition: background 0.1s;
+      flex-shrink: 0;
     }
 
     .text-line:hover {
@@ -570,20 +560,24 @@
     }
 
     .text-line.redacted .pseudo-text {
-      color: rgba(0, 0, 0, 0.2);
+      color: rgba(0, 0, 0, 0.25);
     }
 
     .redaction-bar {
       position: absolute;
       left: 2px;
       right: 2px;
-      height: 80%;
+      top: 50%;
+      height: 18px;
+      margin-top: -9px;
       background: #09090b;
       transform-origin: left center;
+      transform: scaleX(0);
       transition: transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
       border-radius: 2px;
       z-index: 10;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
     }
 
     .text-line.redacted .redaction-bar {
@@ -1335,7 +1329,8 @@
     /* MOBILE (<768px): Bottom Sheet Drawer & Expansive Dossier */
     @media (max-width: 767px) {
       #upgrades-drawer.collapsed {
-        height: 40px !important;
+        height: 44px !important;
+        overflow: hidden !important;
       }
 
       #upgrades-drawer.expanded {
@@ -1345,6 +1340,7 @@
         left: 0;
         right: 0;
         box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.95);
+        overflow: hidden !important;
       }
     }
 
@@ -1611,10 +1607,10 @@
       <!-- RIGHT PANE (Desktop) / BOTTOM SHEET (Mobile): UPGRADES STORE -->
       <footer id="upgrades-drawer" class="collapsed">
         <div class="drawer-handle-bar" id="drawer-toggle">
-          <div class="drawer-title-group">
+          <div class="drawer-title-group" id="drawer-toggle-btn">
             <span class="drawer-folder-icon">📂</span>
-            <span class="drawer-title-text">STORE</span>
-            <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
+            <span class="drawer-title-text" id="drawer-title-text">UPGRADES</span>
+            <div class="drawer-toggle-btn" id="drawer-icon"><span id="drawer-toggle-icon">▲</span></div>
           </div>
 
           <!-- ONE-TAP QUICK-BUY (Buys most expensive affordable upgrade) -->
@@ -1837,6 +1833,12 @@
         frenzyRemaining: 0,
         privilegeActive: false,
         privilegeRemaining: 0,
+        threatLevel: 0,
+        raidActive: false,
+        raidTimer: 7.0,
+        raidClicks: 0,
+        raidPenaltyRemaining: 0,
+        raidBuffRemaining: 0,
         lastEpsteinHit: 0,
         lastDonHit: 0,
         lastTime: performance.now(),
@@ -2113,6 +2115,10 @@
       const raidClicksCount = document.getElementById('raid-clicks-count');
       const shopPenaltyBanner = document.getElementById('shop-penalty-banner');
       const penaltyTimeLeft = document.getElementById('penalty-time-left');
+      const quickBuyBtn = document.getElementById('quick-buy-btn');
+      const quickBuyIcon = document.getElementById('quick-buy-icon');
+      const quickBuyName = document.getElementById('quick-buy-name');
+      const quickBuyCost = document.getElementById('quick-buy-cost');
       const canvas = document.getElementById('fx-canvas');
       const ctx = canvas.getContext('2d');
 
@@ -2497,6 +2503,212 @@
           noise.start(now);
           noise.stop(now + 0.04);
         } catch(e) {}
+      }
+
+      // ==========================================================
+      // BUREAUCRATIC THREAT ENGINE & FEDERAL RAID QTE
+      // ==========================================================
+      function updateThreatLevelUI() {
+        if (!threatFill || !threatTierLabel || !threatPercentText) return;
+        const threat = Math.min(100, Math.max(0, state.threatLevel || 0));
+        threatPercentText.textContent = `${Math.floor(threat)}%`;
+        threatFill.style.width = `${threat}%`;
+
+        let color = '#22c55e'; // Tier 5 (0-24%): Green
+        let tierText = 'DEF-5';
+
+        if (threat >= 100) {
+          color = '#ef4444'; // Tier 1 (100%): Flashing Red
+          tierText = 'DEF-1';
+        } else if (threat >= 75) {
+          color = '#f97316'; // Tier 2 (75-99%): Orange
+          tierText = 'DEF-2';
+        } else if (threat >= 50) {
+          color = '#eab308'; // Tier 3 (50-74%): Yellow
+          tierText = 'DEF-3';
+        } else if (threat >= 25) {
+          color = '#3b82f6'; // Tier 4 (25-49%): Blue
+          tierText = 'DEF-4';
+        }
+
+        threatFill.style.backgroundColor = color;
+        threatTierLabel.textContent = tierText;
+        threatTierLabel.style.color = color;
+        threatPercentText.style.color = color;
+      }
+
+      function increaseThreat(amount) {
+        if (state.raidActive) return;
+        state.threatLevel = Math.min(100, Math.max(0, (state.threatLevel || 0) + amount));
+        updateThreatLevelUI();
+        if (state.threatLevel >= 100) {
+          triggerFederalRaidQTE();
+        }
+      }
+
+      function triggerFederalRaidQTE() {
+        if (state.raidActive) return;
+        state.raidActive = true;
+        state.raidTimer = 7.0;
+        state.raidClicks = 0;
+
+        if (raidClicksCount) raidClicksCount.textContent = '0';
+        if (raidTimerText) raidTimerText.textContent = '7.0s';
+        if (raidTimerFill) raidTimerFill.style.width = '100%';
+        if (raidOverlay) raidOverlay.classList.remove('hidden');
+
+        playRaidSiren();
+      }
+
+      function onRaidSuccess() {
+        state.raidActive = false;
+        state.threatLevel = 0;
+        state.raidBuffRemaining = 30.0; // 30s +25% RPS victory buff
+        if (raidOverlay) raidOverlay.classList.add('hidden');
+
+        playBrassFanfare();
+        updateThreatLevelUI();
+        updateUI();
+
+        const deskRect = canvas.getBoundingClientRect();
+        spawnFloatText(
+          Math.max(20, deskRect.width / 2 - 80),
+          Math.max(20, deskRect.height / 2 - 20),
+          '🔥 SUBPOENAS INCINERATED! +25% RPS BUFF',
+          'combo'
+        );
+      }
+
+      function onRaidFailure() {
+        state.raidActive = false;
+        state.threatLevel = 25; // drop to 25%
+        state.raidPenaltyRemaining = 20.0; // 20s -50% RPS audit penalty
+        if (raidOverlay) raidOverlay.classList.add('hidden');
+
+        playPaperRustle();
+        updateThreatLevelUI();
+        updateUI();
+
+        const deskRect = canvas.getBoundingClientRect();
+        spawnFloatText(
+          Math.max(20, deskRect.width / 2 - 80),
+          Math.max(20, deskRect.height / 2 - 20),
+          '🚨 AUDITED! -50% RPS PENALTY (20s)',
+          'crit'
+        );
+      }
+
+      if (raidIncinerateBtn) {
+        raidIncinerateBtn.addEventListener('click', () => {
+          if (!state.raidActive) return;
+          state.raidClicks = (state.raidClicks || 0) + 1;
+          playIncineratorWhoosh();
+
+          if (raidClicksCount) raidClicksCount.textContent = state.raidClicks;
+          if (state.raidClicks >= 15) {
+            onRaidSuccess();
+          }
+        });
+      }
+
+      // ==========================================================
+      // QUICK-BUY ENGINE: BUY MOST EXPENSIVE AFFORDABLE UPGRADE
+      // ==========================================================
+      function updateQuickBuyUI() {
+        if (!quickBuyBtn) return;
+
+        // Raid lockout check
+        if (state.raidPenaltyRemaining > 0) {
+          quickBuyBtn.disabled = true;
+          quickBuyBtn.classList.add('locked');
+          quickBuyBtn.classList.remove('can-buy');
+          const badge = quickBuyBtn.querySelector('.qb-badge');
+          if (badge) badge.textContent = '🚨 SEIZED';
+          if (quickBuyName) quickBuyName.textContent = 'Audited';
+          if (quickBuyCost) quickBuyCost.textContent = `(${Math.ceil(state.raidPenaltyRemaining)}s)`;
+          return;
+        }
+
+        // Find generator with HIGHEST cost that player can afford
+        let bestGen = null;
+        let maxCost = -1;
+
+        for (let i = 0; i < generators.length; i++) {
+          const g = generators[i];
+          const cost = getGeneratorCost(g);
+          if (state.redactions >= cost) {
+            if (cost > maxCost) {
+              maxCost = cost;
+              bestGen = g;
+            }
+          }
+        }
+
+        const badge = quickBuyBtn.querySelector('.qb-badge');
+
+        if (bestGen) {
+          quickBuyBtn.disabled = false;
+          quickBuyBtn.classList.remove('locked');
+          quickBuyBtn.classList.add('can-buy');
+          quickBuyBtn.dataset.genId = bestGen.id;
+
+          if (badge) badge.textContent = '⚡ BUY';
+          if (quickBuyIcon) quickBuyIcon.textContent = bestGen.icon;
+          if (quickBuyName) quickBuyName.textContent = bestGen.name;
+          if (quickBuyCost) quickBuyCost.textContent = `(${formatNumber(maxCost)})`;
+          quickBuyBtn.title = `Quick-Buy: ${bestGen.name} (${formatNumber(maxCost)})`;
+        } else {
+          // Cannot afford any yet: show next cheapest
+          const cheapest = generators[0];
+          const cheapCost = getGeneratorCost(cheapest);
+          quickBuyBtn.disabled = true;
+          quickBuyBtn.classList.remove('can-buy');
+          quickBuyBtn.classList.add('locked');
+          quickBuyBtn.dataset.genId = cheapest.id;
+
+          if (badge) badge.textContent = '🔒 NEXT';
+          if (quickBuyIcon) quickBuyIcon.textContent = cheapest.icon;
+          if (quickBuyName) quickBuyName.textContent = cheapest.name;
+          if (quickBuyCost) quickBuyCost.textContent = `(${formatNumber(cheapCost)})`;
+          quickBuyBtn.title = `Need ${formatNumber(cheapCost - state.redactions)} more lines for ${cheapest.name}`;
+        }
+      }
+
+      if (quickBuyBtn) {
+        quickBuyBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // DO NOT toggle or open drawer menu
+          if (state.raidPenaltyRemaining > 0) return;
+
+          const genId = quickBuyBtn.dataset.genId;
+          const gen = generators.find(g => g.id === genId);
+          if (!gen) return;
+
+          const cost = getGeneratorCost(gen);
+          if (state.redactions >= cost) {
+            getAudioContext();
+            state.redactions -= cost;
+            gen.count++;
+            playStampSound();
+
+            const prestigeMult = getPrestigeMultiplier();
+            const gainRate = gen.rps * prestigeMult;
+            const rect = quickBuyBtn.getBoundingClientRect();
+            const deskRect = canvas.getBoundingClientRect();
+            const spawnX = Math.max(20, Math.min(deskRect.width - 120, rect.left - deskRect.left + rect.width / 2 - 40));
+            const spawnY = Math.max(40, rect.top - deskRect.top - 20);
+
+            spawnFloatText(
+              spawnX,
+              spawnY,
+              `+${gen.icon} ${gen.name} (+${gainRate >= 100 ? formatNumber(gainRate) : gainRate}/s)`,
+              'combo'
+            );
+
+            updateUI();
+            renderGenerators();
+            updateQuickBuyUI();
+          }
+        });
       }
 
       // 7. CANVAS PARTICLES (POWDER, GOLD COINS, INK & FUMES)
@@ -3142,11 +3354,6 @@
         }
         spawnFloatText(x - 25, y - 16, floatLabel, floatClass);
 
-        const parentLine = targetEl.closest('.text-line');
-        if (parentLine && !parentLine.classList.contains('redacted')) {
-          parentLine.classList.add('redacted');
-        }
-
         const remaining = updateRemainingTargetsDisplay();
         updateUI();
 
@@ -3404,10 +3611,12 @@
           `;
 
           const buyBtn = card.querySelector('.buy-btn');
-          buyBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            buyGenerator(index);
-          });
+          if (buyBtn) {
+            buyBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              buyGenerator(index);
+            });
+          }
 
           upgradesList.appendChild(card);
         });
@@ -3740,9 +3949,40 @@
           }
         }
 
+        // Threat decay: -1% per 4 seconds if no raid active
+        if (!state.raidActive && state.threatLevel > 0) {
+          state.threatLevel = Math.max(0, state.threatLevel - (dt / 4.0));
+          updateThreatLevelUI();
+        }
+
+        // Raid active timer handling
+        if (state.raidActive) {
+          state.raidTimer -= dt;
+          if (raidTimerText) raidTimerText.textContent = `${Math.max(0, state.raidTimer).toFixed(1)}s`;
+          if (raidTimerFill) raidTimerFill.style.width = `${Math.max(0, (state.raidTimer / 7.0) * 100)}%`;
+          if (state.raidTimer <= 0) {
+            onRaidFailure();
+          }
+        }
+
+        // Raid penalty countdown (-50% RPS for 20s)
+        if (state.raidPenaltyRemaining > 0) {
+          state.raidPenaltyRemaining -= dt;
+          if (shopPenaltyBanner) shopPenaltyBanner.style.display = 'flex';
+          if (penaltyTimeLeft) penaltyTimeLeft.textContent = `${Math.ceil(state.raidPenaltyRemaining)}s`;
+        } else {
+          if (shopPenaltyBanner) shopPenaltyBanner.style.display = 'none';
+        }
+
+        // Raid buff countdown (+25% RPS for 30s)
+        if (state.raidBuffRemaining > 0) {
+          state.raidBuffRemaining -= dt;
+        }
+
         updateTicker(dt);
         updateParticles(dt);
         updateUI();
+        updateQuickBuyUI();
 
         requestAnimationFrame(gameLoop);
       }
@@ -3758,6 +3998,7 @@
           secretsBuried: state.secretsBuried,
           prestigeLevel: state.prestigeLevel || 0,
           prestigeCount: state.prestigeCount || 0,
+          threatLevel: state.threatLevel || 0,
           lifetimeMultipliers: 1 + (state.prestigeLevel || 0),
           runManualClicks: state.runManualClicks || 0,
           lastPrestigeClicks: state.lastPrestigeClicks || 0,
@@ -3791,6 +4032,7 @@
           state.lastPrestigeClicks = data.lastPrestigeClicks || 40;
           state.runRedacted = data.runRedacted !== undefined ? data.runRedacted : (data.redactions || 0);
           state.pageNumber = data.pageNumber || 1;
+          state.threatLevel = data.threatLevel || 0;
 
           if (Array.isArray(data.generators)) {
             data.generators.forEach(sg => {
@@ -3930,115 +4172,12 @@
       generateDualTargetDossierPage();
       renderGenerators();
       rebuildTickerText();
+      updateThreatLevelUI();
       updateUI();
+      updateQuickBuyUI();
       requestAnimationFrame(gameLoop);
 
     })();
-  
-      // ==========================================================
-      // QUICK-BUY ENGINE: BUY MOST EXPENSIVE AFFORDABLE UPGRADE
-      // ==========================================================
-      const quickBuyBtn = document.getElementById('quick-buy-btn');
-      const quickBuyIcon = document.getElementById('quick-buy-icon');
-      const quickBuyName = document.getElementById('quick-buy-name');
-      const quickBuyCost = document.getElementById('quick-buy-cost');
-
-      function updateQuickBuyUI() {
-        if (!quickBuyBtn) return;
-
-        // Raid lockout check
-        if (state.raidPenaltyRemaining > 0) {
-          quickBuyBtn.disabled = true;
-          quickBuyBtn.classList.add('locked');
-          quickBuyBtn.classList.remove('can-buy');
-          const badge = quickBuyBtn.querySelector('.qb-badge');
-          if (badge) badge.textContent = '🚨 SEIZED';
-          if (quickBuyName) quickBuyName.textContent = 'Audited';
-          if (quickBuyCost) quickBuyCost.textContent = `(${Math.ceil(state.raidPenaltyRemaining)}s)`;
-          return;
-        }
-
-        // Find generator with HIGHEST cost that player can afford
-        let bestGen = null;
-        let maxCost = -1;
-
-        for (let i = 0; i < generators.length; i++) {
-          const g = generators[i];
-          const cost = getGeneratorCost(g);
-          if (state.redactions >= cost) {
-            if (cost > maxCost) {
-              maxCost = cost;
-              bestGen = g;
-            }
-          }
-        }
-
-        const badge = quickBuyBtn.querySelector('.qb-badge');
-
-        if (bestGen) {
-          quickBuyBtn.disabled = false;
-          quickBuyBtn.classList.remove('locked');
-          quickBuyBtn.classList.add('can-buy');
-          quickBuyBtn.dataset.genId = bestGen.id;
-
-          if (badge) badge.textContent = '⚡ BUY';
-          if (quickBuyIcon) quickBuyIcon.textContent = bestGen.icon;
-          if (quickBuyName) quickBuyName.textContent = bestGen.name;
-          if (quickBuyCost) quickBuyCost.textContent = formatNumber(maxCost);
-          quickBuyBtn.title = `Quick-Buy: ${bestGen.name} (${formatNumber(maxCost)})`;
-        } else {
-          // Cannot afford any yet: show next cheapest
-          const cheapest = generators[0];
-          const cheapCost = getGeneratorCost(cheapest);
-          quickBuyBtn.disabled = true;
-          quickBuyBtn.classList.remove('can-buy');
-          quickBuyBtn.classList.add('locked');
-          quickBuyBtn.dataset.genId = cheapest.id;
-
-          if (badge) badge.textContent = 'NEXT';
-          if (quickBuyIcon) quickBuyIcon.textContent = cheapest.icon;
-          if (quickBuyName) quickBuyName.textContent = cheapest.name;
-          if (quickBuyCost) quickBuyCost.textContent = formatNumber(cheapCost);
-          quickBuyBtn.title = `Need ${formatNumber(cheapCost - state.redactions)} more lines for ${cheapest.name}`;
-        }
-      }
-
-      if (quickBuyBtn) {
-        quickBuyBtn.addEventListener('click', (e) => {
-          e.stopPropagation(); // DO NOT toggle or open the drawer menu
-          if (state.raidPenaltyRemaining > 0) return;
-
-          const genId = quickBuyBtn.dataset.genId;
-          const gen = generators.find(g => g.id === genId);
-          if (!gen) return;
-
-          const cost = getGeneratorCost(gen);
-          if (state.redactions >= cost) {
-            getAudioContext();
-            state.redactions -= cost;
-            gen.count++;
-            playStampSound();
-
-            const prestigeMult = getPrestigeMultiplier();
-            const gainRate = gen.rps * prestigeMult;
-            const rect = quickBuyBtn.getBoundingClientRect();
-            const deskRect = canvas.getBoundingClientRect();
-            const spawnX = Math.max(20, Math.min(deskRect.width - 120, rect.left - deskRect.left + rect.width / 2 - 40));
-            const spawnY = Math.max(40, rect.top - deskRect.top - 20);
-
-            spawnFloatText(
-              spawnX,
-              spawnY,
-              `+${gen.icon} ${gen.name} (+${gainRate >= 100 ? formatNumber(gainRate) : gainRate}/s)`,
-              'combo'
-            );
-
-            updateUI();
-            renderGenerators();
-          }
-        });
-      }
-
-    </script>
+  </script>
 </body>
 </html>
