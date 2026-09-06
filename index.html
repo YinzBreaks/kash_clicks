@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>KLICKASHKLIC - Midnight Redaction Bureau</title>
   <meta name="description" content="Midnight Redaction Bureau: Classified document redaction and cover-up simulator. Redact sensitive dossiers, manage chaos tiers, and prestige your clearance.">
@@ -15,14 +15,32 @@
   <link rel="alternate icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <style>
-    /* RESET & CORE MOBILE-FIRST PHONE LOCK */
+    /* ========================================================= */
+    /* KLICKASHKLIC: RESPONSIVE MASTER STYLESHEET               */
+    /* Mobile-First (<768px) & Dual-Pane Desktop (>=768px)      */
+    /* ========================================================= */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
+    }
+
+    :root {
+      --bg-dark: #070b14;
+      --bg-card: #0d1424;
+      --bg-card-alt: #111a30;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.25);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --cyan-bright: #38bdf8;
+      --green-bright: #4ade80;
+      --gold-bright: #facc15;
+      --orange-bright: #fb923c;
+      --red-bright: #ef4444;
+      --paper-cream: #f7f2e4;
+      --desk-wood: #261108;
     }
 
     html, body {
@@ -31,305 +49,69 @@
       min-height: 100vh;
       min-height: -webkit-fill-available;
       overflow: hidden;
-      overscroll-behavior: none;
+      background-color: var(--bg-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-primary);
       touch-action: manipulation;
-      background-color: #0b0f19;
-      background-image: radial-gradient(ellipse at 50% 20%, #182238 0%, #0b0f19 75%);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Courier New", Courier, monospace, sans-serif;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
-    /* 9:16 MOBILE VIEWPORT PHONE FRAME (Max 450x800) */
-    #app-container {
-      width: 100vw;
-      height: 100vh;
-      max-width: 450px;
-      max-height: 800px;
-      background: #111726;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    }
-
-    /* VIGNETTE & FRENZY OVERLAYS */
+    /* VIGNETTE OVERLAY */
     #vignette {
-      position: absolute;
+      position: fixed;
       inset: 0;
       pointer-events: none;
-      box-shadow: inset 0 0 70px rgba(0,0,0,0.65);
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.85);
       z-index: 50;
       transition: box-shadow 0.3s ease;
     }
 
-    /* Fume Frenzy (Purple/Green) */
     #app-container.frenzy-active #vignette {
-      box-shadow: inset 0 0 80px rgba(168, 85, 247, 0.5), inset 0 0 30px rgba(34, 197, 94, 0.5);
-      animation: frenzyPulse 1s ease-in-out infinite alternate;
+      box-shadow: inset 0 0 90px rgba(168, 85, 247, 0.5), inset 0 0 40px rgba(34, 197, 94, 0.4);
+      animation: frenzyPulse 1s infinite alternate ease-in-out;
+    }
+
+    #app-container.privilege-active #vignette {
+      box-shadow: inset 0 0 100px rgba(250, 204, 21, 0.8), inset 0 0 50px rgba(249, 115, 22, 0.6);
+      animation: goldPrivilegePulse 0.8s infinite alternate ease-in-out;
     }
 
     @keyframes frenzyPulse {
-      0% { box-shadow: inset 0 0 70px rgba(168, 85, 247, 0.4), inset 0 0 35px rgba(34, 197, 94, 0.3); }
-      100% { box-shadow: inset 0 0 100px rgba(217, 70, 239, 0.7), inset 0 0 60px rgba(34, 197, 94, 0.6); }
-    }
-
-    /* Executive Privilege Frenzy (Gold/Amber) */
-    #app-container.privilege-active #vignette {
-      box-shadow: inset 0 0 90px rgba(234, 179, 8, 0.75), inset 0 0 45px rgba(249, 115, 22, 0.75);
-      animation: goldPrivilegePulse 0.8s ease-in-out infinite alternate;
+      from { filter: hue-rotate(0deg); }
+      to { filter: hue-rotate(30deg); }
     }
 
     @keyframes goldPrivilegePulse {
-      0% { box-shadow: inset 0 0 80px rgba(234, 179, 8, 0.6), inset 0 0 35px rgba(249, 115, 22, 0.5); }
-      100% { box-shadow: inset 0 0 120px rgba(250, 204, 21, 0.95), inset 0 0 65px rgba(245, 158, 11, 0.85); }
+      from { opacity: 0.8; }
+      to { opacity: 1; filter: drop-shadow(0 0 15px #facc15); }
     }
 
-    /* START MENU OVERLAY */
-    #start-menu {
-      position: absolute;
-      inset: 0;
-      z-index: 200;
-      background: radial-gradient(circle at 50% 42%, #1e293b 0%, #090d16 100%);
+    /* MAIN APPLICATION CONTAINER */
+    #app-container {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      position: relative;
       overflow: hidden;
-      opacity: 1;
-      transform: scale(1);
-      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      background: var(--bg-dark);
     }
 
-    #start-menu.hidden {
-      opacity: 0;
-      transform: scale(1.04);
-      pointer-events: none;
-    }
-
-    .start-watermark-layer {
-      position: absolute;
-      inset: -60%;
-      width: 220%;
-      height: 220%;
-      pointer-events: none;
-      opacity: 0.045;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      transform: rotate(-32deg);
-      user-select: none;
-      z-index: 1;
-    }
-
-    .watermark-row {
-      white-space: nowrap;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #ffffff;
-    }
-
-    .hazard-stripe-bar {
-      height: 14px;
-      width: 100%;
-      background: repeating-linear-gradient(-45deg, #eab308 0px, #eab308 12px, #000000 12px, #000000 24px);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.7);
-      flex-shrink: 0;
-      position: relative;
-      z-index: 5;
-    }
-
-    .start-menu-content {
-      position: relative;
-      z-index: 10;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 20px;
-      text-align: center;
-      gap: 14px;
-    }
-
-    .start-restricted-badge {
-      display: inline-block;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 10px;
-      font-weight: 900;
-      color: #ef4444;
-      border: 2px solid #ef4444;
-      padding: 3px 10px;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      transform: rotate(-1.5deg);
-      background: rgba(239, 68, 68, 0.1);
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-    }
-
-    .start-title-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .brand-wordmark {
-      font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
-      font-size: 42px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      display: inline-flex;
-      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95), 0 0 22px rgba(255, 255, 255, 0.18);
-    }
-
-    .klic-red { color: #ef4444; text-shadow: 0 0 16px rgba(239, 68, 68, 0.5); }
-    .kash-white { color: #ffffff; text-shadow: 0 0 14px rgba(255, 255, 255, 0.6); }
-    .klic-blue { color: #3b82f6; text-shadow: 0 0 16px rgba(59, 130, 246, 0.5); }
-
-    .start-subtitle {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 2.2px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      margin-top: 6px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    }
-
-    .start-emblem-box {
-      width: 74px;
-      height: 74px;
-      border-radius: 50%;
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle, #1e293b 0%, #0b101c 100%);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-      font-size: 34px;
-      position: relative;
-    }
-
-    .start-emblem-box::after {
-      content: "TOP SECRET";
-      position: absolute;
-      bottom: -7px;
-      background: #b91c1c;
-      color: #fff;
-      font-family: monospace;
-      font-size: 7.5px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-
-    #start-save-card {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 6px;
-      padding: 8px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      max-width: 290px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-
-    .save-card-label {
-      font-family: 'Courier New', monospace;
-      font-size: 9px;
-      font-weight: 800;
-      color: #38bdf8;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .save-card-stats {
-      font-size: 12px;
-      font-weight: 900;
-      color: #f8fafc;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .save-clear-link {
-      font-family: 'Courier New', monospace;
-      font-size: 9px;
-      color: #ef4444;
-      text-decoration: underline;
-      cursor: pointer;
-      margin-top: 2px;
-      display: inline-block;
-      opacity: 0.85;
-      font-weight: 700;
-    }
-
-    .save-clear-link:hover { opacity: 1; }
-
-    .start-breach-btn {
-      width: 100%;
-      max-width: 280px;
-      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
-      border: 2px solid #fca5a5;
-      border-radius: 8px;
-      padding: 14px 20px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.55), 0 6px 20px rgba(0, 0, 0, 0.6);
-      transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      animation: startPulse 1.8s infinite alternate ease-in-out;
-    }
-
-    @keyframes startPulse {
-      0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.45), 0 6px 16px rgba(0,0,0,0.6); }
-      100% { transform: scale(1.025); box-shadow: 0 0 30px rgba(239, 68, 68, 0.75), 0 8px 24px rgba(0,0,0,0.7); }
-    }
-
-    .start-breach-btn:active { transform: scale(0.96) !important; filter: brightness(1.2); }
-    .btn-main-text {
-      font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      color: #ffffff;
-      text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
-    }
-    .btn-sub-text {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #fecaca;
-      text-transform: uppercase;
-    }
-
-    /* 1. DYNAMIC SATIRICAL NEWS CHYRON */
+    /* 1. NEWS CHYRON (Slim 20px) */
     #news-chyron {
-      height: 26px;
-      background: #991b1b;
+      height: 20px;
+      background: #7f1d1d;
+      border-bottom: 1px solid #b91c1c;
       display: flex;
       align-items: center;
       overflow: hidden;
-      border-bottom: 1px solid #dc2626;
-      font-size: 11px;
+      font-size: 9.5px;
       font-weight: 800;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       flex-shrink: 0;
-      z-index: 25;
+      z-index: 30;
     }
 
     .chyron-badge {
@@ -339,20 +121,19 @@
       height: 100%;
       display: flex;
       align-items: center;
+      gap: 5px;
       font-weight: 900;
       white-space: nowrap;
       border-right: 2px solid #ef4444;
       flex-shrink: 0;
-      gap: 5px;
       z-index: 2;
     }
 
     .chyron-badge .dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       background: #ef4444;
       border-radius: 50%;
-      box-shadow: 0 0 6px #ef4444;
       animation: blink 0.8s infinite;
     }
 
@@ -366,1018 +147,560 @@
       white-space: nowrap;
       overflow: hidden;
       flex: 1;
-      position: relative;
     }
 
     .chyron-text {
       display: inline-block;
       white-space: nowrap;
       will-change: transform;
-      color: #ffffff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      color: #fff;
       padding-left: 20px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
 
-    /* 2. HEADER */
+    /* 2. COMMAND HEADER (Clean 40px, Zero-Wrapping) */
     #header {
-      padding: 7px 12px 5px;
-      background: linear-gradient(180deg, #182032 0%, #101625 100%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-
-    .title-group { display: flex; flex-direction: column; }
-    .agency-classification {
-      font-size: 7.5px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #ef4444;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .agency-title {
-      font-size: 14.5px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #f8fafc;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .header-actions { display: flex; align-items: center; gap: 6px; }
-    .icon-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      transition: all 0.1s;
-    }
-
-    .icon-btn:active { transform: scale(0.92); background: #334155; }
-
-    /* PRESTIGE SYSTEM & STACKED CLEARANCE STYLES */
-    .header-prestige-badge {
-      display: inline-flex;
-      align-items: center;
-      background: linear-gradient(135deg, #b45309 0%, #f59e0b 28%, #fef08a 50%, #f59e0b 72%, #b45309 100%);
-      background-size: 200% auto;
-      color: #0b101c;
-      font-size: 7.5px;
-      font-weight: 900;
-      letter-spacing: 0.6px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      border: 1px solid #fde047;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      animation: shineGoldBadge 2.4s linear infinite;
-      cursor: pointer;
-      text-transform: uppercase;
-      white-space: nowrap;
-      transition: transform 0.1s;
-    }
-
-    .header-prestige-badge:active { transform: scale(0.95); }
-
-    @keyframes shineGoldBadge {
-      0% { background-position: 0% center; }
-      100% { background-position: 200% center; }
-    }
-
-    #clearance-bar {
-      padding: 3px 10px;
-      background: linear-gradient(90deg, #1e1b4b 0%, #0d121f 50%, #1e1b4b 100%);
-      border-bottom: 1px solid rgba(250, 204, 21, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-
-    .clearance-badge-wrap {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .clearance-shield { font-size: 11px; }
-
-    .clearance-text {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9.5px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #facc15;
-      text-shadow: 0 0 8px rgba(250, 204, 21, 0.55);
-    }
-
-    .hoover-prestige-btn {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      border: 1px solid #f87171;
-      color: #ffffff;
-      font-size: 8px;
-      font-weight: 900;
-      letter-spacing: 0.6px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
-      transition: all 0.12s;
-      white-space: nowrap;
-    }
-
-    .hoover-prestige-btn:active { transform: scale(0.94); filter: brightness(1.2); }
-
-    /* PRESTIGE CARD IN UPGRADE DRAWER */
-    .prestige-card {
-      margin: 6px 10px 2px;
-      background: linear-gradient(135deg, #2b1104 0%, #150902 100%);
-      border: 1.5px solid #f97316;
-      border-radius: 6px;
-      padding: 6px 10px;
+      height: 40px;
+      padding: 0 10px;
+      background: linear-gradient(180deg, #151d30 0%, #0b1120 100%);
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      box-shadow: 0 0 12px rgba(249, 115, 22, 0.28);
+      flex-shrink: 0;
+      z-index: 25;
+      overflow: hidden;
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       flex-shrink: 0;
     }
 
-    .prestige-card-icon {
-      font-size: 20px;
-      width: 32px;
-      height: 32px;
+    .agency-title {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .klic-red { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+    .kash-white { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.6); }
+    .klic-blue { color: #3b82f6; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+
+    .header-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 2px 8px;
+      flex-shrink: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .telemetry-currency {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--cyan-bright);
+      white-space: nowrap;
+    }
+
+    .stat-badge {
+      font-size: 8px;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: #1e293b;
+      color: #fff;
+    }
+
+    .telemetry-rps {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--green-bright);
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      padding-left: 6px;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .header-prestige-btn {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      border: 1px solid #f87171;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+      transition: transform 0.1s;
+    }
+
+    .header-prestige-btn.locked {
+      background: #1e293b;
+      border-color: #475569;
+      color: var(--text-secondary);
+    }
+
+    .header-prestige-btn:active { transform: scale(0.94); }
+
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #431407;
-      border-radius: 6px;
-      border: 1px solid #ea580c;
-      flex-shrink: 0;
-    }
-
-    .prestige-card-content {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .prestige-card-title {
-      font-size: 10.5px;
-      font-weight: 900;
-      color: #fed7aa;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .prestige-card-sub {
-      font-size: 8.5px;
-      font-weight: 600;
-      color: #fdba74;
-      line-height: 1.25;
-      margin-top: 1px;
-    }
-
-    .prestige-card-req {
-      font-size: 8px;
-      font-weight: 700;
-      color: #f87171;
-      line-height: 1.25;
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .prestige-card-req.ready {
-      color: #4ade80;
-    }
-
-    .hoover-prestige-btn.locked {
-      background: #1e293b;
-      border-color: #475569;
-      color: #94a3b8;
-      box-shadow: none;
-    }
-
-    .prestige-burn-btn {
-      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
-      border: 1px solid #fb923c;
-      color: #ffffff;
-      font-size: 9px;
-      font-weight: 900;
-      padding: 5px 10px;
-      border-radius: 4px;
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
-      letter-spacing: 0.5px;
-      flex-shrink: 0;
-      transition: all 0.12s;
+      font-size: 12px;
+      transition: background 0.15s, transform 0.1s;
     }
 
-    .prestige-burn-btn.locked {
-      background: #1e293b;
-      border-color: #475569;
-      color: #64748b;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
+    .icon-btn:active { transform: scale(0.92); background: #334155; }
 
-    .prestige-burn-btn:active { transform: scale(0.94); filter: brightness(1.2); }
-
-    /* PRESTIGE MODAL DETAILS */
-    .prestige-banner-hero {
-      text-align: center;
-      background: #180c05;
-      border: 1px solid #7c2d12;
-      border-radius: 8px;
-      padding: 10px;
+    /* 3. TACTICAL MICRO-STRIP (DEF-CLERK & FUME in 20px) */
+    #threat-bar-container {
+      height: 20px;
+      padding: 0 10px;
+      background: #060912;
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    .micro-threat-group {
+      display: flex;
       align-items: center;
       gap: 4px;
+      font-size: 8px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
-    .hero-fire {
-      font-size: 30px;
-      animation: fireFlicker 1s ease-in-out infinite alternate;
-    }
+    .threat-prefix { color: var(--text-muted); }
 
-    @keyframes fireFlicker {
-      0% { transform: scale(1) rotate(-2deg); }
-      100% { transform: scale(1.12) rotate(2deg); filter: drop-shadow(0 0 10px #f97316); }
-    }
-
-    .hero-title {
-      font-size: 11.5px;
+    .threat-tier-label {
+      font-size: 7.5px;
       font-weight: 900;
-      color: #fdba74;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      padding: 1px 4px;
+      border-radius: 2px;
+      background: rgba(0, 0, 0, 0.4);
     }
 
-    .hero-desc {
-      font-size: 9px;
+    .threat-track {
+      width: 45px;
+      height: 5px;
+      background: #000;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .threat-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.25s ease-out, background-color 0.3s;
+    }
+
+    .threat-percent-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
       color: #cbd5e1;
-      line-height: 1.35;
     }
 
-    .prestige-compare-grid {
+    .micro-stats-panel {
       display: flex;
       align-items: center;
-      justify-content: space-around;
-      background: #090e1a;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 8px;
-      gap: 6px;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #cbd5e1;
+      white-space: nowrap;
     }
 
-    .prestige-col {
+    .micro-stats-panel .stat-block {
       display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 2px;
     }
 
-    .compare-tag {
-      font-size: 8px;
-      font-weight: 800;
-      color: #94a3b8;
-      letter-spacing: 0.8px;
-    }
-
-    .compare-val {
-      font-size: 13.5px;
-      font-weight: 900;
-      color: #e2e8f0;
-    }
-
-    .prestige-col.next .compare-val {
-      color: #facc15;
-      text-shadow: 0 0 10px rgba(250, 204, 21, 0.7);
-    }
-
-    .compare-arrow {
-      font-size: 17px;
-      color: #f97316;
-      font-weight: 900;
-    }
-
-    /* PRESTIGE REQUIREMENTS BOX IN MODAL */
-    .prestige-req-box {
-      background: #090e1a;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 9px 10px;
+    .micro-fume-section {
       display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .prestige-req-header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-    }
-
-    .prestige-req-title {
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #f59e0b;
-      text-transform: uppercase;
-    }
-
-    .prestige-req-badge {
-      font-size: 8px;
-      font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .prestige-req-badge.locked {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-    }
-
-    .prestige-req-badge.ready {
-      background: rgba(34, 197, 94, 0.2);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.4);
-    }
-
-    .prestige-req-item {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .req-label-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 8.5px;
-      color: #cbd5e1;
-    }
-
-    .req-name {
-      font-weight: 700;
-      color: #94a3b8;
-    }
-
-    .req-val {
-      font-weight: 800;
-      font-family: 'Courier New', Courier, monospace;
-      color: #f1f5f9;
-    }
-
-    .req-val.met {
-      color: #4ade80;
-    }
-
-    .req-progress-bar {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .req-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #f59e0b, #ef4444);
-      width: 0%;
-      transition: width 0.2s ease;
-      border-radius: 3px;
-    }
-
-    .req-progress-fill.met {
-      background: linear-gradient(90deg, #10b981, #22c55e);
-    }
-
-    .prestige-bullet-points {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      font-size: 9.5px;
-      line-height: 1.35;
-      background: #0b1120;
-      border-radius: 6px;
-      padding: 8px 10px;
-      border-left: 3px solid #f59e0b;
-    }
-
-    .bullet-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 5px;
-      color: #cbd5e1;
-    }
-
-    .bullet-icon {
-      color: #facc15;
-      font-weight: 900;
-    }
-
-    .modal-action-btn.burn-action {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      border: 1px solid #f87171;
-      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
-      color: #fff;
-    }
-
-    .modal-action-btn.burn-action:active {
-      transform: scale(0.96);
-      filter: brightness(1.2);
-    }
-
-    .modal-action-btn.burn-action.locked {
-      background: #1e293b !important;
-      border-color: #475569 !important;
-      color: #64748b !important;
-      cursor: not-allowed !important;
-      box-shadow: none !important;
-      filter: grayscale(0.8);
-      transform: none !important;
-    }
-
-    /* 3. ENHANCED DUAL-STAT STATS PANEL */
-    #stats-panel {
-      padding: 5px 10px;
-      background: #0d121f;
-      border-bottom: 1px solid #1e293b;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      align-items: center;
-      flex-shrink: 0;
-      z-index: 20;
       gap: 4px;
-    }
-
-    .stat-block { display: flex; flex-direction: column; }
-    .stat-label {
-      font-size: 7.5px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stat-value-group { display: flex; align-items: baseline; gap: 3px; }
-    #stat-redactions {
-      font-size: 18px;
-      font-weight: 900;
-      color: #38bdf8;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
-      line-height: 1.1;
-    }
-
-    #stat-vips {
-      font-size: 15px;
-      font-weight: 900;
-      color: #facc15;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
-    }
-
-    #stat-secrets {
-      font-size: 15px;
-      font-weight: 900;
-      color: #fb923c;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 8px rgba(251, 146, 60, 0.4);
-    }
-
-    #stat-rps {
-      font-size: 14px;
+      font-size: 8px;
       font-weight: 800;
-      color: #4ade80;
-      font-variant-numeric: tabular-nums;
+      color: #a855f7;
+      white-space: nowrap;
     }
 
-    .stat-badge {
-      font-size: 7.5px;
-      padding: 1px 4px;
+    .fume-track {
+      width: 40px;
+      height: 5px;
+      background: #000;
       border-radius: 3px;
-      background: #1e293b;
-      color: #f1f5f9;
-      font-weight: 700;
+      overflow: hidden;
+      border: 1px solid #334155;
     }
 
-    .stat-badge.frenzy {
-      background: #9333ea;
-      color: #fdf4ff;
-      animation: pulseBadge 0.6s infinite alternate;
+    #fume-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #06b6d4, #a855f7);
+      border-radius: 3px;
+      transition: width 0.08s linear;
     }
 
-    .stat-badge.privilege {
-      background: #f59e0b;
-      color: #000000;
-      font-weight: 900;
-      animation: pulseBadge 0.5s infinite alternate;
+    /* 4. WORKBENCH CONTAINER (Holds Desk & Store) */
+    #game-workbench {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes pulseBadge {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.08); filter: brightness(1.2); }
-    }
-
-    /* 4. MAHOGANY DESK & CENTRAL CORE DOSSIER */
+    /* CENTRAL DOSSIER VIEWPORT (Mahogany Desk) */
     #desk-viewport {
       flex: 1;
-      position: relative;
+      min-height: 0;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 4px 8px 2px;
+      position: relative;
       overflow: hidden;
+      padding: 6px 8px;
       background:
-        radial-gradient(ellipse at 50% 35%, rgba(138, 58, 28, 0.65) 0%, rgba(68, 22, 10, 0.85) 60%, rgba(20, 6, 3, 0.98) 100%),
+        radial-gradient(ellipse at 50% 30%, rgba(138, 58, 28, 0.6) 0%, rgba(55, 18, 8, 0.88) 60%, rgba(15, 4, 2, 0.98) 100%),
         repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 3px, transparent 3px, transparent 12px),
-        #2d1108;
+        var(--desk-wood);
     }
 
     .desk-mat {
       position: absolute;
       inset: 4px;
       border-radius: 8px;
-      border: 1px solid rgba(212, 175, 55, 0.22);
+      border: 1px solid rgba(212, 175, 55, 0.2);
       pointer-events: none;
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.75);
+      box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.7);
     }
 
     #dossier-wrapper {
-      position: relative;
       width: 100%;
-      max-width: 410px;
+      max-width: 440px;
       height: 100%;
-      max-height: 405px;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: crosshair;
+      position: relative;
+      z-index: 10;
     }
 
     #dossier-page {
-      position: relative;
       width: 100%;
       height: 100%;
-      background: #f4eedb;
+      background: var(--paper-cream);
       background-image:
-        radial-gradient(circle at 80% 20%, rgba(205, 175, 125, 0.3) 0%, transparent 60%),
-        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 22px;
-      border-radius: 4px;
-      box-shadow: 0 14px 26px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.15);
-      color: #1c1917;
-      padding: 8px 12px;
+        radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(240, 230, 205, 0.8) 100%),
+        repeating-linear-gradient(0deg, transparent 0px, transparent 23px, rgba(0, 0, 0, 0.035) 24px);
+      border-radius: 5px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 2px 5px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      transform-origin: center center;
-      transition: transform 0.06s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 8px 12px 6px;
+      position: relative;
       overflow: hidden;
     }
-
-    #dossier-page.clicked { transform: scale(0.985); }
 
     .paper-clip {
       position: absolute;
       top: -4px;
       left: 18px;
-      width: 16px;
-      height: 34px;
-      border: 3px solid #94a3b8;
-      border-radius: 8px 8px 0 0;
-      border-bottom: none;
-      box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      width: 12px;
+      height: 28px;
+      border: 2px solid #94a3b8;
+      border-radius: 8px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+      z-index: 15;
+      background: transparent;
       pointer-events: none;
-      z-index: 10;
     }
 
-    .dossier-header {
-      border-bottom: 2px solid #b91c1c;
-      padding-bottom: 3px;
-      margin-bottom: 5px;
+    .dossier-compact-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-shrink: 0;
+      justify-content: space-between;
+      margin-bottom: 2px;
+      padding-left: 26px;
     }
 
     .stamp-sci {
-      font-size: 9.5px;
+      font-family: 'Courier New', monospace;
+      font-size: 8px;
       font-weight: 900;
       color: #b91c1c;
-      letter-spacing: 1.2px;
-      border: 2px solid #b91c1c;
-      padding: 1px 5px;
-      text-transform: uppercase;
-      transform: rotate(-1.5deg);
-      display: inline-block;
-      box-shadow: 0 0 3px rgba(185, 28, 28, 0.4);
+      border: 1px solid #b91c1c;
+      padding: 1px 4px;
+      letter-spacing: 0.5px;
+      transform: rotate(-1deg);
     }
 
     .doc-ref {
-      font-family: "Courier New", monospace;
-      font-size: 8.5px;
-      color: #57534e;
+      font-family: 'Courier New', monospace;
+      font-size: 8px;
       font-weight: 800;
-      text-align: right;
-      line-height: 1.2;
+      color: #57534e;
     }
 
-    .doc-meta {
-      font-family: "Courier New", monospace;
-      font-size: 11px;
-      line-height: 1.3;
-      color: #1f1d1b;
-      font-weight: 700;
-      margin-bottom: 6px;
-      flex-shrink: 0;
-      letter-spacing: 0.1px;
-    }
-
-    .doc-meta strong { color: #000; }
-    .doc-watermark {
-      position: absolute;
-      right: 12px;
-      top: 45px;
-      width: 82px;
-      height: 82px;
-      opacity: 0.12;
-      pointer-events: none;
-      transform: rotate(12deg);
-    }
-
-    /* CLASSIFIED TEXT LINES */
-    #document-lines {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 2px;
-      position: relative;
-    }
-
-    .text-line {
-      position: relative;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      border-radius: 2px;
-    }
-
-    .text-line {
-      cursor: pointer;
-    }
-    .text-line:hover {
-      background: rgba(0, 0, 0, 0.03);
-    }
-    .text-line .pseudo-text {
-      font-family: "Courier New", monospace;
-      font-size: 11px;
-      color: #1f1d1b;
-      letter-spacing: 0.15px;
+    .doc-meta.compact {
+      font-family: 'Courier New', monospace;
+      font-size: 7.5px;
+      color: #78716c;
       white-space: nowrap;
       overflow: hidden;
-      width: 100%;
       text-overflow: ellipsis;
-      opacity: 0.95;
+      margin-bottom: 3px;
+      line-height: 1.1;
+    }
+
+    .crisis-fire-banner {
+      height: 20px;
+      padding: 0 8px;
+      margin-bottom: 4px;
+      font-size: 8px;
       font-weight: 800;
-      line-height: 18px;
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: space-between;
+      border-radius: 3px;
+      background: #7c2d12;
+      border: 1px solid #ea580c;
+      color: #ffedd5;
     }
-    .crit-target {
-      min-height: 16px;
-      display: inline-flex;
+
+    .crisis-fire-banner.contained {
+      background: #14532d;
+      border-color: #22c55e;
+      color: #dcfce7;
+    }
+
+    .doc-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      width: 140px;
+      height: 140px;
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #document-lines {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      position: relative;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .text-line {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13.5px;
+      font-weight: 800;
+      min-height: 28px;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 1px 5px !important;
-      cursor: pointer !important;
-      user-select: none;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin: 1px 0;
+      letter-spacing: 0.2px;
+      cursor: crosshair;
+      position: relative;
+      color: #1c1917;
+      border: 1px dashed transparent;
+      transition: background 0.1s;
+    }
+
+    .text-line:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+
+    .text-line.redacted .pseudo-text {
+      color: rgba(0, 0, 0, 0.2);
+    }
+
+    .redaction-bar {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      height: 80%;
+      background: #09090b;
+      transform-origin: left center;
+      transition: transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      border-radius: 2px;
       z-index: 10;
     }
 
-    /* DUAL TARGET CLASSES */
-    /* 1. EPSTEIN TARGET (Yellow Border) */
-    .target-epstein {
-      color: #854d0e;
-      background: #fef08a;
-      border: 1.5px dashed #ca8a04;
-      border-radius: 3px;
-      padding: 0 4px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: epsteinPulse 0.9s infinite alternate ease-in-out;
-      box-shadow: 0 0 6px rgba(202, 138, 4, 0.4);
-    }
-
-    @keyframes epsteinPulse {
-      0% { border-color: #ca8a04; background: #fef08a; color: #854d0e; box-shadow: 0 0 4px rgba(202, 138, 4, 0.4); }
-      100% { border-color: #eab308; background: #fde047; color: #713f12; box-shadow: 0 0 10px rgba(234, 179, 8, 0.7); }
-    }
-
-    /* 2. DIAPER DON TARGET (Orange/Gold Border) */
-    .target-don {
-      color: #9a3412;
-      background: #ffedd5;
-      border: 2px dashed #ea580c;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: donPulse 0.8s infinite alternate ease-in-out;
-      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
-    }
-
-    @keyframes donPulse {
-      0% { border-color: #ea580c; background: #ffedd5; color: #9a3412; transform: scale(1); }
-      100% { border-color: #f97316; background: #fed7aa; color: #7c2d12; transform: scale(1.03); box-shadow: 0 0 14px rgba(249, 115, 22, 0.9); }
-    }
-
-    /* 3. 1992 BIRTHDAY PARTY TARGET (Electric Pink/Magenta) */
-    .target-party {
-      color: #831843;
-      background: #fce7f3;
-      border: 2px dashed #ec4899;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: partyPulse 0.75s infinite alternate ease-in-out;
-      box-shadow: 0 0 9px rgba(236, 72, 153, 0.6);
-    }
-
-    @keyframes partyPulse {
-      0% { border-color: #ec4899; background: #fce7f3; color: #831843; transform: scale(1); }
-      100% { border-color: #f43f5e; background: #fbcfe8; color: #4c0519; transform: scale(1.03); box-shadow: 0 0 16px rgba(244, 63, 94, 0.85); }
-    }
-
-    /* 4. ROYAL ESCAPADE & WOKING ALIBI TARGET (Majestic Royal Violet) */
-    .target-royal {
-      color: #3b0764;
-      background: #ede9fe;
-      border: 2px dashed #8b5cf6;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: royalPulse 0.85s infinite alternate ease-in-out;
-      box-shadow: 0 0 8px rgba(139, 92, 246, 0.55);
-    }
-
-    @keyframes royalPulse {
-      0% { border-color: #8b5cf6; background: #ede9fe; color: #3b0764; }
-      100% { border-color: #a855f7; background: #ddd6fe; color: #2e1065; box-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
-    }
-
-    /* 5. BILLIONAIRE BLACK BOOK TARGET (Emerald Hush Money) */
-    .target-vip {
-      color: #064e3b;
-      background: #d1fae5;
-      border: 2px dashed #10b981;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: vipPulse 0.8s infinite alternate ease-in-out;
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.55);
-    }
-
-    @keyframes vipPulse {
-      0% { border-color: #10b981; background: #d1fae5; color: #064e3b; }
-      100% { border-color: #059669; background: #a7f3d0; color: #022c22; box-shadow: 0 0 14px rgba(5, 150, 105, 0.8); }
-    }
-
-    /* CRISIS FIRE BANNER */
-    .crisis-fire-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      border-radius: 4px;
-      padding: 3px 8px;
-      margin-bottom: 6px;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9.5px;
-      font-weight: 900;
-      color: #ef4444;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      box-shadow: inset 0 0 8px rgba(239, 68, 68, 0.1);
-      transition: all 0.25s ease;
-    }
-    .crisis-fire-banner.contained {
-      background: rgba(34, 197, 94, 0.18);
-      border-color: rgba(34, 197, 94, 0.6);
-      color: #22c55e;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
-    }
-    .crisis-targets-left {
-      font-variant-numeric: tabular-nums;
-      font-weight: 900;
-      color: #facc15;
-    }
-
-    /* DOSSIER TRANSITION ANIMATIONS */
-    .dossier-slide-out {
-      animation: dossierSlideOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
-      pointer-events: none;
-    }
-    @keyframes dossierSlideOut {
-      0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
-      35% { transform: scale(0.97) translateY(8px) rotate(1deg); opacity: 0.95; }
-      100% { transform: scale(0.85) translateY(-85px) rotate(-7deg); opacity: 0; }
-    }
-
-    .dossier-slide-in {
-      animation: dossierSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-    }
-    @keyframes dossierSlideIn {
-      0% { transform: scale(0.9) translateY(75px) rotate(5deg); opacity: 0; }
-      100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
-    }
-
-    .crit-redacted {
-      background: #000000 !important;
-      color: #000000 !important;
-      border-color: #000000 !important;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.9) !important;
-      animation: none !important;
-      pointer-events: none;
-    }
-
-    /* Regular Line Redaction Bar */
-    .redaction-bar {
-      position: absolute;
-      inset: -2px -5px;
-      background: #09090b;
-      border-radius: 2px;
-      opacity: 0;
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.08s ease;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    .redaction-bar::before {
-      content: "";
-      position: absolute;
-      left: -3px;
-      top: 0;
-      bottom: 0;
-      width: 6px;
-      background: #09090b;
-      clip-path: polygon(100% 0, 0 45%, 100% 100%);
-    }
-
-    .redaction-bar::after {
-      content: "";
-      position: absolute;
-      right: -4px;
-      top: 0;
-      bottom: 0;
-      width: 7px;
-      background: #09090b;
-      clip-path: polygon(0 0, 100% 55%, 0 100%);
-    }
-
     .text-line.redacted .redaction-bar {
-      opacity: 1;
-      transform: scaleX(1);
+      transform: scaleX(1) !important;
+    }
+
+    .crit-target {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1.5px dashed #ea580c;
+      background: rgba(249, 115, 22, 0.15);
+      color: #9a3412;
+      font-weight: 900;
+      cursor: pointer;
+      animation: targetPulse 1.2s infinite alternate;
+      z-index: 8;
+    }
+
+    .crit-target[data-type="epstein"] {
+      border-color: #eab308;
+      background: rgba(234, 179, 8, 0.18);
+      color: #854d0e;
+    }
+
+    .crit-target[data-type="don"] {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.2);
+      color: #991b1b;
+    }
+
+    .crit-target.crit-redacted {
+      background: #09090b !important;
+      color: transparent !important;
+      border-color: #09090b !important;
+      animation: none !important;
+    }
+
+    @keyframes targetPulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.04); box-shadow: 0 0 6px rgba(249, 115, 22, 0.4); }
     }
 
     #shred-stamp {
       position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      opacity: 0;
-      transform: scale(2.2) rotate(-18deg);
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 30;
-    }
-
-    #shred-stamp.active {
-      opacity: 1;
-      transform: scale(1) rotate(-12deg);
-    }
-
-    .stamp-box {
-      border: 5px solid #dc2626;
-      color: #dc2626;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(0);
+      border: 4px solid #b91c1c;
+      color: #b91c1c;
+      padding: 10px 18px;
+      font-family: 'Impact', 'Arial Black', sans-serif;
       font-size: 24px;
-      font-weight: 900;
-      padding: 6px 14px;
-      border-radius: 8px;
       text-transform: uppercase;
       letter-spacing: 2px;
-      text-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
-      background: rgba(254, 242, 242, 0.92);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       text-align: center;
+      background: rgba(247, 242, 228, 0.95);
+      border-radius: 6px;
+      box-shadow: 0 0 20px rgba(185, 28, 28, 0.5);
+      pointer-events: none;
+      z-index: 25;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .stamp-sub {
-      font-size: 9.5px;
+    #shred-stamp.stamped {
+      transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+    }
+
+    #shred-stamp .stamp-sub {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
       letter-spacing: 1px;
-      color: #991b1b;
       margin-top: 2px;
     }
 
-    /* KASH PERSISTENT PANIC DIALOGUE BUBBLE */
-    #kash-dialogue-anchor {
+    /* KASH COMPANION PILL (Corner Docked) */
+    .kash-floating-pill {
       position: absolute;
       bottom: 8px;
-      right: 12px;
+      right: 10px;
+      background: rgba(13, 21, 38, 0.92);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 20px;
+      padding: 3px 10px 3px 4px;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       gap: 6px;
+      z-index: 35;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+      max-width: 260px;
       pointer-events: none;
-      z-index: 45;
     }
 
-    #kash-avatar {
-      width: 38px;
-      height: 38px;
+    .kash-avatar-badge {
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #1e3a8a 100%);
-      border: 2px solid #60a5fa;
+      background: radial-gradient(circle, #38bdf8 0%, #1e3a8a 100%);
+      border: 1.5px solid #60a5fa;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      font-size: 11px;
       flex-shrink: 0;
     }
 
     #kash-bubble {
-      background: #ffffff;
-      color: #0f172a;
-      padding: 5px 9px;
-      border-radius: 8px 8px 0 8px;
-      font-size: 9.5px;
-      font-weight: 800;
-      line-height: 1.25;
-      max-width: 170px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      position: relative;
-      border: 1.5px solid #0284c7;
-      animation: bubbleBounce 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1;
     }
 
-    #kash-bubble::after {
-      content: "";
-      position: absolute;
-      right: -6px;
-      bottom: 4px;
-      border-width: 5px 0 5px 6px;
-      border-style: solid;
-      border-color: transparent transparent transparent #ffffff;
-    }
-
-    /* FX CANVAS & PARTICLES */
     #fx-canvas {
       position: absolute;
       inset: 0;
@@ -1393,528 +716,360 @@
       font-size: 14px;
       color: #ef4444;
       pointer-events: none;
-      animation: floatUp 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 10px rgba(239, 68, 68, 0.4);
+      animation: floatUp 0.75s forwards;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
       z-index: 45;
       white-space: nowrap;
     }
 
-    .float-text.frenzy { color: #d946ef; font-size: 17px; text-shadow: 0 0 12px rgba(217, 70, 239, 0.8); }
-    .float-text.crit { color: #fbbf24; font-size: 18px; text-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 0 2px 6px rgba(0,0,0,0.9); }
-    .float-text.boss { color: #facc15; font-size: 19px; text-shadow: 0 0 16px rgba(250, 204, 21, 1), 0 2px 8px rgba(0,0,0,0.9); font-weight: 900; }
-    .float-text.combo { color: #38bdf8; font-size: 20px; text-shadow: 0 0 20px rgba(56, 189, 248, 1); font-weight: 900; }
+    .float-text.crit { color: #facc15; font-size: 17px; }
+    .float-text.boss { color: #f97316; font-size: 18px; }
+    .float-text.frenzy { color: #d946ef; font-size: 18px; }
+    .float-text.combo { color: #38bdf8; font-size: 19px; }
 
     @keyframes floatUp {
-      0% { opacity: 1; transform: translate3d(0, 0, 0) scale(0.75); }
-      30% { transform: translate3d(0, -20px, 0) scale(1.15); }
+      0% { opacity: 1; transform: translate3d(0, 0, 0) scale(0.8); }
+      30% { transform: translate3d(0, -18px, 0) scale(1.1); }
       100% { opacity: 0; transform: translate3d(0, -45px, 0) scale(1); }
     }
 
-    /* 5. MARKER FUME COMBO METER */
-    #fume-section {
-      width: 100%;
-      padding: 4px 12px 4px;
-      background: #0f172a;
-      border-top: 1px solid #1e293b;
-      border-bottom: 1px solid #1e293b;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-
-    .fume-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .fume-title { display: flex; align-items: center; gap: 5px; color: #a855f7; }
-    .fume-title .toxic-icon { font-size: 11px; animation: spinToxic 6s linear infinite; }
-
-    @keyframes spinToxic {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #fume-status-text { color: #cbd5e1; font-variant-numeric: tabular-nums; }
-    .fume-track {
-      width: 100%;
-      height: 8px;
-      background: #020617;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid #334155;
-      position: relative;
-    }
-
-    #fume-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #10b981 0%, #06b6d4 40%, #a855f7 75%, #ec4899 100%);
-      border-radius: 6px;
-      transition: width 0.08s linear;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-    }
-
-    #app-container.frenzy-active #fume-fill {
-      background: linear-gradient(90deg, #ec4899, #f43f5e, #eab308, #22c55e);
-      animation: rainbowGlow 0.4s linear infinite alternate;
-    }
-
-    @keyframes rainbowGlow {
-      0% { filter: brightness(1); }
-      100% { filter: brightness(1.4); }
-    }
-
-    /* 6. UPGRADE DRAWER (CHAOS WORKFORCE) */
+    /* 5. UPGRADES STORE / DRAWER */
     #upgrades-drawer {
-      height: 235px;
-      background: #0a0f1d;
+      background: #080d19;
       border-top: 1px solid #1e293b;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      z-index: 30;
-      transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 40;
       position: relative;
+      transition: height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    #upgrades-drawer.expanded { height: 380px; }
-    #upgrades-drawer.collapsed { height: 42px; }
 
     .drawer-handle-bar {
-      height: 36px;
-      padding: 0 12px;
+      height: 40px;
+      padding: 0 10px;
       background: linear-gradient(180deg, #162035 0%, #0e1626 100%);
       border-bottom: 1px solid #1f2a40;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 6px;
       cursor: pointer;
-      user-select: none;
       flex-shrink: 0;
+      user-select: none;
     }
-
-    .drawer-handle-bar:active { background: #19243c; }
 
     .drawer-title-group {
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 800;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .drawer-folder-icon { font-size: 12px; }
+
+    .drawer-title-text {
+      font-size: 10px;
+      font-weight: 900;
       color: #f1f5f9;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
-    .drawer-title-group .dept-badge {
-      background: #ea580c;
-      color: #fff;
-      font-size: 8px;
-      padding: 1px 5px;
+    .drawer-toggle-btn {
+      background: #334155;
+      color: #f1f5f9;
+      padding: 2px 7px;
+      font-size: 9px;
+      font-weight: 800;
       border-radius: 4px;
+    }
+
+    /* QUICK-BUY BUTTON (Highlighted in Bottom Bar) */
+    .quick-buy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #1e293b;
+      border: 1.5px solid #475569;
+      color: #94a3b8;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 9.5px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+      white-space: nowrap;
+      max-width: 190px;
+      flex-shrink: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .quick-buy-btn.can-buy {
+      background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #15803d 100%);
+      border-color: #4ade80;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
+    }
+
+    .quick-buy-btn.can-buy:active { transform: scale(0.94); filter: brightness(1.2); }
+    .quick-buy-btn.locked { opacity: 0.65; cursor: not-allowed; }
+
+    .qb-badge {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8px;
       font-weight: 900;
+    }
+
+    .qb-icon { font-size: 11px; }
+
+    .qb-name {
+      font-weight: 800;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .qb-cost {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: #fef08a;
+      font-size: 9px;
     }
 
     .drawer-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      color: #94a3b8;
-      font-weight: 700;
+      gap: 4px;
+      flex-shrink: 0;
     }
 
-    .drawer-toggle-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      width: 22px;
-      height: 22px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
+    .drawer-rps-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #4ade80;
+      white-space: nowrap;
     }
 
-    #upgrades-list {
-      flex: 1;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding: 6px 10px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: #080d1a;
-    }
-
-    #upgrades-list::-webkit-scrollbar { width: 5px; }
-    #upgrades-list::-webkit-scrollbar-thumb { background: #25334d; border-radius: 4px; }
-
-    .upgrade-card {
-      background: #111827;
-      border: 1px solid #1f293d;
+    /* PRESTIGE CARD INSIDE DRAWER */
+    .prestige-card {
+      margin: 6px 10px 4px;
+      background: linear-gradient(135deg, #240c03 0%, #120601 100%);
+      border: 1px solid #f97316;
       border-radius: 6px;
       padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+      flex-shrink: 0;
+    }
+
+    .prestige-card-icon { font-size: 20px; }
+    .prestige-card-content { flex: 1; min-width: 0; }
+
+    .prestige-card-title {
+      font-size: 10px;
+      font-weight: 900;
+      color: #fed7aa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .prestige-card-sub {
+      font-size: 8px;
+      color: #fdba74;
+      line-height: 1.2;
+    }
+
+    .prestige-card-req {
+      font-size: 7.5px;
+      font-weight: 800;
+      color: #f87171;
+      margin-top: 2px;
+    }
+
+    .prestige-card-req.ready { color: #4ade80; }
+
+    .prestige-burn-btn {
+      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+      border: 1px solid #fb923c;
+      color: #fff;
+      font-size: 8.5px;
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
+    }
+
+    .prestige-burn-btn.locked {
+      background: #1e293b;
+      border-color: #475569;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* SHOP SEIZED BANNER */
+    .shop-penalty-banner {
+      background: rgba(220, 38, 38, 0.25);
+      border: 1px solid #ef4444;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fee2e2;
+    }
+
+    .penalty-headline {
+      font-weight: 800;
+      font-size: 8.5px;
+      color: #fca5a5;
+    }
+
+    .penalty-subtext {
+      font-size: 7.5px;
+      color: #cbd5e1;
+    }
+
+    /* UPGRADES LIST (50 Tiers) */
+    #upgrades-list {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 6px 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      -webkit-overflow-scrolling: touch;
+      contain: content;
+    }
+
+    .upgrade-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
       transition: background 0.15s, border-color 0.15s;
     }
 
-    .upgrade-card.affordable { border-color: #2563eb; background: #131d33; }
-    .upgrade-left { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; }
+    .upgrade-card.affordable {
+      background: #131d33;
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .upgrade-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
 
     .upgrade-icon-box {
       font-size: 20px;
       width: 34px;
       height: 34px;
+      border-radius: 6px;
+      background: #1e293b;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #090e1a;
-      border-radius: 6px;
-      border: 1px solid #1e293b;
       flex-shrink: 0;
     }
 
-    .upgrade-text-box { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .upgrade-text-box {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+
     .upgrade-name {
       font-size: 11px;
       font-weight: 800;
       color: #f8fafc;
-      letter-spacing: 0.2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .upgrade-desc {
-      font-size: 8.5px;
-      font-weight: 500;
+      font-size: 8px;
       color: #94a3b8;
       line-height: 1.25;
-      margin-top: 1px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin: 1px 0;
     }
 
     .upgrade-stats-row {
       display: flex;
-      align-items: center;
       gap: 8px;
-      margin-top: 2px;
-      font-size: 8.5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
       font-weight: 700;
     }
 
     .upgrade-rate { color: #4ade80; }
     .upgrade-total-contrib { color: #38bdf8; }
 
-    .upgrade-action-box { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
-    .upgrade-owned-badge { font-size: 10.5px; font-weight: 800; color: #cbd5e1; font-variant-numeric: tabular-nums; }
+    .upgrade-action-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .upgrade-owned-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #94a3b8;
+    }
 
     .buy-btn {
       background: #1e293b;
       border: 1px solid #475569;
-      color: #94a3b8;
+      color: #64748b;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
       font-weight: 800;
-      padding: 5px 8px;
+      padding: 5px 10px;
       border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      min-width: 68px;
-      justify-content: center;
-      transition: all 0.1s;
-      font-variant-numeric: tabular-nums;
+      cursor: not-allowed;
+      transition: all 0.12s;
+      white-space: nowrap;
     }
 
     .buy-btn.can-buy {
-      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-      border-color: #60a5fa;
+      background: linear-gradient(180deg, #15803d 0%, #166534 100%);
+      border-color: #4ade80;
       color: #ffffff;
-      box-shadow: 0 2px 7px rgba(37, 99, 235, 0.45);
-    }
-
-    .buy-btn.can-buy:active { transform: scale(0.93); filter: brightness(1.2); }
-    .buy-btn:disabled { cursor: not-allowed; opacity: 0.45; }
-
-    /* 7. ARCADE MODALS */
-    .modal-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(4, 7, 13, 0.85);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      z-index: 150;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-    }
-
-    .modal-backdrop.active { display: flex; animation: modalFadeIn 0.2s ease-out; }
-
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .modal-window {
-      width: 100%;
-      max-width: 380px;
-      background: #0f172a;
-      border: 2px solid #334155;
-      border-radius: 10px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(56, 189, 248, 0.15);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .modal-header {
-      padding: 10px 14px;
-      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-      border-bottom: 1px solid #334155;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-title {
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .modal-title.incident { color: #f59e0b; }
-    .modal-title.settings { color: #38bdf8; }
-
-    .modal-close-btn {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      font-size: 16px;
       cursor: pointer;
-      font-weight: 900;
-      padding: 2px 6px;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
     }
 
-    .modal-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; }
-    .incident-badge {
-      font-family: "Courier New", monospace;
-      font-size: 9px;
-      font-weight: 800;
-      color: #ef4444;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 3px 6px;
-      border-radius: 4px;
-      display: inline-block;
-      align-self: flex-start;
-    }
+    .buy-btn.can-buy:active { transform: scale(0.94); filter: brightness(1.2); }
 
-    .incident-message {
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      line-height: 1.45;
-      color: #e2e8f0;
-      background: #090e1a;
-      padding: 12px;
-      border-radius: 6px;
-      border-left: 3px solid #f59e0b;
-    }
-
-    .offline-gain-display {
-      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-      border: 1px solid #6366f1;
-      border-radius: 8px;
-      padding: 12px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .offline-gain-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #a5b4fc; text-transform: uppercase; }
-    .offline-gain-val { font-size: 26px; font-weight: 900; color: #38bdf8; text-shadow: 0 0 14px rgba(56, 189, 248, 0.5); }
-
-    .modal-action-btn {
-      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-      color: #fff;
-      border: 1px solid #60a5fa;
-      padding: 10px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-      transition: all 0.1s;
-    }
-
-    .modal-action-btn:active { transform: scale(0.96); }
-
-    .settings-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 10px;
-      background: #090e1a;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .settings-danger-box {
-      border: 1px solid #991b1b;
-      background: rgba(153, 27, 27, 0.15);
-      border-radius: 6px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .settings-danger-title { font-size: 10px; font-weight: 900; color: #ef4444; letter-spacing: 1px; text-transform: uppercase; }
-    .danger-btn {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      color: #fff;
-      border: 1px solid #f87171;
-      padding: 8px 12px;
-      border-radius: 5px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
-      transition: all 0.1s;
-    }
-
-    .danger-btn:active { transform: scale(0.95); filter: brightness(1.2); }
-
-    /* ========================================= */
-    /* BUREAUCRATIC THREAT LEVEL & RAID STYLING  */
-    /* ========================================= */
-    #threat-bar-container {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin: 6px 0 8px 0;
-      box-sizing: border-box;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .threat-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .threat-title-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .threat-title {
-      color: #94a3b8;
-      text-transform: uppercase;
-    }
-
-    .threat-tier-label {
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 800;
-      background: rgba(0, 0, 0, 0.4);
-      transition: color 0.3s ease;
-    }
-
-    .threat-percent-text {
-      font-family: 'JetBrains Mono', monospace;
-      color: #f1f5f9;
-      font-weight: 800;
-    }
-
-    .threat-track {
-      width: 100%;
-      height: 9px;
-      background: rgba(0, 0, 0, 0.55);
-      border-radius: 5px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
-    }
-
-    .threat-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
-    }
-
-    @keyframes threatPulseRed {
-      0%, 100% {
-        opacity: 1;
-        box-shadow: 0 0 12px #ef4444;
-      }
-      50% {
-        opacity: 0.35;
-        box-shadow: 0 0 4px #ef4444;
-      }
-    }
-
-    .threat-flashing {
-      animation: threatPulseRed 0.6s infinite ease-in-out;
-    }
-
-    /* Screen vignette flashes red during raid */
-    .raid-active::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9998;
-      box-shadow: inset 0 0 70px rgba(239, 68, 68, 0.8), inset 0 0 140px rgba(220, 38, 38, 0.5);
-      animation: raidVignettePulse 0.5s infinite alternate ease-in-out;
-    }
-
-    @keyframes raidVignettePulse {
-      from {
-        box-shadow: inset 0 0 40px rgba(239, 68, 68, 0.4), inset 0 0 90px rgba(220, 38, 38, 0.3);
-      }
-      to {
-        box-shadow: inset 0 0 90px rgba(239, 68, 68, 0.9), inset 0 0 180px rgba(220, 38, 38, 0.7);
-      }
-    }
-
-    /* Raid QTE Modal Overlay */
+    /* RAID QTE MODAL & VIGNETTE */
     .raid-overlay {
       position: fixed;
       inset: 0;
@@ -1922,15 +1077,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(15, 0, 0, 0.82);
+      background: rgba(15, 0, 0, 0.85);
       backdrop-filter: blur(5px);
       padding: 16px;
-      box-sizing: border-box;
     }
 
-    .raid-overlay.hidden {
-      display: none !important;
-    }
+    .raid-overlay.hidden { display: none !important; }
 
     .raid-modal {
       background: linear-gradient(180deg, #240b0e 0%, #17070a 100%);
@@ -1940,16 +1092,10 @@
       width: 100%;
       max-width: 440px;
       text-align: center;
-      box-shadow: 0 0 50px rgba(239, 68, 68, 0.5), 0 20px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 50px rgba(239, 68, 68, 0.5);
       display: flex;
       flex-direction: column;
       gap: 14px;
-      animation: popInModal 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popInModal {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
     }
 
     .raid-header {
@@ -1964,26 +1110,6 @@
       font-size: 1.35rem;
       font-weight: 900;
       color: #fee2e2;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
-    }
-
-    .raid-siren-icon {
-      font-size: 1.6rem;
-      animation: sirenShake 0.4s infinite alternate ease-in-out;
-    }
-
-    @keyframes sirenShake {
-      from { transform: rotate(-15deg) scale(1); }
-      to { transform: rotate(15deg) scale(1.15); }
-    }
-
-    .raid-subtext {
-      margin: 0;
-      font-size: 0.85rem;
-      color: #fca5a5;
-      line-height: 1.35;
     }
 
     .raid-timer-section {
@@ -2004,1133 +1130,301 @@
       color: #fecaca;
     }
 
-    .raid-timer-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem;
-      color: #fbbf24;
-    }
-
     .raid-timer-track {
       width: 100%;
       height: 12px;
       background: rgba(0, 0, 0, 0.6);
       border-radius: 6px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .raid-timer-fill {
       height: 100%;
       background: linear-gradient(90deg, #ef4444, #f59e0b);
       border-radius: 6px;
-      transition: width 0.1s linear;
     }
 
     .raid-incinerate-btn {
-      background: linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #dc2626 100%);
-      color: #ffffff;
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      color: #fff;
       border: 2px solid #fca5a5;
       border-radius: 12px;
       padding: 16px 20px;
       font-size: 1.05rem;
       font-weight: 900;
-      letter-spacing: 0.5px;
       cursor: pointer;
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform 0.05s ease, filter 0.1s ease;
     }
 
-    .raid-incinerate-btn:active {
-      transform: scale(0.96);
-      filter: brightness(1.2);
-    }
+    .raid-incinerate-btn:active { transform: scale(0.96); filter: brightness(1.2); }
 
-    .raid-stakes-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 10px;
-    }
-
-    .raid-stakes-info .win-stake {
-      color: #86efac;
-    }
-
-    .raid-stakes-info .fail-stake {
-      color: #fca5a5;
-    }
-
-    /* Shop lock & penalty styling */
-    .shop-penalty-banner {
-      background: rgba(220, 38, 38, 0.25);
-      border: 1px solid #ef4444;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
+    /* MODAL WINDOWS (Offline, Settings, Prestige) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      z-index: 100;
       display: flex;
       align-items: center;
-      gap: 10px;
-      color: #fee2e2;
-    }
-
-    .shop-penalty-banner .penalty-icon {
-      font-size: 1.4rem;
-    }
-
-    .shop-penalty-banner .penalty-headline {
-      font-weight: 800;
-      font-size: 0.8rem;
-      color: #fca5a5;
-      display: block;
-    }
-
-    .shop-penalty-banner .penalty-subtext {
-      font-size: 0.72rem;
-      color: #cbd5e1;
-    }
-
-    .shop-locked #upgrades-list,
-    .shop-locked .generator-card,
-    .shop-locked .buy-btn {
-      pointer-events: none !important;
-      opacity: 0.4 !important;
-      filter: grayscale(0.85) !important;
-      cursor: not-allowed !important;
-    }
-
-    /* Drawer Scroll Optimization for 50 items */
-    #upgrades-drawer {
-      contain: content;
-    }
-
-    #upgrades-list {
-      contain: content;
-      -webkit-overflow-scrolling: touch;
-      will-change: scroll-position;
-      overscroll-behavior: contain;
-    }
-  
-  
-    /* ==================================================== */
-    /* POLISHED TACTICAL COMMAND DECK & LAYOUT REDESIGN     */
-    /* ==================================================== */
-    #header {
-      height: 40px;
-      padding: 0 10px;
-      background: linear-gradient(180deg, #151d30 0%, #0c1220 100%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      z-index: 25;
-    }
-
-    .header-branding {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      min-width: 0;
-    }
-
-    .agency-title {
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #f8fafc;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .agency-subbadge {
-      font-size: 7.5px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #facc15;
-      background: rgba(250, 204, 21, 0.12);
-      border: 1px solid rgba(250, 204, 21, 0.35);
-      padding: 1px 5px;
-      border-radius: 3px;
-      white-space: nowrap;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-    }
-
-    .header-prestige-btn {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      border: 1px solid #f87171;
-      color: #ffffff;
-      font-size: 8px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      padding: 3px 7px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
-      white-space: nowrap;
-      transition: transform 0.1s, filter 0.1s;
-    }
-
-    .header-prestige-btn:active { transform: scale(0.93); filter: brightness(1.2); }
-    .header-prestige-btn.locked {
-      background: #1e293b;
-      border-color: #475569;
-      color: #94a3b8;
-      box-shadow: none;
-    }
-
-    .header-prestige-badge {
-      display: inline-flex;
-      align-items: center;
-      background: linear-gradient(135deg, #b45309 0%, #f59e0b 28%, #fef08a 50%, #f59e0b 72%, #b45309 100%);
-      background-size: 200% auto;
-      color: #0b101c;
-      font-size: 7.5px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      border: 1px solid #fde047;
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
-      cursor: pointer;
-      white-space: nowrap;
-      animation: shineGoldBadge 2.5s linear infinite;
-    }
-
-    /* TACTICAL STATUS STRIP (THREAT + CLEARANCE COMBINED) */
-    #threat-bar-container {
-      height: 26px;
-      padding: 0 10px;
-      background: #090e1b;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      flex-shrink: 0;
-      z-index: 20;
-      margin: 0 !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-    }
-
-    .threat-tactical-left {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
-      font-size: 9px;
-      font-weight: 800;
-    }
-
-    .threat-warning-icon { font-size: 10px; }
-    .threat-prefix { color: #94a3b8; letter-spacing: 0.5px; }
-
-    .threat-tier-label {
-      font-size: 8px;
-      font-weight: 900;
-      padding: 1px 4px;
-      border-radius: 3px;
-      background: rgba(0, 0, 0, 0.5);
-      letter-spacing: 0.4px;
-    }
-
-    .threat-gauge-cluster {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex: 1;
-      max-width: 140px;
-      min-width: 60px;
-    }
-
-    .threat-track {
-      width: 100%;
-      height: 6px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 3px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .threat-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.25s ease-out, background-color 0.3s;
-    }
-
-    .threat-percent-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8px;
-      font-weight: 800;
-      color: #e2e8f0;
-      min-width: 24px;
-      text-align: right;
-    }
-
-    .threat-tactical-right, #clearance-bar {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
-      padding: 0 !important;
-      background: transparent !important;
-      border: none !important;
-    }
-
-    .clearance-shield { font-size: 10px; }
-    .clearance-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
-      font-weight: 900;
-      color: #facc15;
-      text-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
-    }
-
-    /* COMPACT STATS HUD */
-    #stats-panel {
-      height: 38px;
-      padding: 0 10px;
-      background: rgba(13, 18, 31, 0.95);
-      border-bottom: 1px solid #1e293b;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-
-    .stat-block {
-      display: flex;
-      flex-direction: column;
       justify-content: center;
-      min-width: 0;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
     }
 
-    .stat-block.rps-block {
-      text-align: right;
-      align-items: flex-end;
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    .stat-label {
-      font-size: 7px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      color: #64748b;
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stat-value-group {
-      display: flex;
-      align-items: baseline;
-      gap: 3px;
-    }
-
-    #stat-redactions {
-      font-size: 15px;
-      font-weight: 900;
-      color: #38bdf8;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-    }
-
-    #stat-vips {
-      font-size: 13px;
-      font-weight: 900;
-      color: #facc15;
-      line-height: 1;
-    }
-
-    #stat-secrets {
-      font-size: 13px;
-      font-weight: 900;
-      color: #fb923c;
-      line-height: 1;
-    }
-
-    #stat-rps {
-      font-size: 13px;
-      font-weight: 900;
-      color: #4ade80;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-    }
-
-    .stat-icon { font-size: 9px; }
-
-    /* FUME GAUGE SECTION */
-    #fume-section {
-      height: 22px;
-      padding: 0 10px;
-      background: #090e1a;
-      border-top: 1px solid #1e293b;
-      border-bottom: 1px solid #1e293b;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-      z-index: 25;
-    }
-
-    .fume-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      white-space: nowrap;
-      font-size: 8px;
-      font-weight: 800;
-      min-width: 130px;
-    }
-
-    .fume-title {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      color: #a855f7;
-    }
-
-    .toxic-icon { font-size: 9px; }
-
-    .fume-track {
-      flex: 1;
-      height: 6px;
-      background: #020617;
-      border-radius: 3px;
-      overflow: hidden;
+    .modal-window {
+      background: #0f172a;
       border: 1px solid #334155;
-    }
-
-    /* CHIEF KASH PATEL BUREAU INTERCOM BAR */
-    #kash-briefing-bar {
-      height: 30px;
-      background: #0d1526;
-      border-bottom: 1px solid #1e293b;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      gap: 8px;
-      flex-shrink: 0;
-      z-index: 25;
-    }
-
-    .kash-avatar-badge {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #1e3a8a 100%);
-      border: 1.5px solid #60a5fa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      flex-shrink: 0;
-      box-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
-    }
-
-    .kash-message-container {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      min-width: 0;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .kash-callsign {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8px;
-      font-weight: 900;
-      color: #38bdf8;
-      letter-spacing: 0.6px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    #kash-bubble {
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
-      font-size: 8.5px;
-      font-weight: 700;
-      color: #e2e8f0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1;
-      background: transparent !important;
-      padding: 0 !important;
-      box-shadow: none !important;
-      border: none !important;
-      max-width: 100% !important;
-    }
-
-    #kash-bubble::after {
-      display: none !important;
-    }
-
-    /* DRAWER HANDLE BAR & COLLISION FIX */
-    .drawer-handle-bar {
-      height: 34px;
-      padding: 0 10px;
-      background: linear-gradient(180deg, #162035 0%, #0e1626 100%);
-      border-bottom: 1px solid #1f2a40;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-      flex-shrink: 0;
-      gap: 8px;
-    }
-
-    .drawer-title-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      min-width: 0;
-      flex-shrink: 1;
-      overflow: hidden;
-    }
-
-    .drawer-folder-icon { font-size: 11px; }
-
-    .drawer-title-text {
-      font-size: 9.5px;
-      font-weight: 900;
-      color: #f1f5f9;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .drawer-title-group .dept-badge {
-      background: #ea580c;
-      color: #fff;
-      font-size: 7px;
-      padding: 1px 4px;
-      border-radius: 3px;
-      font-weight: 900;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .drawer-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-
-    .drawer-rps-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      font-weight: 800;
-      color: #4ade80;
-    }
-
-    /* RESPONSIVE UPGRADES DRAWER HEIGHTS */
-    #upgrades-drawer {
-      height: 185px;
-      background: #080d19;
-      border-top: 1px solid #1e293b;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      z-index: 30;
-      transition: height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-
-    #upgrades-drawer.expanded { height: 380px; }
-    #upgrades-drawer.collapsed { height: 34px; }
-
-    /* PRESTIGE CARD INSIDE DRAWER */
-    .prestige-card {
-      margin: 6px 10px 4px;
-      background: linear-gradient(135deg, #240c03 0%, #120601 100%);
-      border: 1px solid #f97316;
-      border-radius: 6px;
-      padding: 6px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
-      flex-shrink: 0;
-    }
-
-    /* DOSSIER & DESK EXPANSION */
-    #desk-viewport {
-      flex: 1;
-      min-height: 0;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 8px;
-      overflow: hidden;
-    }
-
-    #dossier-wrapper {
-      position: relative;
+      border-radius: 12px;
       width: 100%;
       max-width: 420px;
-      height: 100%;
-      max-height: 480px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: crosshair;
-    }
-
-    #dossier-page {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: #f7f3e4;
-      border-radius: 4px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 2px 5px rgba(0,0,0,0.4);
+      max-height: 85vh;
       display: flex;
       flex-direction: column;
-      padding: 10px 14px;
-      box-sizing: border-box;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
       overflow: hidden;
     }
 
-    #document-lines {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      overflow: hidden;
-    }
-
-    .crisis-fire-banner {
-      margin-bottom: 6px;
-      padding: 3px 8px;
-      font-size: 8.5px;
+    .modal-header {
+      padding: 12px 16px;
+      background: #1e293b;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-radius: 3px;
-    }
-  
-
-    /* ==================================================== */
-    /* MOBILE-FIRST ULTRA-COMPACT HUD & EXPANSIVE DOSSIER   */
-    /* ==================================================== */
-    #news-chyron {
-      height: 20px !important;
-      font-size: 9.5px !important;
+      border-bottom: 1px solid #334155;
     }
 
-    #header {
-      height: 38px !important;
-      padding: 0 8px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 6px !important;
-      background: #0d1322 !important;
+    .modal-title {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .header-branding .agency-title {
-      font-size: 13.5px !important;
-      letter-spacing: 0.5px !important;
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 2px 6px;
     }
 
-    .header-telemetry {
-      display: flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      background: rgba(0, 0, 0, 0.45) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      border-radius: 6px !important;
-      padding: 2px 7px !important;
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .telemetry-currency {
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 3px !important;
-      font-size: 13.5px !important;
-      font-weight: 900 !important;
-      color: #38bdf8 !important;
-      font-family: 'JetBrains Mono', monospace !important;
+    .modal-action-btn {
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+      border: 1px solid #60a5fa;
+      color: #fff;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
 
-    .telemetry-currency .curr-icon { font-size: 11px !important; }
-
-    .telemetry-rps {
-      display: flex !important;
-      align-items: center !important;
-      gap: 2px !important;
-      font-size: 11.5px !important;
-      font-weight: 800 !important;
-      color: #4ade80 !important;
-      font-family: 'JetBrains Mono', monospace !important;
-      border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
-      padding-left: 6px !important;
+    .modal-action-btn.burn-action {
+      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+      border-color: #fb923c;
+      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
     }
 
-    .telemetry-rps .rps-icon { font-size: 9px !important; color: #facc15 !important; }
-
-    .header-actions {
-      display: flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-    }
-
-    .header-prestige-btn {
-      padding: 2px 6px !important;
-      font-size: 8px !important;
-    }
-
-    /* 3. TACTICAL MICRO-STRIP (Height: 22px) */
-    #threat-bar-container {
-      height: 22px !important;
-      padding: 0 8px !important;
-      background: #060a14 !important;
-      border-bottom: 1px solid #1e293b !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 6px !important;
-      margin: 0 !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-    }
-
-    .micro-threat-group {
-      display: flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-      font-size: 8px !important;
-      font-weight: 800 !important;
-    }
-
-    .micro-threat-group .threat-prefix {
-      color: #94a3b8 !important;
-      letter-spacing: 0.4px !important;
-    }
-
-    .micro-threat-group .threat-tier-label {
-      font-size: 7.5px !important;
-      padding: 1px 4px !important;
-      border-radius: 2px !important;
-      font-weight: 900 !important;
-    }
-
-    .micro-threat-group .threat-track {
-      width: 45px !important;
-      height: 5px !important;
-      background: #000 !important;
-      border-radius: 3px !important;
-      overflow: hidden !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-
-    .micro-threat-group .threat-percent-text {
-      font-family: 'JetBrains Mono', monospace !important;
-      font-size: 8px !important;
-      font-weight: 800 !important;
-      color: #cbd5e1 !important;
-    }
-
-    .micro-stats-panel {
-      display: flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-      height: auto !important;
-    }
-
-    .micro-stats-panel .stat-block {
-      display: flex !important;
-      align-items: center !important;
-      gap: 2px !important;
-      font-family: 'JetBrains Mono', monospace !important;
-      font-size: 9px !important;
-      font-weight: 800 !important;
-      color: #f1f5f9 !important;
-    }
-
-    .micro-stats-panel .stat-icon { font-size: 9px !important; }
-
-    .micro-fume-section {
-      display: flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-      height: auto !important;
-      font-size: 8px !important;
-      font-weight: 800 !important;
-      color: #a855f7 !important;
-    }
-
-    .micro-fume-section .toxic-icon { font-size: 8.5px !important; }
-    .micro-fume-section #fume-status-text {
-      font-family: 'JetBrains Mono', monospace !important;
-      font-size: 8px !important;
-      color: #cbd5e1 !important;
-    }
-
-    .micro-fume-section .fume-track {
-      width: 40px !important;
-      height: 5px !important;
-      background: #000 !important;
-      border-radius: 3px !important;
-      overflow: hidden !important;
-      border: 1px solid #334155 !important;
-    }
-
-    /* 4. EXPANSIVE FULL-VIEW DOSSIER */
-    #desk-viewport {
-      flex: 1 !important;
-      height: 100% !important;
-      min-height: 0 !important;
-      padding: 4px 6px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      position: relative !important;
-      overflow: hidden !important;
-    }
-
-    #dossier-wrapper {
-      width: 100% !important;
-      max-width: 430px !important;
-      height: 100% !important;
-      max-height: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
-    #dossier-page {
-      width: 100% !important;
-      height: 100% !important;
-      background: #f7f3e4 !important;
-      border-radius: 5px !important;
-      padding: 8px 12px 6px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 2px 4px rgba(0,0,0,0.3) !important;
-      box-sizing: border-box !important;
-      overflow: hidden !important;
-    }
-
-    .dossier-compact-header {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      margin-bottom: 2px !important;
-    }
-
-    .stamp-sci {
-      font-family: 'Courier New', monospace !important;
-      font-size: 8px !important;
-      font-weight: 900 !important;
-      color: #b91c1c !important;
-      border: 1px solid #b91c1c !important;
-      padding: 1px 4px !important;
-      letter-spacing: 0.5px !important;
-      transform: rotate(-1deg) !important;
-    }
-
-    .doc-ref {
-      font-family: 'Courier New', monospace !important;
-      font-size: 8px !important;
-      font-weight: 800 !important;
-      color: #57534e !important;
-      letter-spacing: 0.5px !important;
-    }
-
-    .doc-meta.compact {
-      font-family: 'Courier New', monospace !important;
-      font-size: 7.5px !important;
-      color: #78716c !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      margin-bottom: 3px !important;
-      line-height: 1.1 !important;
-    }
-
-    .crisis-fire-banner {
-      height: 20px !important;
-      padding: 0 6px !important;
-      margin-bottom: 4px !important;
-      font-size: 8px !important;
-      font-weight: 800 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      border-radius: 3px !important;
-    }
-
-    #document-lines {
-      flex: 1 !important;
-      min-height: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: space-evenly !important;
-      overflow: hidden !important;
-    }
-
-    .text-line {
-      font-size: 13.5px !important;
-      font-family: 'Courier New', Courier, monospace !important;
-      font-weight: 800 !important;
-      min-height: 30px !important;
-      display: flex !important;
-      align-items: center !important;
-      padding: 2px 6px !important;
-      border-radius: 3px !important;
-      margin: 1px 0 !important;
-      letter-spacing: 0.3px !important;
-      user-select: none !important;
-      -webkit-tap-highlight-color: transparent !important;
-      cursor: pointer !important;
-    }
-
-    .crit-target {
-      padding: 2px 5px !important;
-      font-size: 13.5px !important;
-      border-radius: 3px !important;
-      cursor: pointer !important;
-    }
-
-    /* Kash Floating Pill in Desk Corner */
-    .kash-floating-pill {
-      position: absolute !important;
-      bottom: 8px !important;
-      right: 10px !important;
-      background: rgba(13, 21, 38, 0.92) !important;
-      border: 1px solid rgba(56, 189, 248, 0.4) !important;
-      border-radius: 20px !important;
-      padding: 3px 10px 3px 4px !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      z-index: 35 !important;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.6) !important;
-      max-width: 240px !important;
-      pointer-events: none !important;
-    }
-
-    .kash-floating-pill .kash-avatar-badge {
-      width: 20px !important;
-      height: 20px !important;
-      border-radius: 50% !important;
-      background: radial-gradient(circle, #38bdf8 0%, #1e3a8a 100%) !important;
-      border: 1.5px solid #60a5fa !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      font-size: 11px !important;
-      flex-shrink: 0 !important;
-    }
-
-    .kash-floating-pill #kash-bubble {
-      font-family: 'JetBrains Mono', monospace !important;
-      font-size: 8px !important;
-      font-weight: 700 !important;
-      color: #e2e8f0 !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      line-height: 1 !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-    }
-
-    /* 5. UPGRADES DRAWER (MOBILE BOTTOM SHEET) */
-    #upgrades-drawer {
-      transition: height 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      background: #080d19 !important;
-      border-top: 1px solid #334155 !important;
-      flex-shrink: 0 !important;
-      z-index: 40 !important;
-      position: relative !important;
-    }
-
-    #upgrades-drawer.collapsed {
-      height: 38px !important;
-    }
-
-    #upgrades-drawer.expanded {
-      height: 380px !important;
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
-    }
-
-    .drawer-handle-bar {
-      height: 38px !important;
-      padding: 0 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      cursor: pointer !important;
-      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
-    }
-
-    .drawer-title-group .drawer-title-text {
-      font-size: 10px !important;
-      font-weight: 900 !important;
-      letter-spacing: 0.6px !important;
-    }
-
-    .drawer-actions .drawer-toggle-btn {
-      background: #334155 !important;
-      color: #f1f5f9 !important;
-      padding: 2px 8px !important;
-      width: auto !important;
-      height: 22px !important;
-      font-size: 9.5px !important;
-      font-weight: 800 !important;
-      border-radius: 4px !important;
-    }
-  
-
-    /* ==================================================== */
-    /* QUICK-BUY BUTTON & HEADER FIXES                     */
-    /* ==================================================== */
-    .quick-buy-btn {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 4px !important;
+    .modal-action-btn.locked {
       background: #1e293b !important;
-      border: 1.5px solid #475569 !important;
-      color: #94a3b8 !important;
-      padding: 3px 8px !important;
-      border-radius: 6px !important;
-      font-size: 9.5px !important;
-      font-weight: 800 !important;
-      cursor: pointer !important;
-      user-select: none !important;
-      -webkit-tap-highlight-color: transparent !important;
-      transition: all 0.15s ease !important;
-      white-space: nowrap !important;
-      max-width: 190px !important;
-      flex-shrink: 0 !important;
-      box-sizing: border-box !important;
-    }
-
-    .quick-buy-btn.can-buy {
-      background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #15803d 100%) !important;
-      border-color: #4ade80 !important;
-      color: #ffffff !important;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
-    }
-
-    .quick-buy-btn.can-buy:active {
-      transform: scale(0.94) !important;
-      filter: brightness(1.25) !important;
-    }
-
-    .quick-buy-btn.locked {
-      opacity: 0.65 !important;
+      border-color: #475569 !important;
+      color: #64748b !important;
       cursor: not-allowed !important;
+      box-shadow: none !important;
     }
 
-    .qb-badge {
-      background: rgba(0, 0, 0, 0.35) !important;
-      padding: 1px 4px !important;
-      border-radius: 3px !important;
-      font-size: 8px !important;
-      font-weight: 900 !important;
-      letter-spacing: 0.4px !important;
+    /* START MENU */
+    #start-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: radial-gradient(circle at 50% 40%, #1e293b 0%, #090d16 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: opacity 0.3s ease;
     }
 
-    .qb-icon {
-      font-size: 11px !important;
+    #start-menu.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .qb-name {
-      font-weight: 800 !important;
-      max-width: 80px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
+    .start-menu-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      gap: 14px;
+      position: relative;
+      z-index: 10;
     }
 
-    .qb-cost {
-      font-family: 'JetBrains Mono', monospace !important;
-      font-weight: 800 !important;
-      color: #fef08a !important;
-      font-size: 9px !important;
+    .brand-wordmark {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: 38px;
+      letter-spacing: 2px;
     }
 
-    /* PREVENT HEADER ITEMS FROM EVER WRAPPING OR OVERLAPPING */
-    #header {
-      flex-wrap: nowrap !important;
-      overflow: hidden !important;
+    .start-breach-btn {
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+      border: 2px solid #f87171;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(220, 38, 38, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
     }
 
-    .header-branding {
-      flex-shrink: 0 !important;
+    .start-breach-btn:active { transform: scale(0.96); }
+
+    .btn-main-text { font-size: 18px; letter-spacing: 1px; }
+    .btn-sub-text { font-family: monospace; font-size: 8.5px; color: #fecaca; }
+
+    .start-install-pwa-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid #475569;
+      color: #cbd5e1;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .header-telemetry {
-      flex-shrink: 1 !important;
-      min-width: 0 !important;
-      overflow: hidden !important;
+    /* ========================================================= */
+    /* RESPONSIVE LAYOUTS: MOBILE (<768px) vs DESKTOP (>=768px)  */
+    /* ========================================================= */
+
+    /* MOBILE (<768px): Bottom Sheet Drawer & Expansive Dossier */
+    @media (max-width: 767px) {
+      #upgrades-drawer.collapsed {
+        height: 40px !important;
+      }
+
+      #upgrades-drawer.expanded {
+        height: 65vh !important;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.95);
+      }
     }
 
-    .header-actions {
-      flex-shrink: 0 !important;
-    }
+    /* DESKTOP (>=768px): Widescreen Dual-Pane Layout */
+    @media (min-width: 768px) {
+      #app-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        border-left: 1px solid var(--border-subtle);
+        border-right: 1px solid var(--border-subtle);
+      }
 
-    /* DRAWER HANDLE BAR LAYOUT WITH QUICK-BUY */
-    .drawer-handle-bar {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 6px !important;
-      padding: 0 8px !important;
-    }
+      #news-chyron {
+        height: 22px;
+        font-size: 10.5px;
+      }
 
-    .drawer-title-group {
-      display: flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-      flex-shrink: 0 !important;
-      cursor: pointer !important;
+      #header {
+        height: 44px;
+        padding: 0 16px;
+      }
+
+      .agency-title {
+        font-size: 18px;
+      }
+
+      .telemetry-currency {
+        font-size: 16px;
+      }
+
+      .telemetry-rps {
+        font-size: 13px;
+      }
+
+      #threat-bar-container {
+        height: 24px;
+        padding: 0 16px;
+      }
+
+      /* DUAL-PANE WORKBENCH */
+      #game-workbench {
+        flex-direction: row;
+      }
+
+      #desk-viewport {
+        flex: 1.15;
+        height: 100%;
+        padding: 16px;
+      }
+
+      #dossier-wrapper {
+        max-width: 560px;
+      }
+
+      #dossier-page {
+        padding: 14px 20px 10px;
+      }
+
+      .text-line {
+        font-size: 15px;
+        min-height: 34px;
+      }
+
+      /* UPGRADES STORE: PERSISTENT SIDEBAR ON DESKTOP */
+      #upgrades-drawer {
+        flex: 0.85;
+        max-width: 480px;
+        height: 100% !important;
+        border-top: none;
+        border-left: 1px solid var(--border-subtle);
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      .drawer-toggle-btn {
+        display: none !important; /* Always open on desktop */
+      }
     }
-  
   </style>
+
 </head>
 <body>
 
@@ -3144,35 +1438,31 @@
         <div class="watermark-row">MIDNIGHT REDACTION BUREAU • SPECIAL CLEARANCE REQD • CONFIDENTIAL</div>
         <div class="watermark-row">CLASSIFIED // DO NOT DISTRIBUTE • TOP SECRET // NOFORN • EYES ONLY</div>
         <div class="watermark-row">MIDNIGHT REDACTION BUREAU • SPECIAL CLEARANCE REQD • CONFIDENTIAL</div>
-        <div class="watermark-row">CLASSIFIED // DO NOT DISTRIBUTE • TOP SECRET // NOFORN • EYES ONLY</div>
-        <div class="watermark-row">MIDNIGHT REDACTION BUREAU • SPECIAL CLEARANCE REQD • CONFIDENTIAL</div>
       </div>
 
-      <div class="hazard-stripe-bar"></div>
+      <div class="hazard-stripe-bar" style="height:12px; background:repeating-linear-gradient(-45deg, #eab308 0px, #eab308 12px, #000 12px, #000 24px);"></div>
 
       <div class="start-menu-content">
-        <div class="start-restricted-badge">
+        <div style="font-family:monospace; font-size:10px; font-weight:900; color:#ef4444; border:1.5px solid #ef4444; padding:2px 8px; letter-spacing:1px; text-transform:uppercase;">
           [ ACCESS RESTRICTED: EYES ONLY ]
         </div>
 
-        <div class="start-title-wrap">
-          <h1 class="brand-wordmark">
-            <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
-          </h1>
-          <div class="start-subtitle">
-            MIDNIGHT REDACTION BUREAU // TOP SECRET
-          </div>
+        <h1 class="brand-wordmark">
+          <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
+        </h1>
+        <div style="font-family:monospace; font-size:9.5px; color:#94a3b8; letter-spacing:1px;">
+          MIDNIGHT REDACTION BUREAU // TOP SECRET
         </div>
 
-        <div class="start-emblem-box">
+        <div style="font-size:32px; width:64px; height:64px; border-radius:50%; border:2px dashed #475569; display:flex; align-items:center; justify-content:center; background:#0f172a;">
           🖋️
         </div>
 
-        <div id="start-save-card" style="display: none;">
-          <div class="save-card-label">Active Career Record</div>
-          <div class="save-card-stats" id="start-save-stats">SAVED DOSSIER: 0 Lines Redacted</div>
-          <div class="save-card-prestige" id="start-save-prestige" style="font-size:10px; font-weight:800; color:#facc15; display:none;"></div>
-          <a class="save-clear-link" id="start-clear-save-btn">CLEAR EVIDENCE (Reset)</a>
+        <div id="start-save-card" style="display: none; background:rgba(15,23,42,0.8); border:1px solid #38bdf8; border-radius:6px; padding:8px 14px;">
+          <div style="font-size:9px; font-family:monospace; color:#94a3b8;">Active Career Record</div>
+          <div id="start-save-stats" style="font-size:11px; font-weight:800; color:#f1f5f9;">SAVED DOSSIER: 0 Lines</div>
+          <div id="start-save-prestige" style="font-size:10px; font-weight:800; color:#facc15; display:none;"></div>
+          <a id="start-clear-save-btn" style="font-size:9px; color:#ef4444; text-decoration:underline; cursor:pointer;">CLEAR EVIDENCE</a>
         </div>
 
         <button class="start-breach-btn" id="start-breach-btn">
@@ -3186,7 +1476,7 @@
         </button>
       </div>
 
-      <div class="hazard-stripe-bar"></div>
+      <div class="hazard-stripe-bar" style="height:12px; background:repeating-linear-gradient(-45deg, #eab308 0px, #eab308 12px, #000 12px, #000 24px);"></div>
     </div>
 
     <!-- 1. DYNAMIC SATIRICAL NEWS CHYRON -->
@@ -3199,7 +1489,7 @@
       </div>
     </div>
 
-    <!-- 2. MOBILE MASTER HEADER (Consolidated 38px) -->
+    <!-- 2. STREAMLINED COMMAND HEADER (Single 40px Bar, Zero Overlaps) -->
     <header id="header">
       <div class="header-branding">
         <div class="agency-title">
@@ -3207,20 +1497,18 @@
         </div>
       </div>
 
-      <!-- Core Telemetry in Header -->
       <div class="header-telemetry">
         <div class="telemetry-currency">
-          <span class="curr-icon">📄</span>
+          <span>📄</span>
           <span id="stat-redactions">0</span>
           <span class="stat-badge" id="click-power-badge">+1</span>
         </div>
         <div class="telemetry-rps">
-          <span class="rps-icon">⚡</span>
+          <span>⚡</span>
           <span id="stat-rps">0.0</span>/s
         </div>
       </div>
 
-      <!-- Quick Actions -->
       <div class="header-actions">
         <button class="header-prestige-btn locked" id="hoover-prestige-btn" title="Hoover Building Prestige">
           <span class="prestige-flame-icon">🏛️🔥</span>
@@ -3232,11 +1520,9 @@
       </div>
     </header>
 
-    <!-- 3. TACTICAL MICRO-STRIP (DEF-CLERK, VIP/Secrets, and Fumes in 22px) -->
+    <!-- 3. TACTICAL MICRO-STRIP (DEF-CLERK, VIPs, Secrets, Fumes in 20px) -->
     <div id="threat-bar-container">
-      <!-- DEF-CLERK Threat Meter -->
       <div class="micro-threat-group">
-        <span class="threat-warning-icon">⚠️</span>
         <span class="threat-prefix">DEF-CLERK:</span>
         <span id="threat-tier-label" class="threat-tier-label" style="color: #22c55e;">TIER 5</span>
         <div class="threat-track">
@@ -3245,21 +1531,19 @@
         <span id="threat-percent-text" class="threat-percent-text">0%</span>
       </div>
 
-      <!-- Secondary Stats (VIPs & Secrets) -->
       <div id="stats-panel" class="micro-stats-panel">
         <div class="stat-block">
-          <span class="stat-icon">🛡️</span>
+          <span>🛡️</span>
           <span id="stat-vips">0</span>
         </div>
         <div class="stat-block">
-          <span class="stat-icon">👑</span>
+          <span>👑</span>
           <span id="stat-secrets">0</span>
         </div>
       </div>
 
-      <!-- Fume Meter -->
       <section id="fume-section" class="micro-fume-section">
-        <span class="toxic-icon">☣</span>
+        <span>☣</span>
         <span id="fume-status-text">0%</span>
         <div class="fume-track">
           <div id="fume-fill"></div>
@@ -3270,260 +1554,266 @@
       <div id="clearance-bar" style="display: none;"><span id="clearance-text">1x POWER</span></div>
     </div>
 
-    <!-- 4. CENTRAL DOSSIER HERO VIEWPORT (Takes 75%+ of the Mobile Screen!) -->
-    <main id="desk-viewport">
-      <div class="desk-mat"></div>
+    <!-- 4. RESPONSIVE WORKBENCH (Desktop Dual-Pane / Mobile Stacked) -->
+    <div id="game-workbench">
 
-      <div id="dossier-wrapper">
-        <div id="dossier-page">
-          <div class="paper-clip"></div>
+      <!-- LEFT PANE: THE EXECUTIVE DESK & DOSSIER -->
+      <main id="desk-viewport">
+        <div class="desk-mat"></div>
 
-          <div class="dossier-compact-header">
-            <div class="stamp-sci">TOP SECRET // SCI // NOFORN</div>
-            <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #1992-B</div>
-          </div>
+        <div id="dossier-wrapper">
+          <div id="dossier-page">
+            <div class="paper-clip"></div>
 
-          <div class="doc-meta compact" id="dossier-meta">
-            <div>SUBJECT: MAR-A-LAGO 1992 VIP BASH // EPSTEIN & DONNY</div>
-          </div>
+            <div class="dossier-compact-header">
+              <div class="stamp-sci">TOP SECRET // SCI // NOFORN</div>
+              <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #1992-B</div>
+            </div>
 
-          <div class="crisis-fire-banner" id="crisis-fire-banner">
-            <span id="crisis-title-tag">🔥 1992 VIP BASH</span>
-            <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">9</span> ACTIVE</span>
-          </div>
+            <div class="doc-meta compact" id="dossier-meta">
+              <div>SUBJECT: MAR-A-LAGO 1992 VIP BASH // EPSTEIN & DONNY</div>
+            </div>
 
-          <svg class="doc-watermark" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="3" fill="none"/>
-            <polygon points="50,15 59,38 84,38 63,52 71,76 50,60 29,76 37,52 16,38 41,38" fill="#000"/>
-            <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">BUREAU SEAL</text>
-          </svg>
+            <div class="crisis-fire-banner" id="crisis-fire-banner">
+              <span id="crisis-title-tag">🔥 1992 VIP BASH</span>
+              <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">9</span> ACTIVE</span>
+            </div>
 
-          <!-- Procedural Flight Log / Redaction Lines -->
-          <div id="document-lines"></div>
+            <svg class="doc-watermark" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="3" fill="none"/>
+              <polygon points="50,15 59,38 84,38 63,52 71,76 50,60 29,76 37,52 16,38 41,38" fill="#000"/>
+              <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">BUREAU SEAL</text>
+            </svg>
 
-          <!-- Page Complete Stamp -->
-          <div id="shred-stamp">
-            <div class="stamp-box">
-              100% REDACTED
-              <div class="stamp-sub">APPROVED FOR SHREDDING</div>
+            <!-- Procedural Redaction Lines -->
+            <div id="document-lines"></div>
+
+            <!-- Page Complete Stamp -->
+            <div id="shred-stamp">
+              <div class="stamp-box">
+                100% REDACTED
+                <div class="stamp-sub">APPROVED FOR SHREDDING</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Chief Kash Floating Dialogue Pill (Docked bottom corner of desk) -->
-      <div id="kash-briefing-bar" class="kash-floating-pill">
-        <div id="kash-avatar" class="kash-avatar-badge" title="Chief Kash Patel">👓</div>
-        <span id="kash-bubble">The Boss is watching. Redact the targets!</span>
-      </div>
-
-      <!-- FX Canvas -->
-      <canvas id="fx-canvas"></canvas>
-    </main>
-
-    <!-- 6. UPGRADE DRAWER: THE CHAOS AUTOMATION WORKFORCE -->
-    <footer id="upgrades-drawer" class="collapsed">
-      <div class="drawer-handle-bar" id="drawer-toggle">
-        <div class="drawer-title-group">
-          <span class="drawer-folder-icon">📂</span>
-          <span class="drawer-title-text">STORE</span>
-          <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
+        <!-- Kash Companion Speech Pill (Docked in desk corner) -->
+        <div id="kash-briefing-bar" class="kash-floating-pill">
+          <div id="kash-avatar" class="kash-avatar-badge" title="Chief Kash Patel">👓</div>
+          <span id="kash-bubble">The Boss is watching. Redact the targets!</span>
         </div>
 
-        <!-- QUICK-BUY: MOST EXPENSIVE AFFORDABLE UPGRADE (ONE-TAP WITHOUT OPENING MENU) -->
-        <button id="quick-buy-btn" class="quick-buy-btn locked" type="button" title="Quick-Buy Most Expensive Affordable Upgrade">
-          <span class="qb-badge">⚡ BUY</span>
-          <span id="quick-buy-icon" class="qb-icon">🖊️</span>
-          <span id="quick-buy-name" class="qb-name">Unpaid Intern</span>
-          <span id="quick-buy-cost" class="qb-cost">(15)</span>
+        <!-- FX Particle Canvas -->
+        <canvas id="fx-canvas"></canvas>
+      </main>
+
+      <!-- RIGHT PANE (Desktop) / BOTTOM SHEET (Mobile): UPGRADES STORE -->
+      <footer id="upgrades-drawer" class="collapsed">
+        <div class="drawer-handle-bar" id="drawer-toggle">
+          <div class="drawer-title-group">
+            <span class="drawer-folder-icon">📂</span>
+            <span class="drawer-title-text">STORE</span>
+            <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
+          </div>
+
+          <!-- ONE-TAP QUICK-BUY (Buys most expensive affordable upgrade) -->
+          <button id="quick-buy-btn" class="quick-buy-btn locked" type="button" title="Quick-Buy Most Expensive Upgrade">
+            <span class="qb-badge">⚡ BUY</span>
+            <span id="quick-buy-icon" class="qb-icon">🖊️</span>
+            <span id="quick-buy-name" class="qb-name">Unpaid Intern</span>
+            <span id="quick-buy-cost" class="qb-cost">(15)</span>
+          </button>
+
+          <div class="drawer-actions">
+            <span id="drawer-rps-summary" class="drawer-rps-val">+0.0 RPS</span>
+          </div>
+        </div>
+
+        <!-- PRESTIGE CARD INSIDE STORE -->
+        <div class="prestige-card" id="drawer-prestige-card">
+          <div class="prestige-card-icon">🏛️🔥</div>
+          <div class="prestige-card-content">
+            <div class="prestige-card-title">BURN THE HOOVER BUILDING</div>
+            <div class="prestige-card-sub" id="prestige-card-sub">Reset staff & balance for +1x Stacked Clearance (Tier 1)</div>
+            <div class="prestige-card-req" id="prestige-card-req">🔒 Req: 200.00M Lines (0) • 50 Clicks (0)</div>
+          </div>
+          <button class="prestige-burn-btn locked" id="drawer-prestige-btn">LOCKED</button>
+        </div>
+
+        <!-- SHOP SEIZED PENALTY BANNER -->
+        <div id="shop-penalty-banner" class="shop-penalty-banner" style="display: none;">
+          <span class="penalty-icon">🚨</span>
+          <div>
+            <div class="penalty-headline">SUBPOENA SERVED - REDACTION STORE SEIZED!</div>
+            <div class="penalty-subtext">Bureau under audit. Upgrades locked for <span id="penalty-time-left" style="font-weight:bold; color:#fbbf24;">20</span>s!</div>
+          </div>
+        </div>
+
+        <!-- 50 CHAOS GENERATOR TIERS -->
+        <div id="upgrades-list"></div>
+      </footer>
+
+    </div><!-- /#game-workbench -->
+
+    <!-- RAID QTE OVERLAY -->
+    <div id="raid-overlay" class="raid-overlay hidden">
+      <div class="raid-modal">
+        <div class="raid-header">
+          <span>🚨</span>
+          <h2>FEDERAL RAID IN PROGRESS</h2>
+          <span>🚨</span>
+        </div>
+        <p style="font-size:11px; color:#fca5a5; line-height:1.3;">Subpoena has breached facility! Incinerate evidence before feds break in!</p>
+        <div class="raid-timer-section">
+          <div class="raid-timer-header">
+            <span>COUNTDOWN:</span>
+            <span id="raid-timer-text" style="font-family:monospace; font-size:14px; color:#fbbf24;">7.0s</span>
+          </div>
+          <div class="raid-timer-track">
+            <div id="raid-timer-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+        <button id="raid-incinerate-btn" class="raid-incinerate-btn" type="button">
+          <span>🔥📜🔥</span>
+          <span>INCINERATE SUBPOENA (<span id="raid-clicks-count">0</span>/25)</span>
         </button>
-
-        <div class="drawer-actions">
-          <span id="drawer-rps-summary" class="drawer-rps-val">+0.0 RPS</span>
-        </div>
       </div>
-      </div>
+    </div>
 
-      <!-- PRESTIGE BANNER CARD IN DRAWER -->
-      <div class="prestige-card" id="drawer-prestige-card">
-        <div class="prestige-card-icon">🏛️🔥</div>
-        <div class="prestige-card-content">
-          <div class="prestige-card-title">BURN THE HOOVER BUILDING</div>
-          <div class="prestige-card-sub" id="prestige-card-sub">Reset staff & balance for +1x Stacked Clearance (Tier 1)</div>
-          <div class="prestige-card-req" id="prestige-card-req">🔒 Req: 200.00M Lines (0) • 50 Clicks (0)</div>
-        </div>
-        <button class="prestige-burn-btn locked" id="drawer-prestige-btn">LOCKED</button>
-      </div>
-
-      <!-- SHOP SEIZED PENALTY BANNER -->
-      <div id="shop-penalty-banner" class="shop-penalty-banner" style="display: none;">
-        <span class="penalty-icon">🚨</span>
-        <div class="penalty-text-group">
-          <span class="penalty-headline">SUBPOENA SERVED - REDACTION SHOP SEIZED!</span>
-          <span class="penalty-subtext">Bureau under federal audit. Upgrades locked for <span id="penalty-time-left" style="font-weight: bold; color: #fbbf24;">20</span>s!</span>
-        </div>
-      </div>
-      <div id="upgrades-list"></div>
-    </footer>
-
-    <!-- 7. OFFLINE PROGRESS MODAL -->
+    <!-- OFFLINE PROGRESS MODAL -->
     <div class="modal-backdrop" id="offline-modal">
       <div class="modal-window">
         <div class="modal-header">
-          <div class="modal-title incident">
+          <div class="modal-title" style="color:#ef4444;">
             <span>⚠️</span> INCIDENT REPORT // CLASSIFIED
           </div>
         </div>
         <div class="modal-body">
-          <div class="incident-badge">CASE #409-OVERSIGHT-EVASION</div>
-          <div class="incident-message" id="offline-report-text">
-            INCIDENT REPORT: While you were evading the House Oversight Committee for [X] minutes, your staff blacked out [Y] lines.
-          </div>
-          <div class="offline-gain-display">
-            <div class="offline-gain-label">Recovered Bureau Output (80% Efficiency)</div>
-            <div class="offline-gain-val" id="offline-gain-number">+0 LINES</div>
+          <div style="font-size:9.5px; font-family:monospace; color:#facc15; font-weight:800;">CASE #409-OVERSIGHT-EVASION</div>
+          <div id="offline-report-text" style="font-size:11px; color:#e2e8f0; line-height:1.4;"></div>
+          <div style="background:#090e1a; padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:9px; color:#94a3b8;">Recovered Output (80% Efficiency)</div>
+            <div id="offline-gain-number" style="font-size:18px; font-weight:900; color:#38bdf8; font-family:monospace;">+0 LINES</div>
           </div>
           <button class="modal-action-btn" id="offline-collect-btn">COLLECT AND RESUME REDACTING</button>
         </div>
       </div>
     </div>
 
-    <!-- 8. SETTINGS & DATA PURGE MODAL -->
+    <!-- SETTINGS MODAL -->
     <div class="modal-backdrop" id="settings-modal">
       <div class="modal-window">
         <div class="modal-header">
-          <div class="modal-title settings">
+          <div class="modal-title" style="color:#38bdf8;">
             <span>⚙️</span> BUREAU SECURITY CLEARANCE
           </div>
           <button class="modal-close-btn" id="settings-close-btn">✕</button>
         </div>
         <div class="modal-body">
-          <div class="settings-row">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
             <span>Synthesized Web Audio</span>
             <button class="icon-btn" id="settings-sound-toggle">🔊</button>
           </div>
-          <div class="settings-row">
+          <div style="display:flex; justify-content:space-between; font-size:11px;">
             <span>VIPs Protected (Epstein)</span>
             <span id="settings-vips-stat" style="color:#facc15; font-weight:800;">0</span>
           </div>
-          <div class="settings-row">
+          <div style="display:flex; justify-content:space-between; font-size:11px;">
             <span>Secrets Buried (The Boss)</span>
             <span id="settings-secrets-stat" style="color:#fb923c; font-weight:800;">0</span>
           </div>
-          <div class="settings-row">
+          <div style="display:flex; justify-content:space-between; font-size:11px;">
             <span>Total Lifetime Redactions</span>
-            <span id="settings-lifetime-stat" style="color:#38bdf8;">0</span>
+            <span id="settings-lifetime-stat" style="color:#38bdf8; font-weight:800;">0</span>
           </div>
-          <div class="settings-row">
+          <div style="display:flex; justify-content:space-between; font-size:11px;">
             <span>Bureau Automated Output</span>
-            <span id="settings-rps-stat" style="color:#4ade80;">0.0 RPS</span>
+            <span id="settings-rps-stat" style="color:#4ade80; font-weight:800;">0.0 RPS</span>
           </div>
-          <div class="settings-row">
+          <div style="display:flex; justify-content:space-between; font-size:11px;">
             <span>Stacked Prestige Clearance</span>
             <span id="settings-prestige-stat" style="color:#facc15; font-weight:800;">TIER 0 (1x)</span>
           </div>
-          <button class="modal-action-btn burn-action" id="settings-prestige-btn" style="margin-top:2px;">
+          <button class="modal-action-btn burn-action" id="settings-prestige-btn">
             🔥 BURN HOOVER BUILDING (PRESTIGE)
           </button>
-
-          <div class="settings-danger-box">
-            <div class="settings-danger-title">⚠️ Danger Zone: Executive Privilege Override</div>
-            <div style="font-size:10px; color:#cbd5e1; line-height:1.3;">
-              Purges all classified records, resets all workforce tiers, and deletes persistent LocalStorage state.
-            </div>
-            <button class="danger-btn" id="wipe-data-btn">PURGE ALL BUREAU DATA</button>
+          <div style="border-top:1px solid #334155; padding-top:10px; margin-top:4px;">
+            <div style="font-size:9.5px; font-weight:800; color:#ef4444; margin-bottom:4px;">⚠️ Danger Zone</div>
+            <button id="wipe-data-btn" style="width:100%; background:#7f1d1d; border:1px solid #ef4444; color:#fff; font-size:10px; font-weight:900; padding:6px; border-radius:4px; cursor:pointer;">
+              PURGE ALL BUREAU DATA
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 9. PRESTIGE MODAL (BURN THE HOOVER BUILDING) -->
+    <!-- PRESTIGE MODAL (BURN HOOVER BUILDING) -->
     <div class="modal-backdrop" id="prestige-modal">
       <div class="modal-window">
         <div class="modal-header">
-          <div class="modal-title" style="color: #f97316;">
+          <div class="modal-title" style="color:#f97316;">
             <span>🔥</span> BURN THE HOOVER BUILDING
           </div>
           <button class="modal-close-btn" id="prestige-close-btn">✕</button>
         </div>
         <div class="modal-body">
-          <div class="prestige-banner-hero">
-            <div class="hero-fire">🏛️🔥</div>
-            <div class="hero-title">EXECUTIVE EVIDENCE INCINERATION</div>
-            <div class="hero-desc">
-              The Grand Jury has issued immediate subpoenas. Incinerate all active evidence, dismiss your current workforce, and reset your balance to secure unprecedented Executive Immunity.
+          <div style="text-align:center; background:#1e1005; border:1px solid #7c2d12; border-radius:8px; padding:10px;">
+            <div style="font-size:26px;">🏛️🔥</div>
+            <div style="font-size:12px; font-weight:900; color:#fdba74;">EXECUTIVE EVIDENCE INCINERATION</div>
+            <div style="font-size:9.5px; color:#cbd5e1; margin-top:4px;">
+              Incinerate all active evidence, reset balance, and secure permanent +1x Stacked Clearance.
             </div>
           </div>
 
-          <div class="prestige-compare-grid">
-            <div class="prestige-col current">
-              <span class="compare-tag">CURRENT RUN</span>
-              <span class="compare-val" id="prestige-cur-display">TIER 0 (1x)</span>
+          <div style="display:flex; justify-content:space-around; align-items:center; background:#090e1a; padding:8px; border-radius:6px;">
+            <div style="text-align:center;">
+              <div style="font-size:8px; color:#94a3b8;">CURRENT</div>
+              <div id="prestige-cur-display" style="font-size:13px; font-weight:900; color:#e2e8f0;">TIER 0 (1x)</div>
             </div>
-            <div class="compare-arrow">➔</div>
-            <div class="prestige-col next">
-              <span class="compare-tag">STACKED BOOST</span>
-              <span class="compare-val" id="prestige-next-display">TIER 1 (2x)</span>
-            </div>
-          </div>
-
-          <!-- PRESTIGE REQUIREMENTS METER -->
-          <div class="prestige-req-box" id="prestige-req-box">
-            <div class="prestige-req-header">
-              <span class="prestige-req-title">SUBPOENA CRITERIA (REQUIREMENTS)</span>
-              <span class="prestige-req-badge locked" id="prestige-req-badge">LOCKED</span>
-            </div>
-
-            <div class="prestige-req-item">
-              <div class="req-label-row">
-                <span class="req-name">📄 Redaction Threshold:</span>
-                <span class="req-val" id="prestige-req-lines-val">0 / 200.00M Lines</span>
-              </div>
-              <div class="req-progress-bar">
-                <div class="req-progress-fill" id="prestige-req-lines-fill" style="width: 0%;"></div>
-              </div>
-            </div>
-
-            <div class="prestige-req-item">
-              <div class="req-label-row">
-                <span class="req-name">🖋️ Manual Dossier Clicks:</span>
-                <span class="req-val" id="prestige-req-clicks-val">0 / 50 Clicks</span>
-              </div>
-              <div class="req-progress-bar">
-                <div class="req-progress-fill" id="prestige-req-clicks-fill" style="width: 0%;"></div>
-              </div>
-            </div>
-
-            <div class="req-label-row" style="font-size: 8px; color: #94a3b8; margin-top: 1px;">
-              <span id="prestige-req-explainer">Requires aggregating 1.25x clicks of previous prestige and reaching target lines.</span>
+            <div style="color:#f97316; font-size:16px; font-weight:900;">➔</div>
+            <div style="text-align:center;">
+              <div style="font-size:8px; color:#94a3b8;">NEXT BOOST</div>
+              <div id="prestige-next-display" style="font-size:13px; font-weight:900; color:#facc15;">TIER 1 (2x)</div>
             </div>
           </div>
 
-          <div class="prestige-bullet-points">
-            <div class="bullet-row">
-              <span class="bullet-icon">⚡</span>
-              <span><strong>STACKABLE +1X MULTIPLIER:</strong> Adds +1x power to all manual marker clicks permanently.</span>
+          <div id="prestige-req-box" style="background:#090e1a; border:1px solid #334155; border-radius:6px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:9px; font-weight:800; color:#f59e0b;">CRITERIA</span>
+              <span id="prestige-req-badge" style="font-size:8px; font-weight:800; padding:1px 5px; border-radius:3px; background:#334155; color:#94a3b8;">LOCKED</span>
             </div>
-            <div class="bullet-row">
-              <span class="bullet-icon">⚡</span>
-              <span><strong>STACKABLE +1X WORKFORCE:</strong> Adds +1x base output to all automated staff (Interns, Rollers, Shredders, Stamps).</span>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:8.5px; color:#cbd5e1;">
+                <span>📄 Lines:</span>
+                <span id="prestige-req-lines-val">0 / 200M</span>
+              </div>
+              <div style="height:5px; background:#000; border-radius:3px; overflow:hidden; margin-top:2px;">
+                <div id="prestige-req-lines-fill" style="height:100%; width:0%; background:#facc15;"></div>
+              </div>
             </div>
-            <div class="bullet-row">
-              <span class="bullet-icon">⚡</span>
-              <span><strong>BALANCED PROGRESSION:</strong> Tier 0 = 1x, Tier 1 = 2x, Tier 2 = 3x, Tier 3 = 4x, Tier 4 = 5x...</span>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:8.5px; color:#cbd5e1;">
+                <span>🖋️ Clicks:</span>
+                <span id="prestige-req-clicks-val">0 / 50</span>
+              </div>
+              <div style="height:5px; background:#000; border-radius:3px; overflow:hidden; margin-top:2px;">
+                <div id="prestige-req-clicks-fill" style="height:100%; width:0%; background:#f97316;"></div>
+              </div>
             </div>
+            <span id="prestige-req-explainer" style="font-size:7.5px; color:#64748b;">Requires lines threshold and manual clicks.</span>
           </div>
 
           <button class="modal-action-btn burn-action locked" id="execute-prestige-btn" disabled>
-            🔒 LOCKED (200.00M LINES & 50 CLICKS)
+            🔒 LOCKED
           </button>
         </div>
       </div>
     </div>
 
-  </div>
+  </div><!-- /#app-container -->
 
-  <script>
+<script>
     /* ==========================================================
        KLICKASHKLIC - DUAL TARGET ENGINE & EXECUTIVE PRIVILEGE
        ========================================================== */
@@ -5750,37 +4040,5 @@
       }
 
     </script>
-  <!-- FEDERAL RAID QTE OVERLAY -->
-  <div id="raid-overlay" class="raid-overlay hidden">
-    <div class="raid-modal">
-      <div class="raid-header">
-        <span class="raid-siren-icon">🚨</span>
-        <h2>FEDERAL RAID IN PROGRESS</h2>
-        <span class="raid-siren-icon">🚨</span>
-      </div>
-      <p class="raid-subtext">The Subpoena has breached the facility! Incinerate before the feds break into the vault!</p>
-
-      <div class="raid-timer-section">
-        <div class="raid-timer-header">
-          <span>COUNTDOWN:</span>
-          <span id="raid-timer-text" class="raid-timer-text">7.0s</span>
-        </div>
-        <div class="raid-timer-track">
-          <div id="raid-timer-fill" class="raid-timer-fill" style="width: 100%;"></div>
-        </div>
-      </div>
-
-      <button id="raid-incinerate-btn" class="raid-incinerate-btn" type="button">
-        <span>🔥📜🔥</span>
-        <span>INCINERATE SUBPOENA (<span id="raid-clicks-count">0</span>/25)</span>
-      </button>
-
-      <div class="raid-stakes-info">
-        <span class="win-stake">✓ Success: Reset Threat + 600s Windfall + 25% Boost (30s)</span>
-        <span class="fail-stake">✗ Failure: Shop Seized & -50% RPS Penalty (20s)</span>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
