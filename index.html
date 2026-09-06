@@ -2119,7 +2119,528 @@
       overscroll-behavior: contain;
     }
   
-    </style>
+  
+    /* ==================================================== */
+    /* POLISHED TACTICAL COMMAND DECK & LAYOUT REDESIGN     */
+    /* ==================================================== */
+    #header {
+      height: 40px;
+      padding: 0 10px;
+      background: linear-gradient(180deg, #151d30 0%, #0c1220 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 25;
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .agency-title {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #f8fafc;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .agency-subbadge {
+      font-size: 7.5px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #facc15;
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .header-prestige-btn {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      border: 1px solid #f87171;
+      color: #ffffff;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      padding: 3px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+      white-space: nowrap;
+      transition: transform 0.1s, filter 0.1s;
+    }
+
+    .header-prestige-btn:active { transform: scale(0.93); filter: brightness(1.2); }
+    .header-prestige-btn.locked {
+      background: #1e293b;
+      border-color: #475569;
+      color: #94a3b8;
+      box-shadow: none;
+    }
+
+    .header-prestige-badge {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(135deg, #b45309 0%, #f59e0b 28%, #fef08a 50%, #f59e0b 72%, #b45309 100%);
+      background-size: 200% auto;
+      color: #0b101c;
+      font-size: 7.5px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #fde047;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+      cursor: pointer;
+      white-space: nowrap;
+      animation: shineGoldBadge 2.5s linear infinite;
+    }
+
+    /* TACTICAL STATUS STRIP (THREAT + CLEARANCE COMBINED) */
+    #threat-bar-container {
+      height: 26px;
+      padding: 0 10px;
+      background: #090e1b;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      z-index: 20;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .threat-tactical-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .threat-warning-icon { font-size: 10px; }
+    .threat-prefix { color: #94a3b8; letter-spacing: 0.5px; }
+
+    .threat-tier-label {
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.4px;
+    }
+
+    .threat-gauge-cluster {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      max-width: 140px;
+      min-width: 60px;
+    }
+
+    .threat-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .threat-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.25s ease-out, background-color 0.3s;
+    }
+
+    .threat-percent-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      color: #e2e8f0;
+      min-width: 24px;
+      text-align: right;
+    }
+
+    .threat-tactical-right, #clearance-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .clearance-shield { font-size: 10px; }
+    .clearance-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 900;
+      color: #facc15;
+      text-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
+    }
+
+    /* COMPACT STATS HUD */
+    #stats-panel {
+      height: 38px;
+      padding: 0 10px;
+      background: rgba(13, 18, 31, 0.95);
+      border-bottom: 1px solid #1e293b;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .stat-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .stat-block.rps-block {
+      text-align: right;
+      align-items: flex-end;
+    }
+
+    .stat-label {
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: #64748b;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stat-value-group {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+
+    #stat-redactions {
+      font-size: 15px;
+      font-weight: 900;
+      color: #38bdf8;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    #stat-vips {
+      font-size: 13px;
+      font-weight: 900;
+      color: #facc15;
+      line-height: 1;
+    }
+
+    #stat-secrets {
+      font-size: 13px;
+      font-weight: 900;
+      color: #fb923c;
+      line-height: 1;
+    }
+
+    #stat-rps {
+      font-size: 13px;
+      font-weight: 900;
+      color: #4ade80;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .stat-icon { font-size: 9px; }
+
+    /* FUME GAUGE SECTION */
+    #fume-section {
+      height: 22px;
+      padding: 0 10px;
+      background: #090e1a;
+      border-top: 1px solid #1e293b;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      z-index: 25;
+    }
+
+    .fume-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      white-space: nowrap;
+      font-size: 8px;
+      font-weight: 800;
+      min-width: 130px;
+    }
+
+    .fume-title {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      color: #a855f7;
+    }
+
+    .toxic-icon { font-size: 9px; }
+
+    .fume-track {
+      flex: 1;
+      height: 6px;
+      background: #020617;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+
+    /* CHIEF KASH PATEL BUREAU INTERCOM BAR */
+    #kash-briefing-bar {
+      height: 30px;
+      background: #0d1526;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+      flex-shrink: 0;
+      z-index: 25;
+    }
+
+    .kash-avatar-badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #1e3a8a 100%);
+      border: 1.5px solid #60a5fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
+    }
+
+    .kash-message-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .kash-callsign {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 900;
+      color: #38bdf8;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #kash-bubble {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1;
+      background: transparent !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
+      max-width: 100% !important;
+    }
+
+    #kash-bubble::after {
+      display: none !important;
+    }
+
+    /* DRAWER HANDLE BAR & COLLISION FIX */
+    .drawer-handle-bar {
+      height: 34px;
+      padding: 0 10px;
+      background: linear-gradient(180deg, #162035 0%, #0e1626 100%);
+      border-bottom: 1px solid #1f2a40;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .drawer-title-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      flex-shrink: 1;
+      overflow: hidden;
+    }
+
+    .drawer-folder-icon { font-size: 11px; }
+
+    .drawer-title-text {
+      font-size: 9.5px;
+      font-weight: 900;
+      color: #f1f5f9;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .drawer-title-group .dept-badge {
+      background: #ea580c;
+      color: #fff;
+      font-size: 7px;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: 900;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .drawer-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .drawer-rps-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #4ade80;
+    }
+
+    /* RESPONSIVE UPGRADES DRAWER HEIGHTS */
+    #upgrades-drawer {
+      height: 185px;
+      background: #080d19;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 30;
+      transition: height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    #upgrades-drawer.expanded { height: 380px; }
+    #upgrades-drawer.collapsed { height: 34px; }
+
+    /* PRESTIGE CARD INSIDE DRAWER */
+    .prestige-card {
+      margin: 6px 10px 4px;
+      background: linear-gradient(135deg, #240c03 0%, #120601 100%);
+      border: 1px solid #f97316;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+      flex-shrink: 0;
+    }
+
+    /* DOSSIER & DESK EXPANSION */
+    #desk-viewport {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 8px;
+      overflow: hidden;
+    }
+
+    #dossier-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      max-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+    }
+
+    #dossier-page {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #f7f3e4;
+      border-radius: 4px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 2px 5px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      padding: 10px 14px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    #document-lines {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      overflow: hidden;
+    }
+
+    .crisis-fire-banner {
+      margin-bottom: 6px;
+      padding: 3px 8px;
+      font-size: 8.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 3px;
+    }
+  
+  </style>
 </head>
 <body>
 
@@ -2188,77 +2709,69 @@
       </div>
     </div>
 
-    <!-- 2. HEADER -->
+    <!-- 2. STREAMLINED COMMAND HEADER -->
     <header id="header">
-      <div class="title-group">
-        <div class="agency-classification">
-          <span>★ CLASSIFIED LEVEL 5 ★</span>
-          <span id="header-prestige-badge" class="header-prestige-badge" title="Click to view Hoover Building Prestige Clearance">[TIER 0 IMMUNITY: 1x MULTIPLIER]</span>
-        </div>
+      <div class="header-branding">
         <div class="agency-title">
           <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
         </div>
+        <span class="agency-subbadge">★ TOP SECRET ★</span>
       </div>
       <div class="header-actions">
+        <button class="header-prestige-btn locked" id="hoover-prestige-btn" title="Prestige Clearance: Burn Hoover Building">
+          <span class="prestige-flame-icon">🏛️🔥</span>
+          <span class="prestige-btn-label" id="header-prestige-status">LOCKED</span>
+        </button>
+        <span id="header-prestige-badge" class="header-prestige-badge" title="Active Clearance Multiplier">[1x IMMUNITY]</span>
         <button class="icon-btn" id="sound-btn" title="Toggle Sound">🔊</button>
         <button class="icon-btn" id="settings-btn" title="Bureau Settings">⚙️</button>
       </div>
     </header>
 
-    <!-- STACKED CLEARANCE & PRESTIGE BAR -->
-    <div id="clearance-bar">
-      <div class="clearance-badge-wrap">
-        <span class="clearance-shield">🛡️</span>
-        <span class="clearance-text" id="clearance-text">STACKED CLEARANCE: 1x POWER</span>
-      </div>
-      <button class="header-prestige-logo-btn locked" id="hoover-prestige-btn" title="Prestige Clearance: Burn Hoover Building">
-        <span class="prestige-flame-icon">🏛️🔥</span>
-        <span class="prestige-logo-badge" id="header-prestige-status">LOCKED</span>
-      </button>
-    </div>
-
-    <!-- DEF-CLERK THREAT LEVEL BAR -->
+    <!-- TACTICAL STATUS STRIP: DEF-CLERK THREAT LEVEL & CLEARANCE -->
     <div id="threat-bar-container">
-      <div class="threat-header">
-        <div class="threat-title-group">
-          <span>⚠️</span>
-          <span class="threat-title">DEF-CLERK THREAT LEVEL:</span>
-          <span id="threat-tier-label" class="threat-tier-label" style="color: #22c55e;">TIER 5 (SECURE)</span>
-        </div>
-        <div class="threat-percent-wrap">
-          <span id="threat-percent-text" class="threat-percent-text">0%</span>
-        </div>
+      <div class="threat-tactical-left">
+        <span class="threat-warning-icon">⚠️</span>
+        <span class="threat-prefix">DEF-CLERK:</span>
+        <span id="threat-tier-label" class="threat-tier-label" style="color: #22c55e;">TIER 5 (SECURE)</span>
       </div>
-      <div class="threat-track">
-        <div id="threat-fill" class="threat-fill" style="width: 0%; background: #22c55e;"></div>
+      <div class="threat-gauge-cluster">
+        <div class="threat-track">
+          <div id="threat-fill" class="threat-fill" style="width: 0%; background: #22c55e;"></div>
+        </div>
+        <span id="threat-percent-text" class="threat-percent-text">0%</span>
+      </div>
+      <div class="threat-tactical-right" id="clearance-bar">
+        <span class="clearance-shield">🛡️</span>
+        <span class="clearance-text" id="clearance-text">1x POWER</span>
       </div>
     </div>
 
     <!-- 3. ENHANCED DUAL-STAT STATS PANEL -->
     <div id="stats-panel">
       <div class="stat-block">
-        <div class="stat-label">Lines Done</div>
+        <div class="stat-label">REDACTED</div>
         <div class="stat-value-group">
           <span id="stat-redactions">0</span>
           <span class="stat-badge" id="click-power-badge">+1</span>
         </div>
       </div>
       <div class="stat-block">
-        <div class="stat-label">VIPs Shielded</div>
+        <div class="stat-label">SHIELDED</div>
         <div class="stat-value-group">
           <span id="stat-vips">0</span>
-          <span style="font-size: 10px;">🛡️</span>
+          <span class="stat-icon">🛡️</span>
         </div>
       </div>
       <div class="stat-block">
-        <div class="stat-label">Secrets Buried</div>
+        <div class="stat-label">BURIED</div>
         <div class="stat-value-group">
           <span id="stat-secrets">0</span>
-          <span style="font-size: 10px;">👑</span>
+          <span class="stat-icon">👑</span>
         </div>
       </div>
-      <div class="stat-block" style="text-align: right; align-items: flex-end;">
-        <div class="stat-label">Bureau RPS</div>
+      <div class="stat-block rps-block">
+        <div class="stat-label">BUREAU RPS</div>
         <div class="stat-value-group">
           <span id="stat-rps">0.0</span>
         </div>
@@ -2319,7 +2832,7 @@
       <div class="fume-meta">
         <div class="fume-title">
           <span class="toxic-icon">☣</span>
-          <span>SHARPIE FUME GAUGE</span>
+          <span>FUME GAUGE:</span>
         </div>
         <div id="fume-status-text">0% (TAP FASTER!)</div>
       </div>
@@ -2328,22 +2841,27 @@
       </div>
     </section>
 
+    <!-- CHIEF KASH PATEL BUREAU INTERCOM -->
+    <div id="kash-briefing-bar">
+      <div id="kash-avatar" class="kash-avatar-badge" title="Chief Kash Patel">👓</div>
+      <div class="kash-message-container">
+        <span class="kash-callsign">CHIEF KASH:</span>
+        <span id="kash-bubble">The Boss is watching. Clear the active targets!</span>
+      </div>
+    </div>
+
     <!-- 6. UPGRADE DRAWER: THE CHAOS AUTOMATION WORKFORCE -->
     <footer id="upgrades-drawer">
       <div class="drawer-handle-bar" id="drawer-toggle">
         <div class="drawer-title-group">
-          <span>📂 The Redaction Department</span>
-          <span class="dept-badge">CHAOS & LOYALTY</span>
+          <span class="drawer-folder-icon">📂</span>
+          <span class="drawer-title-text">REDACTION DEPT</span>
+          <span class="dept-badge">CHAOS</span>
         </div>
         <div class="drawer-actions">
-          <span id="drawer-rps-summary">Workforce: 0 RPS</span>
+          <span id="drawer-rps-summary" class="drawer-rps-val">Workforce: 0 RPS</span>
           <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
         </div>
-      </div>
-      <!-- PRESTIGE BAR WITH KASH SPEAKING CHARACTER -->
-      <div class="prestige-kash-dock">
-        <div id="kash-avatar" title="Kash Patel (Redaction Chief)">👓</div>
-        <div id="kash-bubble">The Boss is watching. Clear the active targets!</div>
       </div>
 
       <!-- PRESTIGE BANNER CARD IN DRAWER -->
@@ -2356,6 +2874,7 @@
         </div>
         <button class="prestige-burn-btn locked" id="drawer-prestige-btn">LOCKED</button>
       </div>
+
       <!-- SHOP SEIZED PENALTY BANNER -->
       <div id="shop-penalty-banner" class="shop-penalty-banner" style="display: none;">
         <span class="penalty-icon">🚨</span>
