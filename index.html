@@ -1051,18 +1051,37 @@
       border-radius: 2px;
     }
 
+    .text-line {
+      cursor: pointer;
+    }
+    .text-line:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
     .text-line .pseudo-text {
       font-family: "Courier New", monospace;
-      font-size: 11.5px;
+      font-size: 11px;
       color: #1f1d1b;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.15px;
       white-space: nowrap;
       overflow: hidden;
       width: 100%;
-      text-overflow: clip;
+      text-overflow: ellipsis;
       opacity: 0.95;
       font-weight: 800;
       line-height: 18px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .crit-target {
+      min-height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1px 5px !important;
+      cursor: pointer !important;
+      user-select: none;
+      z-index: 10;
     }
 
     /* DUAL TARGET CLASSES */
@@ -1884,8 +1903,9 @@
         <span class="clearance-shield">🛡️</span>
         <span class="clearance-text" id="clearance-text">STACKED CLEARANCE: 1x POWER</span>
       </div>
-      <button class="hoover-prestige-btn locked" id="hoover-prestige-btn" title="Prestige Clearance Locked">
-        🔒 BURN HOOVER (200M)
+      <button class="header-prestige-logo-btn locked" id="hoover-prestige-btn" title="Prestige Clearance: Burn Hoover Building">
+        <span class="prestige-flame-icon">🏛️🔥</span>
+        <span class="prestige-logo-badge" id="header-prestige-status">LOCKED</span>
       </button>
     </div>
 
@@ -1963,11 +1983,7 @@
         </div>
       </div>
 
-      <!-- KASH PERSISTENT PANIC DIALOGUE BUBBLE -->
-      <div id="kash-dialogue-anchor">
-        <div id="kash-bubble">The Boss is watching, keep redacting!</div>
-        <div id="kash-avatar">👓</div>
-      </div>
+
 
       <!-- Ink Splatter, Baby Powder, Gold Coins & Fume Canvas Overlay -->
       <canvas id="fx-canvas"></canvas>
@@ -1999,6 +2015,12 @@
           <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
         </div>
       </div>
+      <!-- PRESTIGE BAR WITH KASH SPEAKING CHARACTER -->
+      <div class="prestige-kash-dock">
+        <div id="kash-avatar" title="Kash Patel (Redaction Chief)">👓</div>
+        <div id="kash-bubble">The Boss is watching. Clear the active targets!</div>
+      </div>
+
       <!-- PRESTIGE BANNER CARD IN DRAWER -->
       <div class="prestige-card" id="drawer-prestige-card">
         <div class="prestige-card-icon">🏛️🔥</div>
@@ -3074,28 +3096,28 @@
       const CRISIS_DOSSIERS = [
         {
           id: 'flight_logs',
-          titleTag: '🔥 FIRE #1: FLIGHT LOGS',
+          titleTag: '🔥 FIRE #1: EPSTEIN FLIGHT LOGS',
           exhibit: 'EXHIBIT #104-B',
           docRef: 'EXHIBIT #104-B<br>TAIL #N212JE',
           subject: 'FLIGHT LOG // LOLITA EXPRESS MANIFESTS',
           entities: 'JEFFREY EPSTEIN // INDIVIDUAL 1 // PALM BEACH RUNWAY',
-          kashQuote: 'FLIGHT LOGS BLACKED OUT! QUICK, THE PRESS IS REPORTING ON THE 1992 BIRTHDAY PARTY!',
+          kashQuote: 'FLIGHT LOGS BLACKED OUT! BUT THE 1992 CALENDAR PARTY IS LEAKING!',
           nextFireAlert: '🔥 NEXT FIRE IMMINENT: 1992 CALENDAR BIRTHDAY PARTY TAPES LEAKING // SUBPOENAS FILED!',
           headlines: [
-            'BREAKING: Flight logs confirm Tail #N212JE made 14 unauthorized hops to Little St. James.',
+            'BREAKING: Flight logs confirm Tail #N212JE logged 14 unauthorized hops to Little St. James.',
             'DOJ runs out of black Sharpies as passenger manifest leaks to congressional committee.',
             'FAA claims flight manifests were merely tallies of endangered migratory seabirds.',
             'Kash Patel insists Palm Beach safe only contained gold diaper pins and coupon circulars.'
           ],
           lines: [
-            () => `[08:14] FLIGHT MANIFEST: <span class="crit-target target-epstein" data-type="epstein">JEFFREY EPSTEIN</span> CLEARED RUNWAY WITH <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span>`,
-            () => `[09:30] LOGBOOK ALTERATION: COPILOT ORDERED TO PURGE CO-MENTION OF <span class="crit-target target-epstein" data-type="epstein">LOLITA EXPRESS</span>`,
-            () => `[10:45] COURIER TRANSFERRED GUEST LEDGERS FROM <span class="crit-target target-epstein" data-type="epstein">TAIL #N212JE</span> INTO <span class="crit-target target-don" data-type="don">MAR-A-LAGO BOX 18</span>`,
-            () => `[12:10] WATER TAXI CREW ORDERED NEVER TO DISCUSS GUESTS DEBARKING AT <span class="crit-target target-epstein" data-type="epstein">PRIVATE ISLAND</span>`,
-            () => `[14:50] SAFE RECOVERED WITH TAPES MARKED <span class="crit-target target-don" data-type="don">THE BOSS</span> // <span class="crit-target target-epstein" data-type="epstein">JEFFREY</span>`,
-            () => `[16:15] SPECIAL AGENT DEPOSITION: WITNESS RECALLED <span class="crit-target target-don" data-type="don">DIAPER DON</span> BOARDING PRIVATE CABIN`,
-            () => `[19:00] GUEST COTTAGE LOG: ROOM RESERVED FOR <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> DIRECTLY OPPOSITE <span class="crit-target target-epstein">EPSTEIN SUITE</span>`,
-            () => `[23:15] EXECUTIVE ORDER: MAXIMUM REDACTION MANDATE FOR ANY RECORD LINKING <span class="crit-target target-don" data-type="don">THE BOSS</span> TO <span class="crit-target target-epstein">LOLITA EXPRESS</span>`
+            () => `[08:14] PILOT LOG: <span class="crit-target target-epstein" data-type="epstein">EPSTEIN</span> CLEARED RUNWAY`,
+            () => `[09:30] COURIER: <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> VAULT CODES`,
+            () => `[10:45] AIR TRANSIT: <span class="crit-target target-epstein" data-type="epstein">LOLITA EXPRESS</span> CLEARED`,
+            () => `[12:10] WATER TAXI: HIDE <span class="crit-target target-epstein" data-type="epstein">LITTLE ST. JAMES</span>`,
+            () => `[14:50] SAFE TAPES: MARKED <span class="crit-target target-don" data-type="don">DIAPER DON</span>`,
+            () => `[16:15] SPECIAL AGENT: WITNESS <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
+            () => `[19:00] VIP COTTAGE: ROOM FOR <span class="crit-target target-don" data-type="don">MAR-A-LAGO BOX 18</span>`,
+            () => `[23:15] TOP SECRET: PURGE <span class="crit-target target-epstein" data-type="epstein">TAIL #N212JE</span>`
           ]
         },
         {
@@ -3105,7 +3127,7 @@
           docRef: 'EXHIBIT #1992-B<br>MAR-A-LAGO BALLROOM',
           subject: 'MAR-A-LAGO 1992 // THE 28-CALENDAR VIP BASH',
           entities: 'DONNY & EPSTEIN (2 GUESTS) // 28 CALENDAR MODELS // TAPE 4',
-          kashQuote: 'BIRTHDAY FOOTAGE SHREDDED! BUT LOOK AT SCOTLAND YARD — PRINCE ANDREW IS BLOWING UP!',
+          kashQuote: 'BIRTHDAY TAPE SHREDDED! BUT LOOK AT SCOTLAND YARD — PRINCE ANDREW IS BLOWING UP!',
           nextFireAlert: '🔥 NEXT FIRE IMMINENT: PRINCE ANDREW WOKING PIZZA ALIBI CRUMBLING // MET POLICE SUBPOENAS ON WIRE!',
           headlines: [
             'BREAKING: Unsealed 1992 VHS tape captures Mar-a-Lago party with exactly two male VIPs in attendance.',
@@ -3114,14 +3136,14 @@
             'Bureau scrambles to classify all calendar company sponsorships before morning press briefing.'
           ],
           lines: [
-            () => `[20:00] BALLROOM ROSTER CONFIRMED: EXCLUSIVE 2-MAN GUEST LIST OF <span class="crit-target target-don" data-type="don">DONNY</span> AND <span class="crit-target target-epstein" data-type="epstein">JEFFREY EPSTEIN</span>`,
-            () => `[20:45] DJ CONTRACT DEMANDED VIP STAGE PERFORMANCES BY <span class="crit-target target-party" data-type="party">28 CALENDAR MODELS</span>`,
-            () => `[21:30] SECURITY INTERCEPT: <span class="crit-target target-don" data-type="don">THE BOSS</span> SEEN HIGH-FIVING <span class="crit-target target-epstein">JEFFREY</span> OVER VIP CAKE`,
-            () => `[22:15] CONFIDENTIAL CAMCORDER OPERATOR MARKED CASSETTE AS <span class="crit-target target-party" data-type="party">INFAMOUS BIRTHDAY TAPE 4</span>`,
-            () => `[22:50] CATERING RECEIPT: PRIVATE DINNER CHARGED DIRECTLY TO <span class="crit-target target-don">MAR-A-LAGO ACCOUNT</span>`,
-            () => `[23:20] WITNESS SWORN TESTIMONY: <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> QUOTED PRAISING <span class="crit-target target-party" data-type="party">CALENDAR GIRLS BASH</span>`,
-            () => `[00:10] MORNING-AFTER MEMO: BURN ALL INVITATION ENVELOPES CO-SIGNED BY <span class="crit-target target-epstein">EPSTEIN</span>`,
-            () => `[01:00] EMERGENCY VAULT DEPOSIT: CASSETTE TRANSFERRED BEHIND <span class="crit-target target-don">MAR-A-LAGO BOX 18</span>`
+            () => `[20:00] 2-MAN GUEST LIST: <span class="crit-target target-don" data-type="don">DONNY</span> & <span class="crit-target target-epstein" data-type="epstein">EPSTEIN</span>`,
+            () => `[20:45] DJ CONTRACT: <span class="crit-target target-party" data-type="party">28 CALENDAR GIRLS</span>`,
+            () => `[21:30] SECURITY INTERCEPT: <span class="crit-target target-don" data-type="don">THE BOSS</span> AT BUFFET`,
+            () => `[22:15] CAMCORDER LOG: <span class="crit-target target-party" data-type="party">BIRTHDAY TAPE 4</span>`,
+            () => `[22:50] CATERING RECEIPT: <span class="crit-target target-don" data-type="don">DOM PERIGNON</span> BILLED`,
+            () => `[23:20] WITNESS STATEMENT: <span class="crit-target target-party" data-type="party">BALLROOM VIP BASH</span>`,
+            () => `[00:10] MORNING MEMO: BURN <span class="crit-target target-epstein" data-type="epstein">GUEST CARDS</span>`,
+            () => `[01:00] EMERGENCY VAULT: HIDE IN <span class="crit-target target-don" data-type="don">BOX 18</span>`
           ]
         },
         {
@@ -3131,7 +3153,7 @@
           docRef: 'EXHIBIT #007-ROYAL<br>WOKING ALIBI',
           subject: 'ROYAL LODGE // TRAMP NIGHTCLUB INTERCEPTS',
           entities: 'PRINCE ANDREW // VIRGINIA G. // PIZZA EXPRESS // VALET MEMOS',
-          kashQuote: 'ROYAL PHONE LOGS SUPPRESSED! BUT THE BILLIONAIRE BLACK BOOK JUST LEAKED TO THE JOURNAL!',
+          kashQuote: 'ROYAL PHONE LOGS SUPPRESSED! BUT THE BILLIONAIRE BLACK BOOK JUST LEAKED ON REDDIT!',
           nextFireAlert: '🔥 NEXT FIRE IMMINENT: BILLIONAIRE BLACK BOOK CONTACTS LEAKING ON DARK WEB // WALL STREET IN PANIC!',
           headlines: [
             'BREAKING: Prince Andrew insists he was eating garlic dough balls in Woking during royal summit.',
@@ -3140,13 +3162,13 @@
             'Settlement wire transfer of £12 Million intercepted before offshore Cayman clearing.'
           ],
           lines: [
-            () => `[18:30] ROYAL DEFENSE MEMO: <span class="crit-target target-royal" data-type="royal">PRINCE ANDREW</span> CLAIMS HE WAS AT <span class="crit-target target-royal" data-type="royal">PIZZA EXPRESS WOKING</span>`,
-            () => `[19:45] TRAMP NIGHTCLUB LOG: WITNESS OBSERVED <span class="crit-target target-royal" data-type="royal">THE DUKE</span> DANCING WITH <span class="crit-target target-epstein" data-type="epstein">VIRGINIA G.</span>`,
-            () => `[21:10] INTERCEPTED TELEGRAM: BUCKINGHAM PALACE ASKS FOR REMOVAL OF <span class="crit-target target-royal" data-type="royal">ROYAL LODGE LOGS</span>`,
-            () => `[22:00] SETTLEMENT LEDGER: SECRET £12,000,000 TRANSFER AUTHORIZED FROM <span class="crit-target target-royal" data-type="royal">ROYAL COFFERS</span>`,
-            () => `[22:45] MET POLICE MEMO: INVESTIGATION FROZEN AFTER DIRECT CALL FROM <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
-            () => `[23:30] JET MANIFEST: ROYAL CHOPPER TRACKED HEADING DIRECTLY FOR <span class="crit-target target-epstein">LOLITA EXPRESS RUNWAY</span>`,
-            () => `[00:15] MEDICAL AFFIDAVIT CLAIMING INABILITY TO SWEAT FILED UNDER <span class="crit-target target-royal" data-type="royal">ROYAL IMMUNITY</span>`
+            () => `[18:30] ROYAL DEFENSE: <span class="crit-target target-royal" data-type="royal">PRINCE ANDREW</span> PIZZA ALIBI`,
+            () => `[19:45] NIGHTCLUB LOG: <span class="crit-target target-epstein" data-type="epstein">VIRGINIA G.</span> SIGHTING`,
+            () => `[21:10] INTERCEPT: DELETE <span class="crit-target target-royal" data-type="royal">ROYAL LODGE LOGS</span>`,
+            () => `[22:00] WIRE TRANSFER: PURGE <span class="crit-target target-royal" data-type="royal">£12,000,000</span> RECORD`,
+            () => `[22:45] MET POLICE: HALT PROBE FOR <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
+            () => `[23:30] ROYAL CHOPPER: LAND AT <span class="crit-target target-epstein" data-type="epstein">RUNWAY N212JE</span>`,
+            () => `[00:15] MEDICAL CLAIM: HIDE <span class="crit-target target-royal" data-type="royal">SWEAT AFFIDAVIT</span>`
           ]
         },
         {
@@ -3156,7 +3178,7 @@
           docRef: 'EXHIBIT #88-BB<br>UNREDACTED LEDGER',
           subject: 'THE LITTLE BLACK BOOK // 92 PRIVILEGED CONTACTS',
           entities: 'LES WEXNER // BILL GATES // HARVEY WEINSTEIN // ALAN DERSHOWITZ',
-          kashQuote: 'BLACK BOOK HUSH-MONEY COURIERS ARRESTED! BUT BOXES IN THE BATHROOM WERE FOUND BY INVESTIGATORS!',
+          kashQuote: 'BLACK BOOK HUSH-MONEY DESTROYED! BUT THE BATHROOM BOXES WERE DISCOVERED!',
           nextFireAlert: '🔥 NEXT FIRE IMMINENT: 300 BOXES LOCATED IN MAR-A-LAGO CHANDELIER BATHROOM // SHOWER CURTAIN STASH EXPOSED!',
           headlines: [
             'BREAKING: Unredacted Little Black Book found circulating among Upper East Side moguls.',
@@ -3165,13 +3187,13 @@
             'Alan Dershowitz requests full redaction of "all references to keeping underwear on during massage."'
           ],
           lines: [
-            () => `[10:00] WEXNER DOSSIER: COMPLETE POWER OF ATTORNEY GRANTED OVER FORTUNE OF <span class="crit-target target-vip" data-type="vip">LES WEXNER</span>`,
-            () => `[11:30] DINNER CALENDAR: MULTI-HOUR PHILANTHROPY SESSION CO-HOSTED WITH <span class="crit-target target-vip" data-type="vip">BILL GATES</span>`,
-            () => `[13:45] HOLLYWOOD PHONE SLIP: 14 MESSAGES FROM <span class="crit-target target-vip" data-type="vip">HARVEY WEINSTEIN</span> REQUESTING AUDITIONS`,
-            () => `[15:20] PALM BEACH CABANA INVOICE: MASSAGE SLIP LOGGED FOR <span class="crit-target target-vip" data-type="vip">ALAN DERSHOWITZ</span>`,
-            () => `[17:00] CAMBRIDGE ENDOWMENT TRANSFER: DIRECT WIRE APPROVED BY <span class="crit-target target-vip" data-type="vip">LARRY SUMMERS</span>`,
-            () => `[18:40] PRIVATE ISLAND DONOR PLAQUE DEDICATED TO <span class="crit-target target-epstein">JEFFREY EPSTEIN</span> BY WALL STREET TITANS`,
-            () => `[21:15] ATTORNEY MEMO: DELETE CONTACT ENTRIES 40 THROUGH 88 PRIOR TO <span class="crit-target target-don" data-type="don">THE BOSS REVIEWS</span>`
+            () => `[10:00] POWER OF ATTORNEY: <span class="crit-target target-vip" data-type="vip">LES WEXNER</span> FORTUNE`,
+            () => `[11:30] DINNER RECORD: MEETING <span class="crit-target target-vip" data-type="vip">BILL GATES</span>`,
+            () => `[13:45] PHONE LOG: CALLS FROM <span class="crit-target target-vip" data-type="vip">HARVEY WEINSTEIN</span>`,
+            () => `[15:20] CABANA INVOICE: SLIP FOR <span class="crit-target target-vip" data-type="vip">ALAN DERSHOWITZ</span>`,
+            () => `[17:00] HARVARD TRANSFER: WIRE FOR <span class="crit-target target-vip" data-type="vip">LARRY SUMMERS</span>`,
+            () => `[18:40] PRIVATE ISLAND: PLAQUE FOR <span class="crit-target target-epstein" data-type="epstein">EPSTEIN</span>`,
+            () => `[21:15] PURGE CONTACTS: EXCLUDE <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span>`
           ]
         },
         {
@@ -3181,7 +3203,7 @@
           docRef: 'EXHIBIT #MAL-SHOWER<br>PULLMAN SUITE',
           subject: 'CHANDELIER BATHROOM // BOXES 18 THROUGH 34',
           entities: 'BOX 18 BEHIND SHOWER CURTAIN // WAR PLANS // NURSE NATALIA',
-          kashQuote: 'SHOWER CURTAIN BOXES EVACUATED! BUT THE SUBPOENA DEADLINE IN THE INCINERATOR EXPIRES IN 5 MINUTES!',
+          kashQuote: 'SHOWER CURTAIN BOXES CLEARED! BUT THE SUBPOENA INCINERATOR DEADLINE IS EXPIRING!',
           nextFireAlert: '🔥 NEXT FIRE IMMINENT: CONGRESSIONAL SUBPOENA INCINERATOR DEADLINE // DESTROY ALL PAPERS ON SIGHT!',
           headlines: [
             'BREAKING: Photos show 45 cardboard boxes stacked to the crystal chandelier next to the toilet.',
@@ -3190,13 +3212,13 @@
             'DOJ finds top secret folders mixed with golf shoes, newspapers, and commemorative ketchup bottles.'
           ],
           lines: [
-            () => `[09:00] PHOTO EVIDENCE: 45 BOXES STACKED FLUSH WITH SHOWER CURTAIN IN <span class="crit-target target-don" data-type="don">MAR-A-LAGO SUITE</span>`,
-            () => `[10:30] TOP SECRET LABEL OVERLAID WITH GOLDEN SAFETY PIN STICKER BY <span class="crit-target target-don" data-type="don">NURSE NATALIA</span>`,
-            () => `[12:15] POOL DRAIN VALVE MYSTERIOUSLY TRIPPED, FLOODING HARD DRIVES OF <span class="crit-target target-epstein">SURVEILLANCE ARCHIVE</span>`,
-            () => `[14:00] CLASSIFIED WAR PLANS DISCOVERED IN <span class="crit-target target-don" data-type="don">MAR-A-LAGO BOX 18</span> NEXT TO GOLF POLOS`,
-            () => `[16:45] MEMO FROM KASH: 'ALL 300 BOXES WERE MENTALLY DECLASSIFIED BY AURA BEFORE LUNCH'`,
-            () => `[19:10] WITNESS SAW TRUCK MOVING BOXES TO PRIVATE JET HEADED DIRECTLY FOR <span class="crit-target target-don" data-type="don">BEDMINSTER</span>`,
-            () => `[22:00] EMERGENCY MOTION: CLAIM EXECUTIVE PRIVILEGE OVER ENTIRE CLUB PLUMBING SYSTEM`
+            () => `[09:00] SHOWER CURTAIN: 45 BOXES AT <span class="crit-target target-don" data-type="don">MAR-A-LAGO</span>`,
+            () => `[10:30] FORMULA LOG: SIGNED BY <span class="crit-target target-don" data-type="don">NURSE NATALIA</span>`,
+            () => `[12:15] POOL DRAIN: FLOOD <span class="crit-target target-epstein" data-type="epstein">SERVER ROOM</span>`,
+            () => `[14:00] WAR PLANS: FOUND IN <span class="crit-target target-don" data-type="don">BOX 18</span>`,
+            () => `[16:45] TELEPATHIC MEMO: BY <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
+            () => `[19:10] PRIVATE JET: SHIP TO <span class="crit-target target-don" data-type="don">BEDMINSTER</span>`,
+            () => `[22:00] PRIVILEGE MOTION: OVER <span class="crit-target target-don" data-type="don">CLUB PLUMBING</span>`
           ]
         },
         {
@@ -3206,8 +3228,8 @@
           docRef: 'EXHIBIT #000-BURN<br>BASEMENT FURNACE',
           subject: 'SUBPOENA INCINERATOR // 10:00 AM CONGRESSIONAL DEADLINE',
           entities: 'KASH INDUSTRIAL MAGNET // 500 GAL DIESEL // EXECUTIVE IMMUNITY',
-          kashQuote: 'INCINERATOR PURGE SUCCESSFUL! BUT A LEAKED FLIGHT MANIFEST JUST RESURFACED ON TWITTER!',
-          nextFireAlert: '🔥 NEXT FIRE IMMINENT: EPSTEIN FLIGHT LOGS RESURFACING // THE VICIOUS CYCLE OF COVER-UPS CONTINUES!',
+          kashQuote: 'INCINERATOR PURGE SUCCESSFUL! BUT THE 33,000 BLEACHBIT EMAILS ARE BEING UNSEALED!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: BLEACHBIT PRIVATE SERVER RACKS UNCOVERED // HAMMER ALL EVIDENCE NOW!',
           headlines: [
             'BREAKING: D.C. firefighters respond to dense purple smoke pouring from White House chimney.',
             'Kash Patel spotted wheeling 40-pound industrial degaussing magnet through DOJ hallway.',
@@ -3215,12 +3237,108 @@
             'Witness affirms: "I saw them roasting marshmallows over the unsealed 302 FBI files."'
           ],
           lines: [
-            () => `[08:00] HOUSE COMMITTEE DEADLINE: 10:00 AM SURRENDER DEMANDED FOR UNREDACTED <span class="crit-target target-don" data-type="don">THE BOSS</span> FILES`,
-            () => `[08:30] KASH PATEL ROLLS INDUSTRIAL MAGNET OVER SERVERS CONTAINING <span class="crit-target target-epstein">EPSTEIN TAPE BACKUPS</span>`,
-            () => `[09:00] 500 GALLONS INDUSTRIAL SOLVENT DELIVERED TO <span class="crit-target target-don" data-type="don">BASEMENT INCINERATOR</span>`,
-            () => `[09:25] WHITE HOUSE CHIMNEY DETECTED SPEWING 400 LBS OF SMOLDERING <span class="crit-target target-epstein">SUBPOENA TRANSCRIPTS</span>`,
-            () => `[09:45] AFFIDAVIT EXECUTED: ALL FORMER AIDES SWORN TO FORGET THE NAME <span class="crit-target target-epstein">JEFFREY</span>`,
-            () => `[09:59] FINAL DOCUMENT PLACED IN SHREDDER: THE SACRED CO-SIGNED PLEDGE BETWEEN <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> AND <span class="crit-target target-epstein">EPSTEIN</span>`
+            () => `[08:00] SUBPOENA DEADLINE: FOR <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
+            () => `[08:30] INDUSTRIAL MAGNET: DEGAUSS <span class="crit-target target-epstein" data-type="epstein">EPSTEIN TAPES</span>`,
+            () => `[09:00] DIESEL SOLVENT: DUMP IN <span class="crit-target target-don" data-type="don">INCINERATOR</span>`,
+            () => `[09:25] CHIMNEY PLUME: CHARRED <span class="crit-target target-epstein" data-type="epstein">TRANSCRIPTS</span>`,
+            () => `[09:45] PURGE AFFIDAVIT: FORGET <span class="crit-target target-epstein" data-type="epstein">JEFFREY</span>`,
+            () => `[09:59] FINAL SHRED: DESTROY <span class="crit-target target-don" data-type="don">CO-SIGNED NOTE</span>`
+          ]
+        },
+        {
+          id: 'bleachbit_cleanse',
+          titleTag: '🔥 FIRE #7: BLEACHBIT SERVER CLEANSE',
+          exhibit: 'EXHIBIT #33K-WIPE',
+          docRef: 'EXHIBIT #33K-WIPE<br>BASEMENT SERVER RACK',
+          subject: 'CHAPPAQUA CELLAR // 33,000 DELETED EMAILS',
+          entities: 'BLEACHBIT 5.0 // HAMMERED PHONES // OFFSHORE BACKUPS',
+          kashQuote: 'SERVER DRIVES WIPED WITH CLOTH! BUT THE BEDMINSTER GOLF CART BAGS ARE BEING RAIDED!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: BEDMINSTER 18TH HOLE GOLF CART PURSUIT // CLASSIFIED MAPS IN GOLF BAGS!',
+          headlines: [
+            'BREAKING: IT technician asked online how to strip VIP email addresses from Exchange backups.',
+            'House committee confirms 14 mobile devices were decommissioned using standard 16-oz claw hammers.',
+            'DOJ affirms: "Wiped? With like a cloth or something?"',
+            'Basement server rack mysteriously replaced by rack of aged cabernet sauvignon.'
+          ],
+          lines: [
+            () => `[07:15] SERVER SCRUB: RUN <span class="crit-target target-vip" data-type="vip">BLEACHBIT 5.0</span>`,
+            () => `[08:40] EVIDENCE PURGE: SMASH <span class="crit-target target-vip" data-type="vip">BLACKBERRY PHONES</span>`,
+            () => `[10:20] EXCHANGE LOGS: ERASE <span class="crit-target target-vip" data-type="vip">33,000 EMAILS</span>`,
+            () => `[12:00] SUBPOENA WITNESS: CLAIM <span class="crit-target target-don" data-type="don">CLOTH WIPED</span>`,
+            () => `[14:30] CLOUD BACKUP: DELETE <span class="crit-target target-epstein" data-type="epstein">PRIVATE ROUTER</span>`,
+            () => `[17:00] IMMUNITY ORDER: SIGN FOR <span class="crit-target target-don" data-type="don">THE BOSS</span>`
+          ]
+        },
+        {
+          id: 'bedminster_caddy',
+          titleTag: '🔥 FIRE #8: BEDMINSTER GOLF CART PURSUIT',
+          exhibit: 'EXHIBIT #BED-18',
+          docRef: 'EXHIBIT #BED-18<br>HOLE 18 CART PATH',
+          subject: 'NEW JERSEY ESTATE // CLASSIFIED FOLDERS IN GOLF BAG',
+          entities: 'HOLE 18 CADDY // IRAN WAR MAPS // SECRET SERVICE CART #4',
+          kashQuote: 'GOLF BAG EVIDENCE BURIED IN SAND TRAP! BUT THE 3 AM TWEETSTORM JUST HIT TWITTER!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: 3:14 AM COVFEFE TWEETSTORM // UNSEALED EXECUTIVE PHONE DUMP!',
+          headlines: [
+            'BREAKING: Bedminster caddy confesses to storing Top Secret nuclear briefs in leather golf bag.',
+            'Secret Service golf cart clocked at 42 MPH speeding toward private hangar.',
+            'Witness observes club member viewing foreign military maps at the omelet station.',
+            'Club manager insists classified folders were merely printed scorecards from 1998 club championship.'
+          ],
+          lines: [
+            () => `[09:30] HOLE 18 CADDY: UNZIP <span class="crit-target target-don" data-type="don">GOLF BAG MAPS</span>`,
+            () => `[11:00] CLUBHOUSE MEMO: SHIELD <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
+            () => `[13:15] CART PURSUIT: ESCORT <span class="crit-target target-don" data-type="don">BOX 22 CART</span>`,
+            () => `[15:40] SAND TRAP DROP: BURY <span class="crit-target target-epstein" data-type="epstein">FOREIGN DOSSIER</span>`,
+            () => `[17:20] OMELET BAR LEAK: HIDE <span class="crit-target target-don" data-type="don">IRAN WAR PLANS</span>`,
+            () => `[19:00] LOCKER ROOM: PURGE <span class="crit-target target-party" data-type="party">VIP GUEST SCORECARDS</span>`
+          ]
+        },
+        {
+          id: 'covfefe_tweetstorm',
+          titleTag: '🔥 FIRE #9: 3:14 AM COVFEFE TWEETSTORM',
+          exhibit: 'EXHIBIT #0314-COV',
+          docRef: 'EXHIBIT #0314-COV<br>EXECUTIVE RESIDENCE',
+          subject: 'EXECUTIVE BEDROOM // 3 AM DIET COKE DISPATCH',
+          entities: 'COVFEFE MEMORANDUM // TWITTER CELLPHONE // ALL CAPS ORDERS',
+          kashQuote: 'CELLPHONE SEIZED AND SMASHED! BUT MARINE ONE JUST SCATTERED MEMOS ON SOUTH LAWN!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: MARINE ONE ROTOR WASH BLOWING CLASSIFIED PAPERS ACROSS THE MALL!',
+          headlines: [
+            'BREAKING: 3:14 AM tweet reads: "Despite the constant negative press covfefe..."',
+            'Chief of staff claims midnight tweet was a 5D-chess encrypted military command code.',
+            'Emergency Diet Coke delivery dispatched to executive bedroom under armed escort.',
+            'Cabinet members awake to find 14 department heads fired via social media notifications.'
+          ],
+          lines: [
+            () => `[03:14] RESIDENCE TWEET: PURGE <span class="crit-target target-don" data-type="don">COVFEFE CODE</span>`,
+            () => `[03:45] CAPITAL LETTERS: OBFUSCATE <span class="crit-target target-don" data-type="don">THE BOSS RANT</span>`,
+            () => `[04:20] CELLPHONE INTERCEPT: WIPE <span class="crit-target target-don" data-type="don">DIET COKE LOGS</span>`,
+            () => `[05:00] CABINET SHAKEUP: BURY <span class="crit-target target-vip" data-type="vip">DISMISSAL MEMOS</span>`,
+            () => `[06:15] PRESS CORPS ALERT: DENY <span class="crit-target target-epstein" data-type="epstein">MIDNIGHT CALLS</span>`,
+            () => `[07:00] LEGAL AFFIDAVIT: CLAIM <span class="crit-target target-don" data-type="don">EXECUTIVE PRIVILEGE</span>`
+          ]
+        },
+        {
+          id: 'marine_one_scatter',
+          titleTag: '🔥 FIRE #10: MARINE ONE ROTOR SCATTER',
+          exhibit: 'EXHIBIT #HMX-1',
+          docRef: 'EXHIBIT #HMX-1<br>SOUTH LAWN PAD',
+          subject: 'WHITE HOUSE SOUTH LAWN // ROTOR WASH CHAOS',
+          entities: 'MARINE ONE ROTORS // FLYING BRIEFCASES // AIDES ON HANDS & KNEES',
+          kashQuote: 'ALL FLYING PAPERS PINNED DOWN! BUT FLIGHT LOGS RESURFACED ON THE DOCKET!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: EPSTEIN FLIGHT LOGS RESURFACING // THE VICIOUS CIRCLE BEGINS ANEW!',
+          headlines: [
+            'BREAKING: Marine One rotor wash scatters 200 Top Secret files across the South Lawn fence.',
+            'Tourists on Pennsylvania Avenue photograph classified briefings fluttering onto sidewalk.',
+            'Junior aides seen diving across flowerbeds to tackle Top Secret nuclear folders.',
+            'Park Police confirms: "We recovered 14 pages from the White House rose bushes."'
+          ],
+          lines: [
+            () => `[10:00] ROTOR BLAST: CATCH <span class="crit-target target-don" data-type="don">FLYING MEMOS</span>`,
+            () => `[10:15] ROSE BUSHES: TACKLE <span class="crit-target target-don" data-type="don">BOX 18 BRIEFS</span>`,
+            () => `[10:30] TOURIST SNAPS: SEIZE <span class="crit-target target-epstein" data-type="epstein">IPHONE PHOTOS</span>`,
+            () => `[10:45] SECURITY GAUNTLET: PURGE <span class="crit-target target-royal" data-type="royal">ROYAL LOGS</span>`,
+            () => `[11:00] LAWN SWEEP: RETRIEVE <span class="crit-target target-vip" data-type="vip">BLACK BOOK LEAKS</span>`,
+            () => `[11:30] CHOPPER RE-BOARD: FLY <span class="crit-target target-don" data-type="don">THE BOSS TO SAFETY</span>`
           ]
         }
       ];
@@ -3306,6 +3424,30 @@
         });
       }
 
+      // Ensure every single line is directly clickable to redact any active target on that line!
+      function handleLineDirectClick(e, line) {
+        getAudioContext();
+        if (isAdvancingCrisis) return;
+
+        // If line has an unredacted target, trigger it directly!
+        const unredactedTarget = line.querySelector('.crit-target:not(.crit-redacted)');
+        if (unredactedTarget) {
+          handleTargetClick(e, unredactedTarget);
+          return;
+        }
+
+        if (!line.classList.contains('redacted')) {
+          line.classList.add('redacted');
+        }
+
+        handleClick(e);
+
+        const remaining = updateRemainingTargetsDisplay();
+        if (remaining === 0) {
+          onCrisisContained(true);
+        }
+      }
+
       // TARGET CLICK HANDLER
       function handleTargetClick(e, targetEl) {
         getAudioContext();
@@ -3316,7 +3458,7 @@
         const type = targetEl.dataset.type || 'epstein';
 
         const prestigeMult = getPrestigeMultiplier();
-        const multiplier = (state.frenzyActive ? 2 : 1) * (state.privilegeActive ? 7 : 1);
+        const multiplier = (state.frenzyActive ? 2 : 1) * (state.privilegeActive ? 3 : 1);
         const baseGain = state.baseClickPower * prestigeMult * multiplier;
 
         let gain = baseGain * 10;
@@ -3325,33 +3467,33 @@
 
         if (type === 'epstein') {
           state.lastEpsteinHit = now;
-          gain = baseGain * 10;
-          floatLabel = `+10x EPSTEIN REDACTED! (+${formatNumber(gain)})`;
+          gain = baseGain * 3;
+          floatLabel = `+3x EPSTEIN REDACTED! (+${formatNumber(gain)})`;
           floatClass = 'crit';
           playCriticalSound();
           state.vipsProtected++;
         } else if (type === 'don') {
           state.lastDonHit = now;
-          gain = baseGain * 15;
-          floatLabel = `+15x PROTECT THE BOSS! (+${formatNumber(gain)})`;
+          gain = baseGain * 5;
+          floatLabel = `+5x PROTECT THE BOSS! (+${formatNumber(gain)})`;
           floatClass = 'boss';
           playDonCoverupSound();
           state.secretsBuried++;
         } else if (type === 'party') {
-          gain = baseGain * 12;
-          floatLabel = `+12x 1992 PARTY COVER-UP! (+${formatNumber(gain)})`;
+          gain = baseGain * 4;
+          floatLabel = `+4x 1992 PARTY COVER-UP! (+${formatNumber(gain)})`;
           floatClass = 'frenzy';
           playCriticalSound();
           state.vipsProtected++;
         } else if (type === 'royal') {
-          gain = baseGain * 14;
-          floatLabel = `+14x ROYAL IMMUNITY! (+${formatNumber(gain)})`;
+          gain = baseGain * 5;
+          floatLabel = `+5x ROYAL IMMUNITY! (+${formatNumber(gain)})`;
           floatClass = 'combo';
           playBrassFanfare();
           state.secretsBuried++;
         } else if (type === 'vip') {
-          gain = baseGain * 11;
-          floatLabel = `+11x BLACK BOOK HUSH MONEY! (+${formatNumber(gain)})`;
+          gain = baseGain * 4;
+          floatLabel = `+4x BLACK BOOK HUSH MONEY! (+${formatNumber(gain)})`;
           floatClass = 'crit';
           playCriticalSound();
           state.vipsProtected++;
@@ -3420,10 +3562,10 @@
         container.classList.add('privilege-active');
 
         playBrassFanfare();
-        kashBubble.textContent = "EXECUTIVE PRIVILEGE INVOKED! 7X SPEED!";
+        kashBubble.textContent = "EXECUTIVE PRIVILEGE INVOKED! 3X SPEED!";
 
         const rect = canvas.getBoundingClientRect();
-        spawnFloatText(rect.width / 2 - 80, rect.height / 2 - 50, '⚡ EXECUTIVE PRIVILEGE! (7X RPS) ⚡', 'combo');
+        spawnFloatText(rect.width / 2 - 80, rect.height / 2 - 50, '⚡ EXECUTIVE PRIVILEGE! (3X RPS) ⚡', 'combo');
       }
 
       function endExecutivePrivilegeFrenzy() {
@@ -3457,7 +3599,7 @@
         const currentCrisis = getCurrentCrisis();
         const rps = getCurrentRPS();
         const prestigeMult = getPrestigeMultiplier();
-        const bonus = Math.max(100 * prestigeMult, Math.floor(rps * 8));
+        const bonus = Math.max(15 * prestigeMult, Math.floor(rps * 2.5));
 
         state.redactions += bonus;
         state.totalRedactedEver += bonus;
@@ -3490,7 +3632,7 @@
         getAudioContext();
 
         const prestigeMult = getPrestigeMultiplier();
-        const multiplier = (state.frenzyActive ? 2 : 1) * (state.privilegeActive ? 7 : 1);
+        const multiplier = (state.frenzyActive ? 2 : 1) * (state.privilegeActive ? 3 : 1);
         const gain = state.baseClickPower * prestigeMult * multiplier;
 
         state.redactions += gain;
@@ -3557,12 +3699,12 @@
           baseTotal += g.count * g.rps;
         });
         const prestigeMult = getPrestigeMultiplier();
-        const mult = state.privilegeActive ? 7 : 1;
+        const mult = state.privilegeActive ? 3 : 1;
         return baseTotal * prestigeMult * mult;
       }
 
       function getGeneratorCost(g) {
-        return Math.floor(g.baseCost * Math.pow(1.15, g.count));
+        return Math.floor(g.baseCost * Math.pow(1.18, g.count));
       }
 
       function formatNumber(num) {
