@@ -2640,6 +2640,389 @@
       border-radius: 3px;
     }
   
+
+    /* ==================================================== */
+    /* MOBILE-FIRST ULTRA-COMPACT HUD & EXPANSIVE DOSSIER   */
+    /* ==================================================== */
+    #news-chyron {
+      height: 20px !important;
+      font-size: 9.5px !important;
+    }
+
+    #header {
+      height: 38px !important;
+      padding: 0 8px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+      background: #0d1322 !important;
+    }
+
+    .header-branding .agency-title {
+      font-size: 13.5px !important;
+      letter-spacing: 0.5px !important;
+    }
+
+    .header-telemetry {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 6px !important;
+      padding: 2px 7px !important;
+    }
+
+    .telemetry-currency {
+      display: flex !important;
+      align-items: baseline !important;
+      gap: 3px !important;
+      font-size: 13.5px !important;
+      font-weight: 900 !important;
+      color: #38bdf8 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    .telemetry-currency .curr-icon { font-size: 11px !important; }
+
+    .telemetry-rps {
+      display: flex !important;
+      align-items: center !important;
+      gap: 2px !important;
+      font-size: 11.5px !important;
+      font-weight: 800 !important;
+      color: #4ade80 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+      padding-left: 6px !important;
+    }
+
+    .telemetry-rps .rps-icon { font-size: 9px !important; color: #facc15 !important; }
+
+    .header-actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+
+    .header-prestige-btn {
+      padding: 2px 6px !important;
+      font-size: 8px !important;
+    }
+
+    /* 3. TACTICAL MICRO-STRIP (Height: 22px) */
+    #threat-bar-container {
+      height: 22px !important;
+      padding: 0 8px !important;
+      background: #060a14 !important;
+      border-bottom: 1px solid #1e293b !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .micro-threat-group {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      font-size: 8px !important;
+      font-weight: 800 !important;
+    }
+
+    .micro-threat-group .threat-prefix {
+      color: #94a3b8 !important;
+      letter-spacing: 0.4px !important;
+    }
+
+    .micro-threat-group .threat-tier-label {
+      font-size: 7.5px !important;
+      padding: 1px 4px !important;
+      border-radius: 2px !important;
+      font-weight: 900 !important;
+    }
+
+    .micro-threat-group .threat-track {
+      width: 45px !important;
+      height: 5px !important;
+      background: #000 !important;
+      border-radius: 3px !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .micro-threat-group .threat-percent-text {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 8px !important;
+      font-weight: 800 !important;
+      color: #cbd5e1 !important;
+    }
+
+    .micro-stats-panel {
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      height: auto !important;
+    }
+
+    .micro-stats-panel .stat-block {
+      display: flex !important;
+      align-items: center !important;
+      gap: 2px !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 9px !important;
+      font-weight: 800 !important;
+      color: #f1f5f9 !important;
+    }
+
+    .micro-stats-panel .stat-icon { font-size: 9px !important; }
+
+    .micro-fume-section {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      height: auto !important;
+      font-size: 8px !important;
+      font-weight: 800 !important;
+      color: #a855f7 !important;
+    }
+
+    .micro-fume-section .toxic-icon { font-size: 8.5px !important; }
+    .micro-fume-section #fume-status-text {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 8px !important;
+      color: #cbd5e1 !important;
+    }
+
+    .micro-fume-section .fume-track {
+      width: 40px !important;
+      height: 5px !important;
+      background: #000 !important;
+      border-radius: 3px !important;
+      overflow: hidden !important;
+      border: 1px solid #334155 !important;
+    }
+
+    /* 4. EXPANSIVE FULL-VIEW DOSSIER */
+    #desk-viewport {
+      flex: 1 !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      padding: 4px 6px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+
+    #dossier-wrapper {
+      width: 100% !important;
+      max-width: 430px !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    #dossier-page {
+      width: 100% !important;
+      height: 100% !important;
+      background: #f7f3e4 !important;
+      border-radius: 5px !important;
+      padding: 8px 12px 6px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 2px 4px rgba(0,0,0,0.3) !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
+    .dossier-compact-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      margin-bottom: 2px !important;
+    }
+
+    .stamp-sci {
+      font-family: 'Courier New', monospace !important;
+      font-size: 8px !important;
+      font-weight: 900 !important;
+      color: #b91c1c !important;
+      border: 1px solid #b91c1c !important;
+      padding: 1px 4px !important;
+      letter-spacing: 0.5px !important;
+      transform: rotate(-1deg) !important;
+    }
+
+    .doc-ref {
+      font-family: 'Courier New', monospace !important;
+      font-size: 8px !important;
+      font-weight: 800 !important;
+      color: #57534e !important;
+      letter-spacing: 0.5px !important;
+    }
+
+    .doc-meta.compact {
+      font-family: 'Courier New', monospace !important;
+      font-size: 7.5px !important;
+      color: #78716c !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      margin-bottom: 3px !important;
+      line-height: 1.1 !important;
+    }
+
+    .crisis-fire-banner {
+      height: 20px !important;
+      padding: 0 6px !important;
+      margin-bottom: 4px !important;
+      font-size: 8px !important;
+      font-weight: 800 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      border-radius: 3px !important;
+    }
+
+    #document-lines {
+      flex: 1 !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-evenly !important;
+      overflow: hidden !important;
+    }
+
+    .text-line {
+      font-size: 13.5px !important;
+      font-family: 'Courier New', Courier, monospace !important;
+      font-weight: 800 !important;
+      min-height: 30px !important;
+      display: flex !important;
+      align-items: center !important;
+      padding: 2px 6px !important;
+      border-radius: 3px !important;
+      margin: 1px 0 !important;
+      letter-spacing: 0.3px !important;
+      user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      cursor: pointer !important;
+    }
+
+    .crit-target {
+      padding: 2px 5px !important;
+      font-size: 13.5px !important;
+      border-radius: 3px !important;
+      cursor: pointer !important;
+    }
+
+    /* Kash Floating Pill in Desk Corner */
+    .kash-floating-pill {
+      position: absolute !important;
+      bottom: 8px !important;
+      right: 10px !important;
+      background: rgba(13, 21, 38, 0.92) !important;
+      border: 1px solid rgba(56, 189, 248, 0.4) !important;
+      border-radius: 20px !important;
+      padding: 3px 10px 3px 4px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      z-index: 35 !important;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.6) !important;
+      max-width: 240px !important;
+      pointer-events: none !important;
+    }
+
+    .kash-floating-pill .kash-avatar-badge {
+      width: 20px !important;
+      height: 20px !important;
+      border-radius: 50% !important;
+      background: radial-gradient(circle, #38bdf8 0%, #1e3a8a 100%) !important;
+      border: 1.5px solid #60a5fa !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 11px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .kash-floating-pill #kash-bubble {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 8px !important;
+      font-weight: 700 !important;
+      color: #e2e8f0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      line-height: 1 !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+
+    /* 5. UPGRADES DRAWER (MOBILE BOTTOM SHEET) */
+    #upgrades-drawer {
+      transition: height 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      background: #080d19 !important;
+      border-top: 1px solid #334155 !important;
+      flex-shrink: 0 !important;
+      z-index: 40 !important;
+      position: relative !important;
+    }
+
+    #upgrades-drawer.collapsed {
+      height: 38px !important;
+    }
+
+    #upgrades-drawer.expanded {
+      height: 380px !important;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
+    }
+
+    .drawer-handle-bar {
+      height: 38px !important;
+      padding: 0 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      cursor: pointer !important;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+    }
+
+    .drawer-title-group .drawer-title-text {
+      font-size: 10px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.6px !important;
+    }
+
+    .drawer-actions .drawer-toggle-btn {
+      background: #334155 !important;
+      color: #f1f5f9 !important;
+      padding: 2px 8px !important;
+      width: auto !important;
+      height: 22px !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+      border-radius: 4px !important;
+    }
+  
   </style>
 </head>
 <body>
@@ -2709,76 +3092,78 @@
       </div>
     </div>
 
-    <!-- 2. STREAMLINED COMMAND HEADER -->
+    <!-- 2. MOBILE MASTER HEADER (Consolidated 38px) -->
     <header id="header">
       <div class="header-branding">
         <div class="agency-title">
           <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
         </div>
-        <span class="agency-subbadge">★ TOP SECRET ★</span>
       </div>
+
+      <!-- Core Telemetry in Header -->
+      <div class="header-telemetry">
+        <div class="telemetry-currency">
+          <span class="curr-icon">📄</span>
+          <span id="stat-redactions">0</span>
+          <span class="stat-badge" id="click-power-badge">+1</span>
+        </div>
+        <div class="telemetry-rps">
+          <span class="rps-icon">⚡</span>
+          <span id="stat-rps">0.0</span>/s
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
       <div class="header-actions">
-        <button class="header-prestige-btn locked" id="hoover-prestige-btn" title="Prestige Clearance: Burn Hoover Building">
+        <button class="header-prestige-btn locked" id="hoover-prestige-btn" title="Hoover Building Prestige">
           <span class="prestige-flame-icon">🏛️🔥</span>
           <span class="prestige-btn-label" id="header-prestige-status">LOCKED</span>
         </button>
-        <span id="header-prestige-badge" class="header-prestige-badge" title="Active Clearance Multiplier">[1x IMMUNITY]</span>
+        <span id="header-prestige-badge" class="header-prestige-badge" style="display: none;">[1x]</span>
         <button class="icon-btn" id="sound-btn" title="Toggle Sound">🔊</button>
-        <button class="icon-btn" id="settings-btn" title="Bureau Settings">⚙️</button>
+        <button class="icon-btn" id="settings-btn" title="Settings">⚙️</button>
       </div>
     </header>
 
-    <!-- TACTICAL STATUS STRIP: DEF-CLERK THREAT LEVEL & CLEARANCE -->
+    <!-- 3. TACTICAL MICRO-STRIP (DEF-CLERK, VIP/Secrets, and Fumes in 22px) -->
     <div id="threat-bar-container">
-      <div class="threat-tactical-left">
+      <!-- DEF-CLERK Threat Meter -->
+      <div class="micro-threat-group">
         <span class="threat-warning-icon">⚠️</span>
         <span class="threat-prefix">DEF-CLERK:</span>
-        <span id="threat-tier-label" class="threat-tier-label" style="color: #22c55e;">TIER 5 (SECURE)</span>
-      </div>
-      <div class="threat-gauge-cluster">
+        <span id="threat-tier-label" class="threat-tier-label" style="color: #22c55e;">TIER 5</span>
         <div class="threat-track">
           <div id="threat-fill" class="threat-fill" style="width: 0%; background: #22c55e;"></div>
         </div>
         <span id="threat-percent-text" class="threat-percent-text">0%</span>
       </div>
-      <div class="threat-tactical-right" id="clearance-bar">
-        <span class="clearance-shield">🛡️</span>
-        <span class="clearance-text" id="clearance-text">1x POWER</span>
-      </div>
-    </div>
 
-    <!-- 3. ENHANCED DUAL-STAT STATS PANEL -->
-    <div id="stats-panel">
-      <div class="stat-block">
-        <div class="stat-label">REDACTED</div>
-        <div class="stat-value-group">
-          <span id="stat-redactions">0</span>
-          <span class="stat-badge" id="click-power-badge">+1</span>
-        </div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-label">SHIELDED</div>
-        <div class="stat-value-group">
-          <span id="stat-vips">0</span>
+      <!-- Secondary Stats (VIPs & Secrets) -->
+      <div id="stats-panel" class="micro-stats-panel">
+        <div class="stat-block">
           <span class="stat-icon">🛡️</span>
+          <span id="stat-vips">0</span>
         </div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-label">BURIED</div>
-        <div class="stat-value-group">
-          <span id="stat-secrets">0</span>
+        <div class="stat-block">
           <span class="stat-icon">👑</span>
+          <span id="stat-secrets">0</span>
         </div>
       </div>
-      <div class="stat-block rps-block">
-        <div class="stat-label">BUREAU RPS</div>
-        <div class="stat-value-group">
-          <span id="stat-rps">0.0</span>
+
+      <!-- Fume Meter -->
+      <section id="fume-section" class="micro-fume-section">
+        <span class="toxic-icon">☣</span>
+        <span id="fume-status-text">0%</span>
+        <div class="fume-track">
+          <div id="fume-fill"></div>
         </div>
-      </div>
+      </section>
+
+      <!-- Backward compatibility hook -->
+      <div id="clearance-bar" style="display: none;"><span id="clearance-text">1x POWER</span></div>
     </div>
 
-    <!-- 4. CENTRAL CLICK TARGET: MAHOGANY DESK & PROCEDURAL DOSSIER -->
+    <!-- 4. CENTRAL DOSSIER HERO VIEWPORT (Takes 75%+ of the Mobile Screen!) -->
     <main id="desk-viewport">
       <div class="desk-mat"></div>
 
@@ -2786,29 +3171,27 @@
         <div id="dossier-page">
           <div class="paper-clip"></div>
 
-          <div class="dossier-header">
+          <div class="dossier-compact-header">
             <div class="stamp-sci">TOP SECRET // SCI // NOFORN</div>
-            <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #104-B<br>TAIL #N212JE</div>
+            <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #1992-B</div>
           </div>
 
-          <div class="doc-meta" id="dossier-meta">
-            <div><strong>SUBJECT:</strong> FLIGHT LOG: TAIL #N212JE</div>
-            <div><strong>LOCATION:</strong> PALM BEACH MANSION // MAR-A-LAGO BOX 18</div>
+          <div class="doc-meta compact" id="dossier-meta">
+            <div>SUBJECT: MAR-A-LAGO 1992 VIP BASH // EPSTEIN & DONNY</div>
           </div>
 
           <div class="crisis-fire-banner" id="crisis-fire-banner">
-            <span id="crisis-title-tag">🔥 ACTIVE CRISIS: FLIGHT LOGS</span>
-            <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">6</span> ACTIVE</span>
+            <span id="crisis-title-tag">🔥 1992 VIP BASH</span>
+            <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">9</span> ACTIVE</span>
           </div>
 
           <svg class="doc-watermark" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="4" fill="none"/>
-            <circle cx="50" cy="50" r="38" stroke="#000" stroke-width="1.5" stroke-dasharray="3,3" fill="none"/>
+            <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="3" fill="none"/>
             <polygon points="50,15 59,38 84,38 63,52 71,76 50,60 29,76 37,52 16,38 41,38" fill="#000"/>
-            <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">OFFICIAL BUREAU SEAL</text>
+            <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">BUREAU SEAL</text>
           </svg>
 
-          <!-- Procedural Flight Log Lines with Dual Targets -->
+          <!-- Procedural Flight Log / Redaction Lines -->
           <div id="document-lines"></div>
 
           <!-- Page Complete Stamp -->
@@ -2821,37 +3204,18 @@
         </div>
       </div>
 
+      <!-- Chief Kash Floating Dialogue Pill (Docked bottom corner of desk) -->
+      <div id="kash-briefing-bar" class="kash-floating-pill">
+        <div id="kash-avatar" class="kash-avatar-badge" title="Chief Kash Patel">👓</div>
+        <span id="kash-bubble">The Boss is watching. Redact the targets!</span>
+      </div>
 
-
-      <!-- Ink Splatter, Baby Powder, Gold Coins & Fume Canvas Overlay -->
+      <!-- FX Canvas -->
       <canvas id="fx-canvas"></canvas>
     </main>
 
-    <!-- 5. MARKER FUME COMBO METER -->
-    <section id="fume-section">
-      <div class="fume-meta">
-        <div class="fume-title">
-          <span class="toxic-icon">☣</span>
-          <span>FUME GAUGE:</span>
-        </div>
-        <div id="fume-status-text">0% (TAP FASTER!)</div>
-      </div>
-      <div class="fume-track">
-        <div id="fume-fill"></div>
-      </div>
-    </section>
-
-    <!-- CHIEF KASH PATEL BUREAU INTERCOM -->
-    <div id="kash-briefing-bar">
-      <div id="kash-avatar" class="kash-avatar-badge" title="Chief Kash Patel">👓</div>
-      <div class="kash-message-container">
-        <span class="kash-callsign">CHIEF KASH:</span>
-        <span id="kash-bubble">The Boss is watching. Clear the active targets!</span>
-      </div>
-    </div>
-
     <!-- 6. UPGRADE DRAWER: THE CHAOS AUTOMATION WORKFORCE -->
-    <footer id="upgrades-drawer">
+    <footer id="upgrades-drawer" class="collapsed">
       <div class="drawer-handle-bar" id="drawer-toggle">
         <div class="drawer-title-group">
           <span class="drawer-folder-icon">📂</span>
@@ -3073,7 +3437,7 @@
         soundEnabled: true,
         pageLineIndex: 0,
         pageNumber: 1,
-        drawerState: 'normal',
+        drawerState: 'collapsed',
         lastTickSecond: 0,
         gameStarted: false
       };
@@ -4656,24 +5020,20 @@
         }
       }
 
-      // 11. UPGRADE DRAWER TOGGLE
+      // 11. UPGRADE DRAWER TOGGLE (Mobile Bottom Sheet)
       drawerToggle.addEventListener('click', () => {
-        if (state.drawerState === 'normal') {
-          state.drawerState = 'expanded';
-          upgradesDrawer.classList.remove('collapsed');
-          upgradesDrawer.classList.add('expanded');
-          drawerIcon.textContent = '▼';
-        } else if (state.drawerState === 'expanded') {
+        if (state.drawerState === 'expanded') {
           state.drawerState = 'collapsed';
           upgradesDrawer.classList.remove('expanded');
           upgradesDrawer.classList.add('collapsed');
           drawerIcon.textContent = '▲';
         } else {
-          state.drawerState = 'normal';
-          upgradesDrawer.classList.remove('collapsed', 'expanded');
-          drawerIcon.textContent = '▲';
+          state.drawerState = 'expanded';
+          upgradesDrawer.classList.remove('collapsed');
+          upgradesDrawer.classList.add('expanded');
+          drawerIcon.textContent = '▼ CLOSE';
         }
-        setTimeout(resizeCanvas, 260);
+        setTimeout(resizeCanvas, 280);
       });
 
       // 12. NEWS TICKER
