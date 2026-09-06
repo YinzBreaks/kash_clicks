@@ -6,6 +6,7 @@
   <title>KLICKASHKLIC - Midnight Redaction Bureau</title>
   <meta name="description" content="Midnight Redaction Bureau: Classified document redaction and cover-up simulator. Redact sensitive dossiers, manage chaos tiers, and prestige your clearance.">
   <meta name="theme-color" content="#111726">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="KLICKASHKLIC">
@@ -313,40 +314,6 @@
       letter-spacing: 1.5px;
       color: #fecaca;
       text-transform: uppercase;
-    }
-
-    /* PWA INSTALL BUTTON */
-    .start-install-pwa-btn {
-      width: 100%;
-      max-width: 280px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid #38bdf8;
-      border-radius: 8px;
-      padding: 10px 16px;
-      cursor: pointer;
-      display: none;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 11px;
-      font-weight: 800;
-      color: #38bdf8;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(56, 189, 248, 0.15);
-      transition: all 0.2s ease;
-      margin-top: 4px;
-    }
-    .start-install-pwa-btn:hover {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: #7dd3fc;
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-    }
-    .start-install-pwa-btn:active {
-      transform: scale(0.97);
     }
 
     /* 1. DYNAMIC SATIRICAL NEWS CHYRON */
@@ -1137,6 +1104,116 @@
     @keyframes donPulse {
       0% { border-color: #ea580c; background: #ffedd5; color: #9a3412; transform: scale(1); }
       100% { border-color: #f97316; background: #fed7aa; color: #7c2d12; transform: scale(1.03); box-shadow: 0 0 14px rgba(249, 115, 22, 0.9); }
+    }
+
+    /* 3. 1992 BIRTHDAY PARTY TARGET (Electric Pink/Magenta) */
+    .target-party {
+      color: #831843;
+      background: #fce7f3;
+      border: 2px dashed #ec4899;
+      border-radius: 3px;
+      padding: 0 5px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      animation: partyPulse 0.75s infinite alternate ease-in-out;
+      box-shadow: 0 0 9px rgba(236, 72, 153, 0.6);
+    }
+
+    @keyframes partyPulse {
+      0% { border-color: #ec4899; background: #fce7f3; color: #831843; transform: scale(1); }
+      100% { border-color: #f43f5e; background: #fbcfe8; color: #4c0519; transform: scale(1.03); box-shadow: 0 0 16px rgba(244, 63, 94, 0.85); }
+    }
+
+    /* 4. ROYAL ESCAPADE & WOKING ALIBI TARGET (Majestic Royal Violet) */
+    .target-royal {
+      color: #3b0764;
+      background: #ede9fe;
+      border: 2px dashed #8b5cf6;
+      border-radius: 3px;
+      padding: 0 5px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      animation: royalPulse 0.85s infinite alternate ease-in-out;
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.55);
+    }
+
+    @keyframes royalPulse {
+      0% { border-color: #8b5cf6; background: #ede9fe; color: #3b0764; }
+      100% { border-color: #a855f7; background: #ddd6fe; color: #2e1065; box-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
+    }
+
+    /* 5. BILLIONAIRE BLACK BOOK TARGET (Emerald Hush Money) */
+    .target-vip {
+      color: #064e3b;
+      background: #d1fae5;
+      border: 2px dashed #10b981;
+      border-radius: 3px;
+      padding: 0 5px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      animation: vipPulse 0.8s infinite alternate ease-in-out;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.55);
+    }
+
+    @keyframes vipPulse {
+      0% { border-color: #10b981; background: #d1fae5; color: #064e3b; }
+      100% { border-color: #059669; background: #a7f3d0; color: #022c22; box-shadow: 0 0 14px rgba(5, 150, 105, 0.8); }
+    }
+
+    /* CRISIS FIRE BANNER */
+    .crisis-fire-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-bottom: 6px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9.5px;
+      font-weight: 900;
+      color: #ef4444;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      box-shadow: inset 0 0 8px rgba(239, 68, 68, 0.1);
+      transition: all 0.25s ease;
+    }
+    .crisis-fire-banner.contained {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: rgba(34, 197, 94, 0.6);
+      color: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+    }
+    .crisis-targets-left {
+      font-variant-numeric: tabular-nums;
+      font-weight: 900;
+      color: #facc15;
+    }
+
+    /* DOSSIER TRANSITION ANIMATIONS */
+    .dossier-slide-out {
+      animation: dossierSlideOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+      pointer-events: none;
+    }
+    @keyframes dossierSlideOut {
+      0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+      35% { transform: scale(0.97) translateY(8px) rotate(1deg); opacity: 0.95; }
+      100% { transform: scale(0.85) translateY(-85px) rotate(-7deg); opacity: 0; }
+    }
+
+    .dossier-slide-in {
+      animation: dossierSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+    @keyframes dossierSlideIn {
+      0% { transform: scale(0.9) translateY(75px) rotate(5deg); opacity: 0; }
+      100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
     }
 
     .crit-redacted {
@@ -2364,8 +2441,635 @@
         { minScore: 200000, text: "White House chimney issues dense purple smoke; staff denies roasting subpoenas on Duraflames." }
       ];
 
+      // 4. DUAL-TARGET PROCEDURAL ENGINE DATA
+      const epsteinTargets = ["JEFFREY", "EPSTEIN", "LOLITA EXPRESS", "TAIL #N212JE"];
+      const donTargets = ["DIAPER DON", "INDIVIDUAL 1", "NURSE NATALIA", "THE BOSS", "MAR-A-LAGO BOX 18"];
+
+      const dualTemplates = [
+        (eT, dT) => `[08:14] MANIFEST FLIGHT <span class="crit-target target-epstein" data-type="epstein">${eT}</span> AUTHORIZED BY <span class="crit-target target-don" data-type="don">${dT}</span>`,
+        (eT, dT) => `[09:30] MEETING SCHEDULED BETWEEN <span class="crit-target target-epstein" data-type="epstein">${eT}</span> AND <span class="crit-target target-don" data-type="don">${dT}</span> IN PRIVATE CABIN`,
+        (eT, dT) => `[10:45] COURIER TRANSFERRED GUEST LEDGERS FROM <span class="crit-target target-epstein" data-type="epstein">${eT}</span> INTO <span class="crit-target target-don" data-type="don">${dT}</span> VAULT`,
+        (eT, dT) => `[12:10] WATER TAXI CREW ORDERED NEVER TO DISCUSS <span class="crit-target target-epstein" data-type="epstein">${eT}</span> OR <span class="crit-target target-don" data-type="don">${dT}</span>`,
+        (eT, dT) => `[13:35] SUBPOENA DEMANDS ENTIRE DOSSIER REGARDING <span class="crit-target target-epstein" data-type="epstein">${eT}</span> TIED TO <span class="crit-target target-don" data-type="don">${dT}</span>`,
+        (eT, dT) => `[14:50] SAFE IN PALM BEACH DISCOVERED WITH TAPES MARKED <span class="crit-target target-epstein" data-type="epstein">${eT}</span> // <span class="crit-target target-don" data-type="don">${dT}</span>`,
+        (eT, dT) => `[16:15] SPECIAL AGENT STATEMENT: WITNESS RECALLED <span class="crit-target target-don" data-type="don">${dT}</span> ARRIVING ABOARD <span class="crit-target target-epstein" data-type="epstein">${eT}</span>`,
+        (eT, dT) => `[17:40] MEMO TO KASH: OBFUSCATE ALL FLIGHT RECORDS OF <span class="crit-target target-epstein" data-type="epstein">${eT}</span> TO PROTECT <span class="crit-target target-don" data-type="don">${dT}</span>`,
+        (eT, dT) => `[19:00] GUEST COTTAGE RECEPTION: ROOM RESERVED FOR <span class="crit-target target-don" data-type="don">${dT}</span> DIRECTLY ADJACENT TO <span class="crit-target target-epstein" data-type="epstein">${eT}</span>`,
+        (eT, dT) => `[20:25] HARD DRIVE DEGAUSS PROTOCOL APPLIED TO INTERCEPTS OF <span class="crit-target target-epstein" data-type="epstein">${eT}</span> AND <span class="crit-target target-don" data-type="don">${dT}</span>`,
+        (eT, dT) => `[21:50] PHONE CALL LOG: 28 CALLS RECORDED BETWEEN <span class="crit-target target-don" data-type="don">${dT}</span> AND <span class="crit-target target-epstein" data-type="epstein">${eT}</span>`,
+        (eT, dT) => `[23:15] EXECUTIVE ORDER: TOTAL REDACTION OF ANY RECORD CO-MENTIONING <span class="crit-target target-epstein" data-type="epstein">${eT}</span> AND <span class="crit-target target-don" data-type="don">${dT}</span>`
+      ];
+
+      // 5. DOM REFERENCES
+      const container = document.getElementById('app-container');
+      const startMenu = document.getElementById('start-menu');
+      const startBreachBtn = document.getElementById('start-breach-btn');
+      const startSaveCard = document.getElementById('start-save-card');
+      const startSaveStats = document.getElementById('start-save-stats');
+      const startSavePrestige = document.getElementById('start-save-prestige');
+      const startClearSaveBtn = document.getElementById('start-clear-save-btn');
+
+      const headerPrestigeBadge = document.getElementById('header-prestige-badge');
+      const clearanceText = document.getElementById('clearance-text');
+      const hooverPrestigeBtn = document.getElementById('hoover-prestige-btn');
+      const drawerPrestigeCard = document.getElementById('drawer-prestige-card');
+      const drawerPrestigeBtn = document.getElementById('drawer-prestige-btn');
+      const prestigeCardSub = document.getElementById('prestige-card-sub');
+
+      const statRedactions = document.getElementById('stat-redactions');
+      const statVips = document.getElementById('stat-vips');
+      const statSecrets = document.getElementById('stat-secrets');
+      const statRps = document.getElementById('stat-rps');
+      const clickPowerBadge = document.getElementById('click-power-badge');
+      const dossierPage = document.getElementById('dossier-page');
+      const dossierMeta = document.getElementById('dossier-meta');
+      const dossierDocRef = document.getElementById('dossier-doc-ref');
+      const documentLines = document.getElementById('document-lines');
+      const shredStamp = document.getElementById('shred-stamp');
+      const fumeFill = document.getElementById('fume-fill');
+      const fumeStatusText = document.getElementById('fume-status-text');
+      const upgradesDrawer = document.getElementById('upgrades-drawer');
+      const drawerToggle = document.getElementById('drawer-toggle');
+      const drawerIcon = document.getElementById('drawer-icon');
+      const drawerRpsSummary = document.getElementById('drawer-rps-summary');
+      const upgradesList = document.getElementById('upgrades-list');
+      const chyronText = document.getElementById('chyron-text');
+      const soundBtn = document.getElementById('sound-btn');
+      const settingsBtn = document.getElementById('settings-btn');
+      const settingsModal = document.getElementById('settings-modal');
+      const settingsCloseBtn = document.getElementById('settings-close-btn');
+      const settingsSoundToggle = document.getElementById('settings-sound-toggle');
+      const settingsLifetimeStat = document.getElementById('settings-lifetime-stat');
+      const settingsVipsStat = document.getElementById('settings-vips-stat');
+      const settingsSecretsStat = document.getElementById('settings-secrets-stat');
+      const settingsRpsStat = document.getElementById('settings-rps-stat');
+      const settingsPrestigeStat = document.getElementById('settings-prestige-stat');
+      const settingsPrestigeBtn = document.getElementById('settings-prestige-btn');
+      const wipeDataBtn = document.getElementById('wipe-data-btn');
+
+      const prestigeModal = document.getElementById('prestige-modal');
+      const prestigeCloseBtn = document.getElementById('prestige-close-btn');
+      const prestigeCurDisplay = document.getElementById('prestige-cur-display');
+      const prestigeNextDisplay = document.getElementById('prestige-next-display');
+      const executePrestigeBtn = document.getElementById('execute-prestige-btn');
+      const prestigeCardReq = document.getElementById('prestige-card-req');
+      const prestigeReqBadge = document.getElementById('prestige-req-badge');
+      const prestigeReqLinesVal = document.getElementById('prestige-req-lines-val');
+      const prestigeReqLinesFill = document.getElementById('prestige-req-lines-fill');
+      const prestigeReqClicksVal = document.getElementById('prestige-req-clicks-val');
+      const prestigeReqClicksFill = document.getElementById('prestige-req-clicks-fill');
+      const prestigeReqExplainer = document.getElementById('prestige-req-explainer');
+
+      const offlineModal = document.getElementById('offline-modal');
+      const offlineReportText = document.getElementById('offline-report-text');
+      const offlineGainNumber = document.getElementById('offline-gain-number');
+      const offlineCollectBtn = document.getElementById('offline-collect-btn');
+      const kashBubble = document.getElementById('kash-bubble');
+      const crisisFireBanner = document.getElementById('crisis-fire-banner');
+      const crisisTitleTag = document.getElementById('crisis-title-tag');
+      const crisisTargetsLeft = document.getElementById('crisis-targets-left');
+      let isAdvancingCrisis = false;
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // 6. SYNTHESIZED AUDIO ENGINE (Zero External Assets)
+      let audioCtx = null;
+
+      function getAudioContext() {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) audioCtx = new AudioContext();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      }
+
+      ['pointerdown', 'touchstart', 'mousedown', 'keydown'].forEach(evt => {
+        window.addEventListener(evt, () => {
+          getAudioContext();
+        }, { once: false, passive: true });
+      });
+
+      // REALISTIC PROCEDURAL SHARPIE SYNTHESIS (Zero External Audio Assets)
+      // Procedural friction scratch: 0.08s White Noise AudioBuffer + Bandpass (1400Hz, Q=3.5, +/-300Hz jitter)
+      // Envelope: instant attack (0.002s), jagged mid-sustain, rapid decay (0.07s)
+      // Subtle high-frequency squeak layer (~2200Hz triangle oscillator at 0.05 volume for 0.04s) on 30% of clicks
+      function playMarkerSqueak() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          const duration = 0.08;
+          const bufferSize = Math.floor(actx.sampleRate * duration);
+          const noiseBuffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+
+          const noiseSrc = actx.createBufferSource();
+          noiseSrc.buffer = noiseBuffer;
+
+          // Bandpass filter centered at ~1400Hz (Q = 3.5) with randomized pitch/frequency jitter (+/- 300Hz)
+          const filter = actx.createBiquadFilter();
+          filter.type = 'bandpass';
+          const centerFreq = 1400 + (Math.random() * 600 - 300);
+          filter.frequency.setValueAtTime(centerFreq, now);
+          filter.Q.value = 3.5;
+
+          // Amplitude envelope: instant attack (0.002s), jagged mid-sustain, rapid decay (0.07s)
+          const gainNode = actx.createGain();
+          gainNode.gain.setValueAtTime(0.0001, now);
+          gainNode.gain.linearRampToValueAtTime(0.32, now + 0.002);
+          gainNode.gain.setValueAtTime(0.24, now + 0.022);
+          gainNode.gain.setValueAtTime(0.28, now + 0.040);
+          gainNode.gain.setValueAtTime(0.20, now + 0.055);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.072);
+
+          noiseSrc.connect(filter);
+          filter.connect(gainNode);
+          gainNode.connect(actx.destination);
+
+          noiseSrc.start(now);
+          noiseSrc.stop(now + duration);
+
+          // Subtle high-frequency squeak layer (~2200Hz triangle oscillator at 0.05 volume for 0.04s) on 30% of clicks
+          if (Math.random() < 0.30) {
+            const squeakOsc = actx.createOscillator();
+            const squeakGain = actx.createGain();
+            squeakOsc.type = 'triangle';
+            const squeakFreq = 2200 + (Math.random() * 200 - 100);
+            squeakOsc.frequency.setValueAtTime(squeakFreq, now);
+
+            squeakGain.gain.setValueAtTime(0.0001, now);
+            squeakGain.gain.linearRampToValueAtTime(0.05, now + 0.004);
+            squeakGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+            squeakOsc.connect(squeakGain);
+            squeakGain.connect(actx.destination);
+
+            squeakOsc.start(now);
+            squeakOsc.stop(now + 0.04);
+          }
+        } catch(e) {}
+      }
+
+      // Critical cover-up sound (Friction paper tear + chimes, NO bass kick thump)
+      function playCriticalSound() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          // Friction scratch burst (Zero low-frequency kick)
+          const bufferSize = Math.floor(actx.sampleRate * 0.09);
+          const noiseBuffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const output = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+          const noise = actx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          const filter = actx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1600, now);
+          filter.Q.value = 3.0;
+          const noiseGain = actx.createGain();
+          noiseGain.gain.setValueAtTime(0.0001, now);
+          noiseGain.gain.linearRampToValueAtTime(0.35, now + 0.003);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+          noise.connect(filter);
+          filter.connect(noiseGain);
+          noiseGain.connect(actx.destination);
+          noise.start(now);
+          noise.stop(now + 0.09);
+
+          [1318.5, 1760.0, 2093.0].forEach((freq, idx) => {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+            gain.gain.setValueAtTime(0.2, now + idx * 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.04 + 0.22);
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start(now + idx * 0.04);
+            osc.stop(now + idx * 0.04 + 0.23);
+          });
+        } catch(e) {}
+      }
+
+      // Incinerator paper burn + fanfare for Hoover Building Prestige Reset
+      function playPrestigeBurnSound() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          // Roaring fire rush
+          const bufferSize = Math.floor(actx.sampleRate * 0.45);
+          const noiseBuffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          const noise = actx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          const filter = actx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(650, now);
+          filter.frequency.exponentialRampToValueAtTime(200, now + 0.42);
+          filter.Q.value = 2.0;
+          const gain = actx.createGain();
+          gain.gain.setValueAtTime(0.38, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(actx.destination);
+          noise.start(now);
+          noise.stop(now + 0.45);
+
+          // Majestic fanfare rise
+          [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+            const osc = actx.createOscillator();
+            const g = actx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            g.gain.setValueAtTime(0.22, now + idx * 0.08);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.38);
+            osc.connect(g);
+            g.connect(actx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.40);
+          });
+        } catch(e) {}
+      }
+
+      // Diaper Don Loyalty Hit Sound (Baby powder poof + gold ring)
+      function playDonCoverupSound() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          // Soft powder noise puff
+          const bufferSize = actx.sampleRate * 0.1;
+          const noiseBuffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const output = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.3;
+          const noise = actx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          const filter = actx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(350, now);
+          const noiseGain = actx.createGain();
+          noiseGain.gain.setValueAtTime(0.3, now);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          noise.connect(filter);
+          filter.connect(noiseGain);
+          noiseGain.connect(actx.destination);
+          noise.start(now);
+
+          // Deep royal coin chime
+          [587.33, 880.0, 1174.66, 1760.0].forEach((freq, idx) => {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.03);
+            gain.gain.setValueAtTime(0.25, now + idx * 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.03 + 0.3);
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start(now + idx * 0.03);
+            osc.stop(now + idx * 0.03 + 0.32);
+          });
+        } catch(e) {}
+      }
+
+      // Celebratory Brass Fanfare for Executive Privilege Frenzy
+      function playBrassFanfare() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          // Triad Fanfare: C4 (261.63), E4 (329.63), G4 (392.0), C5 (523.25), E5 (659.25), G5 (783.99)
+          const notes = [
+            { f: 261.63, t: 0.0, d: 0.18 },
+            { f: 329.63, t: 0.12, d: 0.18 },
+            { f: 392.00, t: 0.24, d: 0.18 },
+            { f: 523.25, t: 0.36, d: 0.45 },
+            { f: 659.25, t: 0.36, d: 0.45 },
+            { f: 783.99, t: 0.42, d: 0.65 }
+          ];
+
+          notes.forEach(n => {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            const filter = actx.createBiquadFilter();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(n.f, now + n.t);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(800, now + n.t);
+            filter.frequency.exponentialRampToValueAtTime(2600, now + n.t + 0.08);
+
+            gain.gain.setValueAtTime(0.18, now + n.t);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(actx.destination);
+
+            osc.start(now + n.t);
+            osc.stop(now + n.t + n.d + 0.05);
+          });
+        } catch(e) {}
+      }
+
+      function playPurchaseSound() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          const bufferSize = actx.sampleRate * 0.07;
+          const noiseBuffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const output = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.4;
+          const noise = actx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          const noiseFilter = actx.createBiquadFilter();
+          noiseFilter.type = 'lowpass';
+          noiseFilter.frequency.setValueAtTime(500, now);
+          const noiseGain = actx.createGain();
+          noiseGain.gain.setValueAtTime(0.25, now);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+          noise.connect(noiseFilter);
+          noiseFilter.connect(noiseGain);
+          noiseGain.connect(actx.destination);
+          noise.start(now);
+
+          const playBellTone = (freq, startTime, duration) => {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.2, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+          };
+
+          playBellTone(987.77, now + 0.02, 0.22);
+          playBellTone(1318.51, now + 0.09, 0.32);
+        } catch(e) {}
+      }
+
+      function playStampSound() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          // Crisp paper latch & mechanical snap (Zero low-frequency sine/kick thump)
+          const bufferSize = Math.floor(actx.sampleRate * 0.04);
+          const noiseBuffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const output = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+          const noise = actx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          const filter = actx.createBiquadFilter();
+          filter.type = 'highpass';
+          filter.frequency.setValueAtTime(2200, now);
+          const gain = actx.createGain();
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(actx.destination);
+          noise.start(now);
+          noise.stop(now + 0.04);
+        } catch(e) {}
+      }
+
+      // 7. CANVAS PARTICLES (POWDER, GOLD COINS, INK & FUMES)
+      const particles = [];
+      const fumes = [];
+
+      function resizeCanvas() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Emit baby powder and gold coins
+      function spawnDonParticles(x, y) {
+        // 1. Soft white baby powder cloud
+        for (let i = 0; i < 14; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 3.5 + 1.2;
+          particles.push({
+            type: 'powder',
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 0.8,
+            radius: Math.random() * 7 + 4,
+            alpha: 0.85,
+            decay: 0.02
+          });
+        }
+
+        // 2. Flying gold coins ($)
+        for (let i = 0; i < 6; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5 + 3;
+          particles.push({
+            type: 'coin',
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 2.5,
+            radius: 8,
+            alpha: 1,
+            decay: 0.025
+          });
+        }
+      }
+
+      function spawnInkSplatter(x, y, count = 10, isFrenzy = false, isCrit = false) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * (isCrit ? 7 : 5) + 2;
+          let col = '#09090b';
+          if (isCrit) col = Math.random() > 0.4 ? '#f59e0b' : '#ef4444';
+          else if (isFrenzy) col = Math.random() > 0.5 ? '#d946ef' : '#10b981';
+
+          particles.push({
+            type: 'ink',
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: Math.random() * (isCrit ? 4.5 : 3.5) + 1.5,
+            color: col,
+            alpha: 1,
+            decay: Math.random() * 0.03 + 0.02
+          });
+        }
+
+        for (let i = 0; i < (isCrit ? 4 : 2); i++) {
+          particles.push({
+            type: 'chisel',
+            x: x + (Math.random() * 26 - 13),
+            y: y + (Math.random() * 10 - 5),
+            w: Math.random() * 34 + 18,
+            h: Math.random() * 8 + 5,
+            angle: (Math.random() - 0.5) * 0.35,
+            alpha: 0.9,
+            decay: 0.035,
+            color: isCrit ? '#b45309' : (isFrenzy ? '#a855f7' : '#050505')
+          });
+        }
+      }
+
+      function spawnFumeParticle() {
+        const w = canvas.width || 380;
+        const h = canvas.height || 420;
+        fumes.push({
+          x: Math.random() * w,
+          y: h + 10,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: -(Math.random() * 2.2 + 1.8),
+          radius: Math.random() * 14 + 10,
+          alpha: 0.6,
+          color: state.privilegeActive ? '234, 179, 8' : (Math.random() > 0.4 ? '168, 85, 247' : '34, 197, 94'),
+          decay: 0.012
+        });
+      }
+
+      function updateParticles(dt) {
+        const timeScale = dt * 60;
+
+        if ((state.frenzyActive || state.privilegeActive) && Math.random() < 0.45) {
+          spawnFumeParticle();
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = fumes.length - 1; i >= 0; i--) {
+          const f = fumes[i];
+          f.x += f.vx * timeScale;
+          f.y += f.vy * timeScale;
+          f.radius += 0.35 * timeScale;
+          f.alpha -= f.decay * timeScale;
+
+          if (f.alpha <= 0 || f.y < -30) {
+            fumes.splice(i, 1);
+            continue;
+          }
+
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${f.color}, ${f.alpha})`;
+          ctx.fill();
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.alpha -= p.decay * timeScale;
+
+          if (p.alpha <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+
+          if (p.type === 'powder') {
+            p.x += p.vx * timeScale;
+            p.y += p.vy * timeScale;
+            p.radius += 0.25 * timeScale;
+            p.vx *= 0.94;
+            p.vy *= 0.94;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 0.75})`;
+            ctx.fill();
+          } else if (p.type === 'coin') {
+            p.x += p.vx * timeScale;
+            p.y += p.vy * timeScale;
+            p.vy += 0.15 * timeScale; // gravity on gold coins
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.fillStyle = `rgba(250, 204, 21, ${p.alpha})`;
+            ctx.beginPath();
+            ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = `rgba(180, 83, 9, ${p.alpha})`;
+            ctx.stroke();
+
+            ctx.fillStyle = `rgba(120, 53, 15, ${p.alpha})`;
+            ctx.font = "bold 9px monospace";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("$", 0, 1);
+            ctx.restore();
+          } else if (p.type === 'ink') {
+            p.x += p.vx * timeScale;
+            p.y += p.vy * timeScale;
+            p.vx *= 0.94;
+            p.vy *= 0.94;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          } else if (p.type === 'chisel') {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+
+      function spawnFloatText(x, y, text, extraClass = '') {
+        const span = document.createElement('span');
+        span.className = 'float-text ' + extraClass;
+        span.textContent = text;
+        span.style.left = x + 'px';
+        span.style.top = y + 'px';
+        canvas.parentElement.appendChild(span);
+
+        setTimeout(() => {
+          if (span.parentNode) span.parentNode.removeChild(span);
+        }, 800);
+      }
+
+      // Cycle Kash Panic Bubble
+      function triggerKashPanic() {
+        const quote = kashQuotes[Math.floor(Math.random() * kashQuotes.length)];
+        kashBubble.textContent = quote;
+        kashBubble.style.animation = 'none';
+        void kashBubble.offsetWidth;
+        kashBubble.style.animation = 'bubbleBounce 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      }
+
       // ==========================================
-      // 4. DYNAMIC CRISIS DOSSIER PROCEDURAL ENGINE
+      // 8. DYNAMIC MULTI-CRISIS PROCEDURAL ENGINE
       // ==========================================
       const CRISIS_DOSSIERS = [
         {
@@ -2415,7 +3119,7 @@
             () => `[21:30] SECURITY INTERCEPT: <span class="crit-target target-don" data-type="don">THE BOSS</span> SEEN HIGH-FIVING <span class="crit-target target-epstein">JEFFREY</span> OVER VIP CAKE`,
             () => `[22:15] CONFIDENTIAL CAMCORDER OPERATOR MARKED CASSETTE AS <span class="crit-target target-party" data-type="party">INFAMOUS BIRTHDAY TAPE 4</span>`,
             () => `[22:50] CATERING RECEIPT: PRIVATE DINNER CHARGED DIRECTLY TO <span class="crit-target target-don">MAR-A-LAGO ACCOUNT</span>`,
-            () => `[23:20] WITNESS SWORN TESTIMONY: <span class="crit-target target-don">INDIVIDUAL 1</span> QUOTED PRAISING <span class="crit-target target-party" data-type="party">CALENDAR GIRLS BASH</span>`,
+            () => `[23:20] WITNESS SWORN TESTIMONY: <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> QUOTED PRAISING <span class="crit-target target-party" data-type="party">CALENDAR GIRLS BASH</span>`,
             () => `[00:10] MORNING-AFTER MEMO: BURN ALL INVITATION ENVELOPES CO-SIGNED BY <span class="crit-target target-epstein">EPSTEIN</span>`,
             () => `[01:00] EMERGENCY VAULT DEPOSIT: CASSETTE TRANSFERRED BEHIND <span class="crit-target target-don">MAR-A-LAGO BOX 18</span>`
           ]
@@ -2521,70 +3225,6 @@
         }
       ];
 
-      // 5. DOM REFERENCES
-      const container = document.getElementById('app-container');
-      const startMenu = document.getElementById('start-menu');
-      const startBreachBtn = document.getElementById('start-breach-btn');
-      const startSaveCard = document.getElementById('start-save-card');
-      const startSaveStats = document.getElementById('start-save-stats');
-      const startSavePrestige = document.getElementById('start-save-prestige');
-      const startClearSaveBtn = document.getElementById('start-clear-save-btn');
-
-      const headerPrestigeBadge = document.getElementById('header-prestige-badge');
-      const clearanceText = document.getElementById('clearance-text');
-      const hooverPrestigeBtn = document.getElementById('hoover-prestige-btn');
-      const drawerPrestigeCard = document.getElementById('drawer-prestige-card');
-      const drawerPrestigeBtn = document.getElementById('drawer-prestige-btn');
-      const prestigeCardSub = document.getElementById('prestige-card-sub');
-
-      const statRedactions = document.getElementById('stat-redactions');
-      const statVips = document.getElementById('stat-vips');
-      const statSecrets = document.getElementById('stat-secrets');
-      const statRps = document.getElementById('stat-rps');
-      const clickPowerBadge = document.getElementById('click-power-badge');
-      const dossierPage = document.getElementById('dossier-page');
-      const dossierMeta = document.getElementById('dossier-meta');
-      const dossierDocRef = document.getElementById('dossier-doc-ref');
-      const documentLines = document.getElementById('document-lines');
-      const shredStamp = document.getElementById('shred-stamp');
-      const fumeFill = document.getElementById('fume-fill');
-      const fumeStatusText = document.getElementById('fume-status-text');
-      const upgradesDrawer = document.getElementById('upgrades-drawer');
-      const drawerToggle = document.getElementById('drawer-toggle');
-      const drawerIcon = document.getElementById('drawer-icon');
-      const drawerRpsSummary = document.getElementById('drawer-rps-summary');
-      const upgradesList = document.getElementById('upgrades-list');
-      const chyronText = document.getElementById('chyron-text');
-      const soundBtn = document.getElementById('sound-btn');
-      const settingsBtn = document.getElementById('settings-btn');
-      const settingsModal = document.getElementById('settings-modal');
-      const settingsCloseBtn = document.getElementById('settings-close-btn');
-      const settingsSoundToggle = document.getElementById('settings-sound-toggle');
-      const settingsLifetimeStat = document.getElementById('settings-lifetime-stat');
-      const settingsVipsStat = document.getElementById('settings-vips-stat');
-      const settingsSecretsStat = document.getElementById('settings-secrets-stat');
-      const settingsRpsStat = document.getElementById('settings-rps-stat');
-      const settingsPrestigeStat = document.getElementById('settings-prestige-stat');
-      const wipeDataBtn = document.getElementById('wipe-data-btn');
-
-      const prestigeModal = document.getElementById('prestige-modal');
-      const prestigeCloseBtn = document.getElementById('prestige-close-btn');
-      const executePrestigeBtn = document.getElementById('execute-prestige-btn');
-      const prestigeTierDisplay = document.getElementById('prestige-tier-display');
-      const prestigeLinesReq = document.getElementById('prestige-lines-req');
-      const prestigeClicksReq = document.getElementById('prestige-clicks-req');
-      const prestigeNextBonus = document.getElementById('prestige-next-bonus');
-
-      const kashAvatar = document.getElementById('kash-avatar');
-      const kashBubble = document.getElementById('kash-bubble');
-
-      const crisisFireBanner = document.getElementById('crisis-fire-banner');
-      const crisisTitleTag = document.getElementById('crisis-title-tag');
-      const crisisTargetsLeft = document.getElementById('crisis-targets-left');
-
-      let isAdvancingCrisis = false;
-
-      // 6. CRISIS DOSSIER GENERATION & TARGET MANAGEMENT
       function getCurrentCrisis() {
         const crisisIdx = (state.crisisIndex || 0) % CRISIS_DOSSIERS.length;
         return CRISIS_DOSSIERS[crisisIdx];
@@ -2608,9 +3248,15 @@
         `;
 
         if (crisisTitleTag) crisisTitleTag.textContent = crisis.titleTag;
-        if (crisisFireBanner) crisisFireBanner.classList.remove('contained');
+        if (crisisFireBanner) {
+          crisisFireBanner.classList.remove('contained');
+          crisisFireBanner.innerHTML = `
+            <span id="crisis-title-tag">${crisis.titleTag}</span>
+            <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">6</span> ACTIVE</span>
+          `;
+        }
 
-        // Render themed crisis text lines
+        // Render crisis lines
         crisis.lines.forEach((lineFn, i) => {
           const line = document.createElement('div');
           line.className = 'text-line';
@@ -2643,8 +3289,9 @@
 
       function updateRemainingTargetsDisplay() {
         const unredactedTargets = documentLines.querySelectorAll('.crit-target:not(.crit-redacted)');
-        if (crisisTargetsLeft) {
-          crisisTargetsLeft.textContent = unredactedTargets.length;
+        const countSpan = document.getElementById('crisis-targets-left');
+        if (countSpan) {
+          countSpan.textContent = unredactedTargets.length;
         }
         return unredactedTargets.length;
       }
@@ -2659,7 +3306,7 @@
         });
       }
 
-      // GENERIC CRITICAL TARGET CLICK HANDLER
+      // TARGET CLICK HANDLER
       function handleTargetClick(e, targetEl) {
         getAudioContext();
         if (targetEl.classList.contains('crit-redacted') || isAdvancingCrisis) return;
@@ -2718,7 +3365,6 @@
         triggerKashPanic();
         checkPrivilegeCombo(now);
 
-        // Splatters and particles
         const deskRect = canvas.getBoundingClientRect();
         const x = (e.clientX || deskRect.left + deskRect.width / 2) - deskRect.left;
         const y = (e.clientY || deskRect.top + deskRect.height / 2) - deskRect.top;
@@ -2730,7 +3376,6 @@
         }
         spawnFloatText(x - 25, y - 16, floatLabel, floatClass);
 
-        // Also blackout the parent line if not yet blacked out
         const parentLine = targetEl.closest('.text-line');
         if (parentLine && !parentLine.classList.contains('redacted')) {
           parentLine.classList.add('redacted');
@@ -2739,13 +3384,11 @@
         const remaining = updateRemainingTargetsDisplay();
         updateUI();
 
-        // If all manual targets on this file are clicked -> FIRE CONTAINED! ADVANCE TO NEXT PAGE!
         if (remaining === 0) {
           onCrisisContained(true);
         }
       }
 
-      // DIRECT CLICK ON A TEXT LINE
       function handleLineDirectClick(e, line) {
         getAudioContext();
         if (isAdvancingCrisis) return;
@@ -2762,7 +3405,6 @@
         }
       }
 
-      // EXECUTIVE PRIVILEGE COMBO CHECK (within 2.5s)
       function checkPrivilegeCombo(now) {
         if (state.lastEpsteinHit > 0 && state.lastDonHit > 0) {
           const diff = Math.abs(state.lastEpsteinHit - state.lastDonHit);
@@ -2774,7 +3416,7 @@
 
       function triggerExecutivePrivilegeFrenzy() {
         state.privilegeActive = true;
-        state.privilegeRemaining = 15.0; // 15 seconds
+        state.privilegeRemaining = 15.0;
         container.classList.add('privilege-active');
 
         playBrassFanfare();
@@ -2790,7 +3432,6 @@
         container.classList.remove('privilege-active');
       }
 
-      // AUTOMATED WORKFORCE / BACKGROUND REDACTIONS
       function redactNextLine(isManual = false) {
         const lines = documentLines.querySelectorAll('.text-line:not(.redacted)');
         if (lines.length > 0) {
@@ -2800,14 +3441,14 @@
         }
       }
 
-      // CRISIS CONTAINMENT & DYNAMIC PAGE ADVANCE
       function onCrisisContained(isManual = false) {
         if (isAdvancingCrisis) return;
         isAdvancingCrisis = true;
 
-        if (crisisFireBanner) {
-          crisisFireBanner.classList.add('contained');
-          crisisFireBanner.innerHTML = '<span>✅ FIRE CONTAINED!</span><span>DISPATCHING NEXT DOSSIER...</span>';
+        const banner = document.getElementById('crisis-fire-banner');
+        if (banner) {
+          banner.classList.add('contained');
+          banner.innerHTML = '<span>✅ FIRE CONTAINED!</span><span>DISPATCHING NEXT DOSSIER...</span>';
         }
 
         shredStamp.classList.add('active');
@@ -2823,25 +3464,21 @@
         state.runRedacted = (state.runRedacted || 0) + bonus;
         state.pageNumber = (state.pageNumber || 1) + 1;
 
-        // Kash quote reacting to the containment
         kashBubble.textContent = currentCrisis.kashQuote || 'FIRE CONTAINED! CHECK THE NEWS FOR THE NEXT LEAK!';
 
         const rect = dossierPage.getBoundingClientRect();
         const deskRect = canvas.getBoundingClientRect();
         spawnFloatText(rect.left - deskRect.left + rect.width / 2 - 60, rect.top - deskRect.top + rect.height / 2, `+${formatNumber(bonus)} FIRE CONTAINED!`, 'frenzy');
 
-        // Slide out the finished file
         dossierPage.classList.add('dossier-slide-out');
 
         setTimeout(() => {
           shredStamp.classList.remove('active');
           dossierPage.classList.remove('dossier-slide-out');
 
-          // Advance crisis index to next fire!
           state.crisisIndex = ((state.crisisIndex || 0) + 1) % CRISIS_DOSSIERS.length;
           generateCrisisDossierPage();
 
-          // Slide in the new crisis dossier!
           dossierPage.classList.add('dossier-slide-in');
           setTimeout(() => dossierPage.classList.remove('dossier-slide-in'), 400);
 
@@ -2849,7 +3486,6 @@
         }, 420);
       }
 
-      // 7. REGULAR CLICK HANDLING
       function handleClick(e) {
         getAudioContext();
 
@@ -2913,7 +3549,6 @@
         handleClick(e);
       });
 
-      // Backward-compatible alias
       const generateDualTargetDossierPage = generateCrisisDossierPage;
       // 10. GENERATOR SCALING & PURCHASING
       function getCurrentRPS() {
@@ -3019,24 +3654,21 @@
       let lastTickerUpdateScore = 0;
 
       function updateNewsHeadlinesPool() {
-        const crisis = getCurrentCrisis ? getCurrentCrisis() : null;
-        const nextCrisis = getNextCrisis ? getNextCrisis() : null;
+        const crisis = typeof getCurrentCrisis === 'function' ? getCurrentCrisis() : null;
+        const nextCrisis = typeof getNextCrisis === 'function' ? getNextCrisis() : null;
 
         const activeHeadlines = [];
 
-        // 1. Prominent alert for the NEXT fire threatening to break out!
         if (crisis && crisis.nextFireAlert) {
           activeHeadlines.push(crisis.nextFireAlert);
         } else if (nextCrisis && nextCrisis.nextFireAlert) {
           activeHeadlines.push(nextCrisis.nextFireAlert);
         }
 
-        // 2. Breaking crisis-specific headlines
         if (crisis && crisis.headlines) {
           activeHeadlines.push(...crisis.headlines);
         }
 
-        // 3. Score-unlocked and satirical base headlines
         unlockableHeadlines.forEach(h => {
           if (state.totalRedactedEver >= h.minScore) {
             activeHeadlines.push(h.text);
@@ -3505,61 +4137,6 @@
       rebuildTickerText();
       updateUI();
       requestAnimationFrame(gameLoop);
-
-      // ==========================================
-      // PWA SERVICE WORKER & APP INSTALL LIFECYCLE
-      // ==========================================
-      let deferredInstallPrompt = null;
-      const installPwaBtn = document.getElementById('start-install-pwa-btn');
-
-      // Register Service Worker for 100% offline gameplay
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js')
-            .then(reg => {
-              console.log('[PWA] Service Worker active, scope:', reg.scope);
-            })
-            .catch(err => {
-              console.warn('[PWA] Service Worker registration:', err);
-            });
-        });
-      }
-
-      // Listen for browser install availability
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent default mini-infobar on mobile
-        e.preventDefault();
-        deferredInstallPrompt = e;
-        if (installPwaBtn) {
-          installPwaBtn.style.display = 'flex';
-        }
-      });
-
-      // Handle user click on install button
-      if (installPwaBtn) {
-        installPwaBtn.addEventListener('click', async () => {
-          if (deferredInstallPrompt) {
-            deferredInstallPrompt.prompt();
-            const { outcome } = await deferredInstallPrompt.userChoice;
-            console.log('[PWA] Install prompt outcome:', outcome);
-            if (outcome === 'accepted') {
-              installPwaBtn.style.display = 'none';
-            }
-            deferredInstallPrompt = null;
-          } else {
-            // Fallback instruction for iOS / unsupported browsers
-            alert("BUREAU AGENT NOTICE:\n\nTo install this app on iOS / Safari:\nTap 'Share' (square with arrow) -> 'Add to Home Screen'.\n\nOn Chrome/Edge Desktop:\nClick the Install icon in the address bar.");
-          }
-        });
-      }
-
-      // Hide install button when app is already installed
-      window.addEventListener('appinstalled', () => {
-        console.log('[PWA] Bureau App installed successfully');
-        if (installPwaBtn) {
-          installPwaBtn.style.display = 'none';
-        }
-      });
 
     })();
   </script>
