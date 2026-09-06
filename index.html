@@ -1,0 +1,3567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>KLICKASHKLIC - Midnight Redaction Bureau</title>
+  <meta name="description" content="Midnight Redaction Bureau: Classified document redaction and cover-up simulator. Redact sensitive dossiers, manage chaos tiers, and prestige your clearance.">
+  <meta name="theme-color" content="#111726">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KLICKASHKLIC">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="alternate icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <style>
+    /* RESET & CORE MOBILE-FIRST PHONE LOCK */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: manipulation;
+      background-color: #0b0f19;
+      background-image: radial-gradient(ellipse at 50% 20%, #182238 0%, #0b0f19 75%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Courier New", Courier, monospace, sans-serif;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 9:16 MOBILE VIEWPORT PHONE FRAME (Max 450x800) */
+    #app-container {
+      width: 100vw;
+      height: 100vh;
+      max-width: 450px;
+      max-height: 800px;
+      background: #111726;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    /* VIGNETTE & FRENZY OVERLAYS */
+    #vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 70px rgba(0,0,0,0.65);
+      z-index: 50;
+      transition: box-shadow 0.3s ease;
+    }
+
+    /* Fume Frenzy (Purple/Green) */
+    #app-container.frenzy-active #vignette {
+      box-shadow: inset 0 0 80px rgba(168, 85, 247, 0.5), inset 0 0 30px rgba(34, 197, 94, 0.5);
+      animation: frenzyPulse 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes frenzyPulse {
+      0% { box-shadow: inset 0 0 70px rgba(168, 85, 247, 0.4), inset 0 0 35px rgba(34, 197, 94, 0.3); }
+      100% { box-shadow: inset 0 0 100px rgba(217, 70, 239, 0.7), inset 0 0 60px rgba(34, 197, 94, 0.6); }
+    }
+
+    /* Executive Privilege Frenzy (Gold/Amber) */
+    #app-container.privilege-active #vignette {
+      box-shadow: inset 0 0 90px rgba(234, 179, 8, 0.75), inset 0 0 45px rgba(249, 115, 22, 0.75);
+      animation: goldPrivilegePulse 0.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes goldPrivilegePulse {
+      0% { box-shadow: inset 0 0 80px rgba(234, 179, 8, 0.6), inset 0 0 35px rgba(249, 115, 22, 0.5); }
+      100% { box-shadow: inset 0 0 120px rgba(250, 204, 21, 0.95), inset 0 0 65px rgba(245, 158, 11, 0.85); }
+    }
+
+    /* START MENU OVERLAY */
+    #start-menu {
+      position: absolute;
+      inset: 0;
+      z-index: 200;
+      background: radial-gradient(circle at 50% 42%, #1e293b 0%, #090d16 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #start-menu.hidden {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .start-watermark-layer {
+      position: absolute;
+      inset: -60%;
+      width: 220%;
+      height: 220%;
+      pointer-events: none;
+      opacity: 0.045;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      transform: rotate(-32deg);
+      user-select: none;
+      z-index: 1;
+    }
+
+    .watermark-row {
+      white-space: nowrap;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #ffffff;
+    }
+
+    .hazard-stripe-bar {
+      height: 14px;
+      width: 100%;
+      background: repeating-linear-gradient(-45deg, #eab308 0px, #eab308 12px, #000000 12px, #000000 24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 5;
+    }
+
+    .start-menu-content {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 20px;
+      text-align: center;
+      gap: 14px;
+    }
+
+    .start-restricted-badge {
+      display: inline-block;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10px;
+      font-weight: 900;
+      color: #ef4444;
+      border: 2px solid #ef4444;
+      padding: 3px 10px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      transform: rotate(-1.5deg);
+      background: rgba(239, 68, 68, 0.1);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+
+    .start-title-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brand-wordmark {
+      font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: inline-flex;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95), 0 0 22px rgba(255, 255, 255, 0.18);
+    }
+
+    .klic-red { color: #ef4444; text-shadow: 0 0 16px rgba(239, 68, 68, 0.5); }
+    .kash-white { color: #ffffff; text-shadow: 0 0 14px rgba(255, 255, 255, 0.6); }
+    .klic-blue { color: #3b82f6; text-shadow: 0 0 16px rgba(59, 130, 246, 0.5); }
+
+    .start-subtitle {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 2.2px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-top: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .start-emblem-box {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, #1e293b 0%, #0b101c 100%);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      font-size: 34px;
+      position: relative;
+    }
+
+    .start-emblem-box::after {
+      content: "TOP SECRET";
+      position: absolute;
+      bottom: -7px;
+      background: #b91c1c;
+      color: #fff;
+      font-family: monospace;
+      font-size: 7.5px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    #start-save-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 6px;
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-width: 290px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .save-card-label {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .save-card-stats {
+      font-size: 12px;
+      font-weight: 900;
+      color: #f8fafc;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .save-clear-link {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      color: #ef4444;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 2px;
+      display: inline-block;
+      opacity: 0.85;
+      font-weight: 700;
+    }
+
+    .save-clear-link:hover { opacity: 1; }
+
+    .start-breach-btn {
+      width: 100%;
+      max-width: 280px;
+      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+      border: 2px solid #fca5a5;
+      border-radius: 8px;
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.55), 0 6px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: startPulse 1.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes startPulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.45), 0 6px 16px rgba(0,0,0,0.6); }
+      100% { transform: scale(1.025); box-shadow: 0 0 30px rgba(239, 68, 68, 0.75), 0 8px 24px rgba(0,0,0,0.7); }
+    }
+
+    .start-breach-btn:active { transform: scale(0.96) !important; filter: brightness(1.2); }
+    .btn-main-text {
+      font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+    .btn-sub-text {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #fecaca;
+      text-transform: uppercase;
+    }
+
+    /* PWA INSTALL BUTTON */
+    .start-install-pwa-btn {
+      width: 100%;
+      max-width: 280px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      display: none;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(56, 189, 248, 0.15);
+      transition: all 0.2s ease;
+      margin-top: 4px;
+    }
+    .start-install-pwa-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #7dd3fc;
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .start-install-pwa-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* 1. DYNAMIC SATIRICAL NEWS CHYRON */
+    #news-chyron {
+      height: 26px;
+      background: #991b1b;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      border-bottom: 1px solid #dc2626;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      z-index: 25;
+    }
+
+    .chyron-badge {
+      background: #000;
+      color: #fef08a;
+      padding: 0 8px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-weight: 900;
+      white-space: nowrap;
+      border-right: 2px solid #ef4444;
+      flex-shrink: 0;
+      gap: 5px;
+      z-index: 2;
+    }
+
+    .chyron-badge .dot {
+      width: 7px;
+      height: 7px;
+      background: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #ef4444;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .chyron-track {
+      display: flex;
+      white-space: nowrap;
+      overflow: hidden;
+      flex: 1;
+      position: relative;
+    }
+
+    .chyron-text {
+      display: inline-block;
+      white-space: nowrap;
+      will-change: transform;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      padding-left: 20px;
+    }
+
+    /* 2. HEADER */
+    #header {
+      padding: 7px 12px 5px;
+      background: linear-gradient(180deg, #182032 0%, #101625 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .title-group { display: flex; flex-direction: column; }
+    .agency-classification {
+      font-size: 7.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .agency-title {
+      font-size: 14.5px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #f8fafc;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .icon-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.1s;
+    }
+
+    .icon-btn:active { transform: scale(0.92); background: #334155; }
+
+    /* PRESTIGE SYSTEM & STACKED CLEARANCE STYLES */
+    .header-prestige-badge {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(135deg, #b45309 0%, #f59e0b 28%, #fef08a 50%, #f59e0b 72%, #b45309 100%);
+      background-size: 200% auto;
+      color: #0b101c;
+      font-size: 7.5px;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #fde047;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      animation: shineGoldBadge 2.4s linear infinite;
+      cursor: pointer;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: transform 0.1s;
+    }
+
+    .header-prestige-badge:active { transform: scale(0.95); }
+
+    @keyframes shineGoldBadge {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    #clearance-bar {
+      padding: 3px 10px;
+      background: linear-gradient(90deg, #1e1b4b 0%, #0d121f 50%, #1e1b4b 100%);
+      border-bottom: 1px solid rgba(250, 204, 21, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .clearance-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .clearance-shield { font-size: 11px; }
+
+    .clearance-text {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9.5px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #facc15;
+      text-shadow: 0 0 8px rgba(250, 204, 21, 0.55);
+    }
+
+    .hoover-prestige-btn {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      border: 1px solid #f87171;
+      color: #ffffff;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
+      transition: all 0.12s;
+      white-space: nowrap;
+    }
+
+    .hoover-prestige-btn:active { transform: scale(0.94); filter: brightness(1.2); }
+
+    /* PRESTIGE CARD IN UPGRADE DRAWER */
+    .prestige-card {
+      margin: 6px 10px 2px;
+      background: linear-gradient(135deg, #2b1104 0%, #150902 100%);
+      border: 1.5px solid #f97316;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.28);
+      flex-shrink: 0;
+    }
+
+    .prestige-card-icon {
+      font-size: 20px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #431407;
+      border-radius: 6px;
+      border: 1px solid #ea580c;
+      flex-shrink: 0;
+    }
+
+    .prestige-card-content {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .prestige-card-title {
+      font-size: 10.5px;
+      font-weight: 900;
+      color: #fed7aa;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .prestige-card-sub {
+      font-size: 8.5px;
+      font-weight: 600;
+      color: #fdba74;
+      line-height: 1.25;
+      margin-top: 1px;
+    }
+
+    .prestige-card-req {
+      font-size: 8px;
+      font-weight: 700;
+      color: #f87171;
+      line-height: 1.25;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .prestige-card-req.ready {
+      color: #4ade80;
+    }
+
+    .hoover-prestige-btn.locked {
+      background: #1e293b;
+      border-color: #475569;
+      color: #94a3b8;
+      box-shadow: none;
+    }
+
+    .prestige-burn-btn {
+      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+      border: 1px solid #fb923c;
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      transition: all 0.12s;
+    }
+
+    .prestige-burn-btn.locked {
+      background: #1e293b;
+      border-color: #475569;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .prestige-burn-btn:active { transform: scale(0.94); filter: brightness(1.2); }
+
+    /* PRESTIGE MODAL DETAILS */
+    .prestige-banner-hero {
+      text-align: center;
+      background: #180c05;
+      border: 1px solid #7c2d12;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .hero-fire {
+      font-size: 30px;
+      animation: fireFlicker 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes fireFlicker {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.12) rotate(2deg); filter: drop-shadow(0 0 10px #f97316); }
+    }
+
+    .hero-title {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: #fdba74;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hero-desc {
+      font-size: 9px;
+      color: #cbd5e1;
+      line-height: 1.35;
+    }
+
+    .prestige-compare-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #090e1a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 8px;
+      gap: 6px;
+    }
+
+    .prestige-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .compare-tag {
+      font-size: 8px;
+      font-weight: 800;
+      color: #94a3b8;
+      letter-spacing: 0.8px;
+    }
+
+    .compare-val {
+      font-size: 13.5px;
+      font-weight: 900;
+      color: #e2e8f0;
+    }
+
+    .prestige-col.next .compare-val {
+      color: #facc15;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.7);
+    }
+
+    .compare-arrow {
+      font-size: 17px;
+      color: #f97316;
+      font-weight: 900;
+    }
+
+    /* PRESTIGE REQUIREMENTS BOX IN MODAL */
+    .prestige-req-box {
+      background: #090e1a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .prestige-req-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .prestige-req-title {
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #f59e0b;
+      text-transform: uppercase;
+    }
+
+    .prestige-req-badge {
+      font-size: 8px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .prestige-req-badge.locked {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .prestige-req-badge.ready {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .prestige-req-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .req-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      color: #cbd5e1;
+    }
+
+    .req-name {
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    .req-val {
+      font-weight: 800;
+      font-family: 'Courier New', Courier, monospace;
+      color: #f1f5f9;
+    }
+
+    .req-val.met {
+      color: #4ade80;
+    }
+
+    .req-progress-bar {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .req-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      width: 0%;
+      transition: width 0.2s ease;
+      border-radius: 3px;
+    }
+
+    .req-progress-fill.met {
+      background: linear-gradient(90deg, #10b981, #22c55e);
+    }
+
+    .prestige-bullet-points {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 9.5px;
+      line-height: 1.35;
+      background: #0b1120;
+      border-radius: 6px;
+      padding: 8px 10px;
+      border-left: 3px solid #f59e0b;
+    }
+
+    .bullet-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      color: #cbd5e1;
+    }
+
+    .bullet-icon {
+      color: #facc15;
+      font-weight: 900;
+    }
+
+    .modal-action-btn.burn-action {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      border: 1px solid #f87171;
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
+      color: #fff;
+    }
+
+    .modal-action-btn.burn-action:active {
+      transform: scale(0.96);
+      filter: brightness(1.2);
+    }
+
+    .modal-action-btn.burn-action.locked {
+      background: #1e293b !important;
+      border-color: #475569 !important;
+      color: #64748b !important;
+      cursor: not-allowed !important;
+      box-shadow: none !important;
+      filter: grayscale(0.8);
+      transform: none !important;
+    }
+
+    /* 3. ENHANCED DUAL-STAT STATS PANEL */
+    #stats-panel {
+      padding: 5px 10px;
+      background: #0d121f;
+      border-bottom: 1px solid #1e293b;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 20;
+      gap: 4px;
+    }
+
+    .stat-block { display: flex; flex-direction: column; }
+    .stat-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stat-value-group { display: flex; align-items: baseline; gap: 3px; }
+    #stat-redactions {
+      font-size: 18px;
+      font-weight: 900;
+      color: #38bdf8;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+      line-height: 1.1;
+    }
+
+    #stat-vips {
+      font-size: 15px;
+      font-weight: 900;
+      color: #facc15;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+    }
+
+    #stat-secrets {
+      font-size: 15px;
+      font-weight: 900;
+      color: #fb923c;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 8px rgba(251, 146, 60, 0.4);
+    }
+
+    #stat-rps {
+      font-size: 14px;
+      font-weight: 800;
+      color: #4ade80;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-badge {
+      font-size: 7.5px;
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: #1e293b;
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    .stat-badge.frenzy {
+      background: #9333ea;
+      color: #fdf4ff;
+      animation: pulseBadge 0.6s infinite alternate;
+    }
+
+    .stat-badge.privilege {
+      background: #f59e0b;
+      color: #000000;
+      font-weight: 900;
+      animation: pulseBadge 0.5s infinite alternate;
+    }
+
+    @keyframes pulseBadge {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); filter: brightness(1.2); }
+    }
+
+    /* 4. MAHOGANY DESK & CENTRAL CORE DOSSIER */
+    #desk-viewport {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px 2px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(138, 58, 28, 0.65) 0%, rgba(68, 22, 10, 0.85) 60%, rgba(20, 6, 3, 0.98) 100%),
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 3px, transparent 3px, transparent 12px),
+        #2d1108;
+    }
+
+    .desk-mat {
+      position: absolute;
+      inset: 4px;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      pointer-events: none;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.75);
+    }
+
+    #dossier-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 410px;
+      height: 100%;
+      max-height: 405px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+    }
+
+    #dossier-page {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #f4eedb;
+      background-image:
+        radial-gradient(circle at 80% 20%, rgba(205, 175, 125, 0.3) 0%, transparent 60%),
+        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 22px;
+      border-radius: 4px;
+      box-shadow: 0 14px 26px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.15);
+      color: #1c1917;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      transform-origin: center center;
+      transition: transform 0.06s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    #dossier-page.clicked { transform: scale(0.985); }
+
+    .paper-clip {
+      position: absolute;
+      top: -4px;
+      left: 18px;
+      width: 16px;
+      height: 34px;
+      border: 3px solid #94a3b8;
+      border-radius: 8px 8px 0 0;
+      border-bottom: none;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .dossier-header {
+      border-bottom: 2px solid #b91c1c;
+      padding-bottom: 3px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .stamp-sci {
+      font-size: 9.5px;
+      font-weight: 900;
+      color: #b91c1c;
+      letter-spacing: 1.2px;
+      border: 2px solid #b91c1c;
+      padding: 1px 5px;
+      text-transform: uppercase;
+      transform: rotate(-1.5deg);
+      display: inline-block;
+      box-shadow: 0 0 3px rgba(185, 28, 28, 0.4);
+    }
+
+    .doc-ref {
+      font-family: "Courier New", monospace;
+      font-size: 8.5px;
+      color: #57534e;
+      font-weight: 800;
+      text-align: right;
+      line-height: 1.2;
+    }
+
+    .doc-meta {
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      line-height: 1.3;
+      color: #1f1d1b;
+      font-weight: 700;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      letter-spacing: 0.1px;
+    }
+
+    .doc-meta strong { color: #000; }
+    .doc-watermark {
+      position: absolute;
+      right: 12px;
+      top: 45px;
+      width: 82px;
+      height: 82px;
+      opacity: 0.12;
+      pointer-events: none;
+      transform: rotate(12deg);
+    }
+
+    /* CLASSIFIED TEXT LINES */
+    #document-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2px;
+      position: relative;
+    }
+
+    .text-line {
+      position: relative;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      border-radius: 2px;
+    }
+
+    .text-line .pseudo-text {
+      font-family: "Courier New", monospace;
+      font-size: 11.5px;
+      color: #1f1d1b;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+      text-overflow: clip;
+      opacity: 0.95;
+      font-weight: 800;
+      line-height: 18px;
+    }
+
+    /* DUAL TARGET CLASSES */
+    /* 1. EPSTEIN TARGET (Yellow Border) */
+    .target-epstein {
+      color: #854d0e;
+      background: #fef08a;
+      border: 1.5px dashed #ca8a04;
+      border-radius: 3px;
+      padding: 0 4px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      animation: epsteinPulse 0.9s infinite alternate ease-in-out;
+      box-shadow: 0 0 6px rgba(202, 138, 4, 0.4);
+    }
+
+    @keyframes epsteinPulse {
+      0% { border-color: #ca8a04; background: #fef08a; color: #854d0e; box-shadow: 0 0 4px rgba(202, 138, 4, 0.4); }
+      100% { border-color: #eab308; background: #fde047; color: #713f12; box-shadow: 0 0 10px rgba(234, 179, 8, 0.7); }
+    }
+
+    /* 2. DIAPER DON TARGET (Orange/Gold Border) */
+    .target-don {
+      color: #9a3412;
+      background: #ffedd5;
+      border: 2px dashed #ea580c;
+      border-radius: 3px;
+      padding: 0 5px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      animation: donPulse 0.8s infinite alternate ease-in-out;
+      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
+    }
+
+    @keyframes donPulse {
+      0% { border-color: #ea580c; background: #ffedd5; color: #9a3412; transform: scale(1); }
+      100% { border-color: #f97316; background: #fed7aa; color: #7c2d12; transform: scale(1.03); box-shadow: 0 0 14px rgba(249, 115, 22, 0.9); }
+    }
+
+    .crit-redacted {
+      background: #000000 !important;
+      color: #000000 !important;
+      border-color: #000000 !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.9) !important;
+      animation: none !important;
+      pointer-events: none;
+    }
+
+    /* Regular Line Redaction Bar */
+    .redaction-bar {
+      position: absolute;
+      inset: -2px -5px;
+      background: #09090b;
+      border-radius: 2px;
+      opacity: 0;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.08s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .redaction-bar::before {
+      content: "";
+      position: absolute;
+      left: -3px;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: #09090b;
+      clip-path: polygon(100% 0, 0 45%, 100% 100%);
+    }
+
+    .redaction-bar::after {
+      content: "";
+      position: absolute;
+      right: -4px;
+      top: 0;
+      bottom: 0;
+      width: 7px;
+      background: #09090b;
+      clip-path: polygon(0 0, 100% 55%, 0 100%);
+    }
+
+    .text-line.redacted .redaction-bar {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    #shred-stamp {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(2.2) rotate(-18deg);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 30;
+    }
+
+    #shred-stamp.active {
+      opacity: 1;
+      transform: scale(1) rotate(-12deg);
+    }
+
+    .stamp-box {
+      border: 5px solid #dc2626;
+      color: #dc2626;
+      font-size: 24px;
+      font-weight: 900;
+      padding: 6px 14px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+      background: rgba(254, 242, 242, 0.92);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .stamp-sub {
+      font-size: 9.5px;
+      letter-spacing: 1px;
+      color: #991b1b;
+      margin-top: 2px;
+    }
+
+    /* KASH PERSISTENT PANIC DIALOGUE BUBBLE */
+    #kash-dialogue-anchor {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      pointer-events: none;
+      z-index: 45;
+    }
+
+    #kash-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #1e3a8a 100%);
+      border: 2px solid #60a5fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+
+    #kash-bubble {
+      background: #ffffff;
+      color: #0f172a;
+      padding: 5px 9px;
+      border-radius: 8px 8px 0 8px;
+      font-size: 9.5px;
+      font-weight: 800;
+      line-height: 1.25;
+      max-width: 170px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      position: relative;
+      border: 1.5px solid #0284c7;
+      animation: bubbleBounce 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #kash-bubble::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      bottom: 4px;
+      border-width: 5px 0 5px 6px;
+      border-style: solid;
+      border-color: transparent transparent transparent #ffffff;
+    }
+
+    /* FX CANVAS & PARTICLES */
+    #fx-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    .float-text {
+      position: absolute;
+      font-weight: 900;
+      font-size: 14px;
+      color: #ef4444;
+      pointer-events: none;
+      animation: floatUp 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 10px rgba(239, 68, 68, 0.4);
+      z-index: 45;
+      white-space: nowrap;
+    }
+
+    .float-text.frenzy { color: #d946ef; font-size: 17px; text-shadow: 0 0 12px rgba(217, 70, 239, 0.8); }
+    .float-text.crit { color: #fbbf24; font-size: 18px; text-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 0 2px 6px rgba(0,0,0,0.9); }
+    .float-text.boss { color: #facc15; font-size: 19px; text-shadow: 0 0 16px rgba(250, 204, 21, 1), 0 2px 8px rgba(0,0,0,0.9); font-weight: 900; }
+    .float-text.combo { color: #38bdf8; font-size: 20px; text-shadow: 0 0 20px rgba(56, 189, 248, 1); font-weight: 900; }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate3d(0, 0, 0) scale(0.75); }
+      30% { transform: translate3d(0, -20px, 0) scale(1.15); }
+      100% { opacity: 0; transform: translate3d(0, -45px, 0) scale(1); }
+    }
+
+    /* 5. MARKER FUME COMBO METER */
+    #fume-section {
+      width: 100%;
+      padding: 4px 12px 4px;
+      background: #0f172a;
+      border-top: 1px solid #1e293b;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .fume-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .fume-title { display: flex; align-items: center; gap: 5px; color: #a855f7; }
+    .fume-title .toxic-icon { font-size: 11px; animation: spinToxic 6s linear infinite; }
+
+    @keyframes spinToxic {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #fume-status-text { color: #cbd5e1; font-variant-numeric: tabular-nums; }
+    .fume-track {
+      width: 100%;
+      height: 8px;
+      background: #020617;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      position: relative;
+    }
+
+    #fume-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #06b6d4 40%, #a855f7 75%, #ec4899 100%);
+      border-radius: 6px;
+      transition: width 0.08s linear;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    }
+
+    #app-container.frenzy-active #fume-fill {
+      background: linear-gradient(90deg, #ec4899, #f43f5e, #eab308, #22c55e);
+      animation: rainbowGlow 0.4s linear infinite alternate;
+    }
+
+    @keyframes rainbowGlow {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.4); }
+    }
+
+    /* 6. UPGRADE DRAWER (CHAOS WORKFORCE) */
+    #upgrades-drawer {
+      height: 235px;
+      background: #0a0f1d;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 30;
+      transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    #upgrades-drawer.expanded { height: 380px; }
+    #upgrades-drawer.collapsed { height: 42px; }
+
+    .drawer-handle-bar {
+      height: 36px;
+      padding: 0 12px;
+      background: linear-gradient(180deg, #162035 0%, #0e1626 100%);
+      border-bottom: 1px solid #1f2a40;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .drawer-handle-bar:active { background: #19243c; }
+
+    .drawer-title-group {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .drawer-title-group .dept-badge {
+      background: #ea580c;
+      color: #fff;
+      font-size: 8px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 900;
+    }
+
+    .drawer-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+
+    .drawer-toggle-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    #upgrades-list {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 6px 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #080d1a;
+    }
+
+    #upgrades-list::-webkit-scrollbar { width: 5px; }
+    #upgrades-list::-webkit-scrollbar-thumb { background: #25334d; border-radius: 4px; }
+
+    .upgrade-card {
+      background: #111827;
+      border: 1px solid #1f293d;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .upgrade-card.affordable { border-color: #2563eb; background: #131d33; }
+    .upgrade-left { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; }
+
+    .upgrade-icon-box {
+      font-size: 20px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #090e1a;
+      border-radius: 6px;
+      border: 1px solid #1e293b;
+      flex-shrink: 0;
+    }
+
+    .upgrade-text-box { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .upgrade-name {
+      font-size: 11px;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upgrade-desc {
+      font-size: 8.5px;
+      font-weight: 500;
+      color: #94a3b8;
+      line-height: 1.25;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upgrade-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+      font-size: 8.5px;
+      font-weight: 700;
+    }
+
+    .upgrade-rate { color: #4ade80; }
+    .upgrade-total-contrib { color: #38bdf8; }
+
+    .upgrade-action-box { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+    .upgrade-owned-badge { font-size: 10.5px; font-weight: 800; color: #cbd5e1; font-variant-numeric: tabular-nums; }
+
+    .buy-btn {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 5px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 68px;
+      justify-content: center;
+      transition: all 0.1s;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .buy-btn.can-buy {
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+      border-color: #60a5fa;
+      color: #ffffff;
+      box-shadow: 0 2px 7px rgba(37, 99, 235, 0.45);
+    }
+
+    .buy-btn.can-buy:active { transform: scale(0.93); filter: brightness(1.2); }
+    .buy-btn:disabled { cursor: not-allowed; opacity: 0.45; }
+
+    /* 7. ARCADE MODALS */
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 7, 13, 0.85);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .modal-backdrop.active { display: flex; animation: modalFadeIn 0.2s ease-out; }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-window {
+      width: 100%;
+      max-width: 380px;
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(56, 189, 248, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 10px 14px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal-title.incident { color: #f59e0b; }
+    .modal-title.settings { color: #38bdf8; }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 900;
+      padding: 2px 6px;
+    }
+
+    .modal-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; }
+    .incident-badge {
+      font-family: "Courier New", monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      align-self: flex-start;
+    }
+
+    .incident-message {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #e2e8f0;
+      background: #090e1a;
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 3px solid #f59e0b;
+    }
+
+    .offline-gain-display {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      border: 1px solid #6366f1;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .offline-gain-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #a5b4fc; text-transform: uppercase; }
+    .offline-gain-val { font-size: 26px; font-weight: 900; color: #38bdf8; text-shadow: 0 0 14px rgba(56, 189, 248, 0.5); }
+
+    .modal-action-btn {
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+      color: #fff;
+      border: 1px solid #60a5fa;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      transition: all 0.1s;
+    }
+
+    .modal-action-btn:active { transform: scale(0.96); }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: #090e1a;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .settings-danger-box {
+      border: 1px solid #991b1b;
+      background: rgba(153, 27, 27, 0.15);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .settings-danger-title { font-size: 10px; font-weight: 900; color: #ef4444; letter-spacing: 1px; text-transform: uppercase; }
+    .danger-btn {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      color: #fff;
+      border: 1px solid #f87171;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+      transition: all 0.1s;
+    }
+
+    .danger-btn:active { transform: scale(0.95); filter: brightness(1.2); }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+    <div id="vignette"></div>
+
+    <!-- START MENU OVERLAY -->
+    <div id="start-menu">
+      <div class="start-watermark-layer">
+        <div class="watermark-row">CLASSIFIED // DO NOT DISTRIBUTE • TOP SECRET // NOFORN • EYES ONLY</div>
+        <div class="watermark-row">MIDNIGHT REDACTION BUREAU • SPECIAL CLEARANCE REQD • CONFIDENTIAL</div>
+        <div class="watermark-row">CLASSIFIED // DO NOT DISTRIBUTE • TOP SECRET // NOFORN • EYES ONLY</div>
+        <div class="watermark-row">MIDNIGHT REDACTION BUREAU • SPECIAL CLEARANCE REQD • CONFIDENTIAL</div>
+        <div class="watermark-row">CLASSIFIED // DO NOT DISTRIBUTE • TOP SECRET // NOFORN • EYES ONLY</div>
+        <div class="watermark-row">MIDNIGHT REDACTION BUREAU • SPECIAL CLEARANCE REQD • CONFIDENTIAL</div>
+      </div>
+
+      <div class="hazard-stripe-bar"></div>
+
+      <div class="start-menu-content">
+        <div class="start-restricted-badge">
+          [ ACCESS RESTRICTED: EYES ONLY ]
+        </div>
+
+        <div class="start-title-wrap">
+          <h1 class="brand-wordmark">
+            <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
+          </h1>
+          <div class="start-subtitle">
+            MIDNIGHT REDACTION BUREAU // TOP SECRET
+          </div>
+        </div>
+
+        <div class="start-emblem-box">
+          🖋️
+        </div>
+
+        <div id="start-save-card" style="display: none;">
+          <div class="save-card-label">Active Career Record</div>
+          <div class="save-card-stats" id="start-save-stats">SAVED DOSSIER: 0 Lines Redacted</div>
+          <div class="save-card-prestige" id="start-save-prestige" style="font-size:10px; font-weight:800; color:#facc15; display:none;"></div>
+          <a class="save-clear-link" id="start-clear-save-btn">CLEAR EVIDENCE (Reset)</a>
+        </div>
+
+        <button class="start-breach-btn" id="start-breach-btn">
+          <span class="btn-main-text">BREACH & REDACT</span>
+          <span class="btn-sub-text">[ PRESS TO ENTER OFFICE ]</span>
+        </button>
+
+        <button class="start-install-pwa-btn" id="start-install-pwa-btn">
+          <span>📲</span>
+          <span>INSTALL BUREAU APP</span>
+        </button>
+      </div>
+
+      <div class="hazard-stripe-bar"></div>
+    </div>
+
+    <!-- 1. DYNAMIC SATIRICAL NEWS CHYRON -->
+    <div id="news-chyron">
+      <div class="chyron-badge">
+        <span class="dot"></span> BREAKING
+      </div>
+      <div class="chyron-track" id="chyron-track">
+        <div class="chyron-text" id="chyron-text"></div>
+      </div>
+    </div>
+
+    <!-- 2. HEADER -->
+    <header id="header">
+      <div class="title-group">
+        <div class="agency-classification">
+          <span>★ CLASSIFIED LEVEL 5 ★</span>
+          <span id="header-prestige-badge" class="header-prestige-badge" title="Click to view Hoover Building Prestige Clearance">[TIER 0 IMMUNITY: 1x MULTIPLIER]</span>
+        </div>
+        <div class="agency-title">
+          <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="sound-btn" title="Toggle Sound">🔊</button>
+        <button class="icon-btn" id="settings-btn" title="Bureau Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- STACKED CLEARANCE & PRESTIGE BAR -->
+    <div id="clearance-bar">
+      <div class="clearance-badge-wrap">
+        <span class="clearance-shield">🛡️</span>
+        <span class="clearance-text" id="clearance-text">STACKED CLEARANCE: 1x POWER</span>
+      </div>
+      <button class="hoover-prestige-btn locked" id="hoover-prestige-btn" title="Prestige Clearance Locked">
+        🔒 BURN HOOVER (200M)
+      </button>
+    </div>
+
+    <!-- 3. ENHANCED DUAL-STAT STATS PANEL -->
+    <div id="stats-panel">
+      <div class="stat-block">
+        <div class="stat-label">Lines Done</div>
+        <div class="stat-value-group">
+          <span id="stat-redactions">0</span>
+          <span class="stat-badge" id="click-power-badge">+1</span>
+        </div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">VIPs Shielded</div>
+        <div class="stat-value-group">
+          <span id="stat-vips">0</span>
+          <span style="font-size: 10px;">🛡️</span>
+        </div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Secrets Buried</div>
+        <div class="stat-value-group">
+          <span id="stat-secrets">0</span>
+          <span style="font-size: 10px;">👑</span>
+        </div>
+      </div>
+      <div class="stat-block" style="text-align: right; align-items: flex-end;">
+        <div class="stat-label">Bureau RPS</div>
+        <div class="stat-value-group">
+          <span id="stat-rps">0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. CENTRAL CLICK TARGET: MAHOGANY DESK & PROCEDURAL DOSSIER -->
+    <main id="desk-viewport">
+      <div class="desk-mat"></div>
+
+      <div id="dossier-wrapper">
+        <div id="dossier-page">
+          <div class="paper-clip"></div>
+
+          <div class="dossier-header">
+            <div class="stamp-sci">TOP SECRET // SCI // NOFORN</div>
+            <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #104-B<br>TAIL #N212JE</div>
+          </div>
+
+          <div class="doc-meta" id="dossier-meta">
+            <div><strong>SUBJECT:</strong> FLIGHT LOG: TAIL #N212JE</div>
+            <div><strong>LOCATION:</strong> PALM BEACH MANSION // MAR-A-LAGO BOX 18</div>
+          </div>
+
+          <div class="crisis-fire-banner" id="crisis-fire-banner">
+            <span id="crisis-title-tag">🔥 ACTIVE CRISIS: FLIGHT LOGS</span>
+            <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">6</span> ACTIVE</span>
+          </div>
+
+          <svg class="doc-watermark" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="4" fill="none"/>
+            <circle cx="50" cy="50" r="38" stroke="#000" stroke-width="1.5" stroke-dasharray="3,3" fill="none"/>
+            <polygon points="50,15 59,38 84,38 63,52 71,76 50,60 29,76 37,52 16,38 41,38" fill="#000"/>
+            <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">OFFICIAL BUREAU SEAL</text>
+          </svg>
+
+          <!-- Procedural Flight Log Lines with Dual Targets -->
+          <div id="document-lines"></div>
+
+          <!-- Page Complete Stamp -->
+          <div id="shred-stamp">
+            <div class="stamp-box">
+              100% REDACTED
+              <div class="stamp-sub">APPROVED FOR SHREDDING</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KASH PERSISTENT PANIC DIALOGUE BUBBLE -->
+      <div id="kash-dialogue-anchor">
+        <div id="kash-bubble">The Boss is watching, keep redacting!</div>
+        <div id="kash-avatar">👓</div>
+      </div>
+
+      <!-- Ink Splatter, Baby Powder, Gold Coins & Fume Canvas Overlay -->
+      <canvas id="fx-canvas"></canvas>
+    </main>
+
+    <!-- 5. MARKER FUME COMBO METER -->
+    <section id="fume-section">
+      <div class="fume-meta">
+        <div class="fume-title">
+          <span class="toxic-icon">☣</span>
+          <span>SHARPIE FUME GAUGE</span>
+        </div>
+        <div id="fume-status-text">0% (TAP FASTER!)</div>
+      </div>
+      <div class="fume-track">
+        <div id="fume-fill"></div>
+      </div>
+    </section>
+
+    <!-- 6. UPGRADE DRAWER: THE CHAOS AUTOMATION WORKFORCE -->
+    <footer id="upgrades-drawer">
+      <div class="drawer-handle-bar" id="drawer-toggle">
+        <div class="drawer-title-group">
+          <span>📂 The Redaction Department</span>
+          <span class="dept-badge">CHAOS & LOYALTY</span>
+        </div>
+        <div class="drawer-actions">
+          <span id="drawer-rps-summary">Workforce: 0 RPS</span>
+          <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
+        </div>
+      </div>
+      <!-- PRESTIGE BANNER CARD IN DRAWER -->
+      <div class="prestige-card" id="drawer-prestige-card">
+        <div class="prestige-card-icon">🏛️🔥</div>
+        <div class="prestige-card-content">
+          <div class="prestige-card-title">BURN THE HOOVER BUILDING</div>
+          <div class="prestige-card-sub" id="prestige-card-sub">Reset staff & balance for +1x Stacked Clearance (Tier 1)</div>
+          <div class="prestige-card-req" id="prestige-card-req">🔒 Req: 200.00M Lines (0) • 50 Clicks (0)</div>
+        </div>
+        <button class="prestige-burn-btn locked" id="drawer-prestige-btn">LOCKED</button>
+      </div>
+      <div id="upgrades-list"></div>
+    </footer>
+
+    <!-- 7. OFFLINE PROGRESS MODAL -->
+    <div class="modal-backdrop" id="offline-modal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="modal-title incident">
+            <span>⚠️</span> INCIDENT REPORT // CLASSIFIED
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="incident-badge">CASE #409-OVERSIGHT-EVASION</div>
+          <div class="incident-message" id="offline-report-text">
+            INCIDENT REPORT: While you were evading the House Oversight Committee for [X] minutes, your staff blacked out [Y] lines.
+          </div>
+          <div class="offline-gain-display">
+            <div class="offline-gain-label">Recovered Bureau Output (80% Efficiency)</div>
+            <div class="offline-gain-val" id="offline-gain-number">+0 LINES</div>
+          </div>
+          <button class="modal-action-btn" id="offline-collect-btn">COLLECT AND RESUME REDACTING</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. SETTINGS & DATA PURGE MODAL -->
+    <div class="modal-backdrop" id="settings-modal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="modal-title settings">
+            <span>⚙️</span> BUREAU SECURITY CLEARANCE
+          </div>
+          <button class="modal-close-btn" id="settings-close-btn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-row">
+            <span>Synthesized Web Audio</span>
+            <button class="icon-btn" id="settings-sound-toggle">🔊</button>
+          </div>
+          <div class="settings-row">
+            <span>VIPs Protected (Epstein)</span>
+            <span id="settings-vips-stat" style="color:#facc15; font-weight:800;">0</span>
+          </div>
+          <div class="settings-row">
+            <span>Secrets Buried (The Boss)</span>
+            <span id="settings-secrets-stat" style="color:#fb923c; font-weight:800;">0</span>
+          </div>
+          <div class="settings-row">
+            <span>Total Lifetime Redactions</span>
+            <span id="settings-lifetime-stat" style="color:#38bdf8;">0</span>
+          </div>
+          <div class="settings-row">
+            <span>Bureau Automated Output</span>
+            <span id="settings-rps-stat" style="color:#4ade80;">0.0 RPS</span>
+          </div>
+          <div class="settings-row">
+            <span>Stacked Prestige Clearance</span>
+            <span id="settings-prestige-stat" style="color:#facc15; font-weight:800;">TIER 0 (1x)</span>
+          </div>
+          <button class="modal-action-btn burn-action" id="settings-prestige-btn" style="margin-top:2px;">
+            🔥 BURN HOOVER BUILDING (PRESTIGE)
+          </button>
+
+          <div class="settings-danger-box">
+            <div class="settings-danger-title">⚠️ Danger Zone: Executive Privilege Override</div>
+            <div style="font-size:10px; color:#cbd5e1; line-height:1.3;">
+              Purges all classified records, resets all workforce tiers, and deletes persistent LocalStorage state.
+            </div>
+            <button class="danger-btn" id="wipe-data-btn">PURGE ALL BUREAU DATA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. PRESTIGE MODAL (BURN THE HOOVER BUILDING) -->
+    <div class="modal-backdrop" id="prestige-modal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="modal-title" style="color: #f97316;">
+            <span>🔥</span> BURN THE HOOVER BUILDING
+          </div>
+          <button class="modal-close-btn" id="prestige-close-btn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="prestige-banner-hero">
+            <div class="hero-fire">🏛️🔥</div>
+            <div class="hero-title">EXECUTIVE EVIDENCE INCINERATION</div>
+            <div class="hero-desc">
+              The Grand Jury has issued immediate subpoenas. Incinerate all active evidence, dismiss your current workforce, and reset your balance to secure unprecedented Executive Immunity.
+            </div>
+          </div>
+
+          <div class="prestige-compare-grid">
+            <div class="prestige-col current">
+              <span class="compare-tag">CURRENT RUN</span>
+              <span class="compare-val" id="prestige-cur-display">TIER 0 (1x)</span>
+            </div>
+            <div class="compare-arrow">➔</div>
+            <div class="prestige-col next">
+              <span class="compare-tag">STACKED BOOST</span>
+              <span class="compare-val" id="prestige-next-display">TIER 1 (2x)</span>
+            </div>
+          </div>
+
+          <!-- PRESTIGE REQUIREMENTS METER -->
+          <div class="prestige-req-box" id="prestige-req-box">
+            <div class="prestige-req-header">
+              <span class="prestige-req-title">SUBPOENA CRITERIA (REQUIREMENTS)</span>
+              <span class="prestige-req-badge locked" id="prestige-req-badge">LOCKED</span>
+            </div>
+
+            <div class="prestige-req-item">
+              <div class="req-label-row">
+                <span class="req-name">📄 Redaction Threshold:</span>
+                <span class="req-val" id="prestige-req-lines-val">0 / 200.00M Lines</span>
+              </div>
+              <div class="req-progress-bar">
+                <div class="req-progress-fill" id="prestige-req-lines-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="prestige-req-item">
+              <div class="req-label-row">
+                <span class="req-name">🖋️ Manual Dossier Clicks:</span>
+                <span class="req-val" id="prestige-req-clicks-val">0 / 50 Clicks</span>
+              </div>
+              <div class="req-progress-bar">
+                <div class="req-progress-fill" id="prestige-req-clicks-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="req-label-row" style="font-size: 8px; color: #94a3b8; margin-top: 1px;">
+              <span id="prestige-req-explainer">Requires aggregating 1.25x clicks of previous prestige and reaching target lines.</span>
+            </div>
+          </div>
+
+          <div class="prestige-bullet-points">
+            <div class="bullet-row">
+              <span class="bullet-icon">⚡</span>
+              <span><strong>STACKABLE +1X MULTIPLIER:</strong> Adds +1x power to all manual marker clicks permanently.</span>
+            </div>
+            <div class="bullet-row">
+              <span class="bullet-icon">⚡</span>
+              <span><strong>STACKABLE +1X WORKFORCE:</strong> Adds +1x base output to all automated staff (Interns, Rollers, Shredders, Stamps).</span>
+            </div>
+            <div class="bullet-row">
+              <span class="bullet-icon">⚡</span>
+              <span><strong>BALANCED PROGRESSION:</strong> Tier 0 = 1x, Tier 1 = 2x, Tier 2 = 3x, Tier 3 = 4x, Tier 4 = 5x...</span>
+            </div>
+          </div>
+
+          <button class="modal-action-btn burn-action locked" id="execute-prestige-btn" disabled>
+            🔒 LOCKED (200.00M LINES & 50 CLICKS)
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ==========================================================
+       KLICKASHKLIC - DUAL TARGET ENGINE & EXECUTIVE PRIVILEGE
+       ========================================================== */
+
+    (function() {
+      // 1. GAME STATE
+      const state = {
+        redactions: 0,
+        totalRedactedEver: 0,
+        vipsProtected: 0,
+        secretsBuried: 0,
+        prestigeLevel: 0,
+        prestigeCount: 0,
+        lifetimeMultipliers: 1,
+        runManualClicks: 0,
+        lastPrestigeClicks: 40,
+        runRedacted: 0,
+        baseClickPower: 1,
+        fumeCharge: 0,
+        frenzyActive: false,
+        frenzyRemaining: 0,
+        privilegeActive: false,
+        privilegeRemaining: 0,
+        lastEpsteinHit: 0,
+        lastDonHit: 0,
+        lastTime: performance.now(),
+        soundEnabled: true,
+        pageLineIndex: 0,
+        pageNumber: 1,
+        drawerState: 'normal',
+        lastTickSecond: 0,
+        gameStarted: false
+      };
+
+      function getPrestigeMultiplier() {
+        return 1 + (state.prestigeLevel || 0);
+      }
+
+      // Step increment per prestige level:
+      // Levels 1-5: 200M per level (200mm)
+      // Levels 6-10: 2,000M (2B) per level (10x previous value)
+      // Levels 11-15: 20,000M (20B) per level (10x previous value)
+      // Scales 10x every 5 levels
+      function getPrestigeStep(targetLevel) {
+        if (targetLevel <= 0) return 200000000;
+        let step = 200000000;
+        for (let lvl = 1; lvl <= targetLevel; lvl++) {
+          if (lvl > 1 && (lvl - 1) % 5 === 0) {
+            step *= 10;
+          }
+        }
+        return step;
+      }
+
+      // Cumulative line threshold required for targetLevel:
+      // Level 1: 200M (200,000,000)
+      // Level 2: 400M (+200M)
+      // Level 3: 600M (+200M)
+      // Level 4: 800M (+200M)
+      // Level 5: 1,000M = 1B (+200M)
+      // Level 6: 1B + 2B = 3B (+2000M)
+      // Level 7: 3B + 2B = 5B (+2000M)
+      // ...
+      // Level 11: 11B + 20B = 31B (+20000M)
+      function getPrestigeLineRequirement(targetLevel) {
+        if (targetLevel <= 0) return 200000000;
+        let total = 0;
+        let currentStep = 200000000;
+        for (let lvl = 1; lvl <= targetLevel; lvl++) {
+          if (lvl > 1 && (lvl - 1) % 5 === 0) {
+            currentStep *= 10;
+          }
+          total += currentStep;
+        }
+        return total;
+      }
+
+      // Manual clicks requirement:
+      // - Must click on the dossier file (cannot prestige with 0 clicks)
+      // - Must aggregate 1.25x the amount of clicks had at time of previous prestige
+      // - After 5th prestige, it costs double (2.0x) the last click amount and lowest click requirement doubles
+      function getPrestigeClickRequirement() {
+        const lowestClickBase = 50;
+        const targetLevel = (state.prestigeLevel || 0) + 1;
+        if (targetLevel <= 1) {
+          return lowestClickBase;
+        }
+        const lastClicks = state.lastPrestigeClicks || lowestClickBase;
+        if (targetLevel <= 5) {
+          return Math.max(lowestClickBase, Math.ceil(lastClicks * 1.25));
+        } else {
+          return Math.max(lowestClickBase * 2, Math.ceil(lastClicks * 2.0));
+        }
+      }
+
+      function canPrestige() {
+        const targetLevel = (state.prestigeLevel || 0) + 1;
+        const reqLines = getPrestigeLineRequirement(targetLevel);
+        const reqClicks = getPrestigeClickRequirement();
+        const hasLines = (state.totalRedactedEver || 0) >= reqLines;
+        const hasClicks = (state.runManualClicks || 0) >= reqClicks;
+        return hasLines && hasClicks;
+      }
+
+      // Panic Dialogue Quotes
+      const kashQuotes = [
+        "Don't let them see Page 7!",
+        "The Boss is watching, keep redacting!",
+        "Natalia, bring more black ink!",
+        "If anyone asks, it's personal diary entries!",
+        "Turn the transponder off! OFF!",
+        "Redact faster, the Grand Jury is convening!",
+        "Box 18 never left Mar-a-Lago, understand?!",
+        "Burn the tape swabs! All of them!"
+      ];
+
+      // 2. TIERED AUTOMATED GENERATORS (INCORPORATING ALL THEMED TIERS)
+      // Cost scaling formula: cost = baseCost * Math.pow(1.15, count)
+      const generators = [
+        {
+          id: 'intern',
+          name: 'Unpaid Intern',
+          icon: '🖊️',
+          baseCost: 15,
+          rps: 0.5,
+          count: 0,
+          desc: 'Squeaks dried-out dollar-store markers.'
+        },
+        {
+          id: 'magnum_roller',
+          name: 'Magnum Sharpie Roller',
+          icon: '🖌️',
+          baseCost: 100,
+          rps: 4.0,
+          count: 0,
+          desc: '4-inch paint roller dipped in black ink.'
+        },
+        {
+          id: 'whiteout_swarm',
+          name: 'White-Out Tape Swarm',
+          icon: '📼',
+          baseCost: 350,
+          rps: 12.0,
+          count: 0,
+          desc: 'Correction tape swarm blanking entire manifests.'
+        },
+        {
+          id: 'crosscut_shredder',
+          name: 'Cross-Cut Shredder',
+          icon: '⚙️',
+          baseCost: 1100,
+          rps: 32.0,
+          count: 0,
+          desc: 'Chews binders into confetti.'
+        },
+        {
+          id: 'beltfed_shredder',
+          name: 'Belt-Fed Shredder 9000',
+          icon: '🌪️',
+          baseCost: 4500,
+          rps: 85.0,
+          count: 0,
+          desc: 'Military-grade automated hopper processing logs.'
+        },
+        {
+          id: 'natalia_swabs',
+          name: 'Nurse Natalia Ink Swabs',
+          icon: '🩹',
+          baseCost: 8500,
+          rps: 180.0,
+          count: 0,
+          desc: 'Hospital-grade sterile swabs drenched in permanent black ink.'
+        },
+        {
+          id: 'pneumatic_stamp',
+          name: "Pneumatic 'CLASSIFIED' Stamp",
+          icon: '🔨',
+          baseCost: 12000,
+          rps: 260.0,
+          count: 0,
+          desc: 'Heavy hydraulic blackout piston.'
+        },
+        {
+          id: 'safe_degausser',
+          name: 'Safe Degausser',
+          icon: '🧲',
+          baseCost: 45000,
+          rps: 650.0,
+          count: 0,
+          desc: 'Industrial magnet scrambling hard drives in vault safe.'
+        },
+        {
+          id: 'chandelier_hider',
+          name: 'Ballroom Chandelier Hider',
+          icon: '💡',
+          baseCost: 95000,
+          rps: 2100.0,
+          count: 0,
+          desc: 'Ceiling rigging concealing classified files behind crystals.'
+        },
+        {
+          id: 'duraflame_hearth',
+          name: 'Executive Duraflame Hearth',
+          icon: '🔥',
+          baseCost: 130000,
+          rps: 1400.0,
+          count: 0,
+          desc: 'Open fireplace data elimination.'
+        },
+        {
+          id: 'radar_amnesia',
+          name: 'FAA Radar Amnesia',
+          icon: '📡',
+          baseCost: 400000,
+          rps: 4200.0,
+          count: 0,
+          desc: 'Deletes transponder tracks over the Virgin Islands.'
+        },
+        {
+          id: 'declass_mind',
+          name: 'Declassified By Mind Protocol',
+          icon: '🧠',
+          baseCost: 1200000,
+          rps: 18500.0,
+          count: 0,
+          desc: 'Telepathic declassification field eliminating records instantly.'
+        },
+        {
+          id: 'subbasement_incinerator',
+          name: 'Sub-Basement Incinerator',
+          icon: '🏭',
+          baseCost: 1400000,
+          rps: 7800.0,
+          count: 0,
+          desc: 'Industrial furnace burning FOIA requests.'
+        },
+        {
+          id: 'quantum_memory_hole',
+          name: 'Quantum Memory Hole',
+          icon: '🕳️',
+          baseCost: 5000000,
+          rps: 38000.0,
+          count: 0,
+          desc: 'Erases passenger records from the fabric of space-time.'
+        }
+      ];
+
+      // 3. SATIRICAL NEWS HEADLINES
+      const baseHeadlines = [
+        "DOJ spokesperson insists Virgin Islands flight logs were merely 'migratory bird tallies.'",
+        "FAA confirms radar over Little St. James was obstructed by swamp gas.",
+        "Kash Patel seen wheeling 40-pound industrial magnet into evidence locker at 3 AM.",
+        "Palm Beach phonebook mysteriously missing pages E through G.",
+        "DOJ runs out of black markers; emergency shipment en route.",
+        "Kash claims locked office doors were simply 'stuck on deadbolt by deep state hinges.'",
+        "D.C. air quality alert: High concentrations of charred 20-lb bond paper.",
+        "Historians confirm 1974 never actually occurred.",
+        "FOIA request returned as 600 pages of solid pitch-black PNGs.",
+        "Sharpie stock up 4,000% following late-night bureaucratic scramble.",
+        "FBI reports 'accidental marshmallow roast' consumed Hoover Building evidence floor.",
+        "Stacked Executive Clearance invoked: All federal oversight laws reduced to polite suggestions."
+      ];
+
+      const unlockableHeadlines = [
+        { minScore: 100, text: "Nurse Natalia reported ordering 10,000 extra-large black Sharpie felt tips." },
+        { minScore: 500, text: "Mar-a-Lago ballroom chandeliers lowered for 'routine structural document reinforcement.'" },
+        { minScore: 3000, text: "Special Counsel demands to know why subpoena responses smell like baby powder and suntan oil." },
+        { minScore: 25000, text: "Former chief of staff claims all executive memos were declassified by telepathic aura." },
+        { minScore: 200000, text: "White House chimney issues dense purple smoke; staff denies roasting subpoenas on Duraflames." }
+      ];
+
+      // ==========================================
+      // 4. DYNAMIC CRISIS DOSSIER PROCEDURAL ENGINE
+      // ==========================================
+      const CRISIS_DOSSIERS = [
+        {
+          id: 'flight_logs',
+          titleTag: '🔥 FIRE #1: FLIGHT LOGS',
+          exhibit: 'EXHIBIT #104-B',
+          docRef: 'EXHIBIT #104-B<br>TAIL #N212JE',
+          subject: 'FLIGHT LOG // LOLITA EXPRESS MANIFESTS',
+          entities: 'JEFFREY EPSTEIN // INDIVIDUAL 1 // PALM BEACH RUNWAY',
+          kashQuote: 'FLIGHT LOGS BLACKED OUT! QUICK, THE PRESS IS REPORTING ON THE 1992 BIRTHDAY PARTY!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: 1992 CALENDAR BIRTHDAY PARTY TAPES LEAKING // SUBPOENAS FILED!',
+          headlines: [
+            'BREAKING: Flight logs confirm Tail #N212JE made 14 unauthorized hops to Little St. James.',
+            'DOJ runs out of black Sharpies as passenger manifest leaks to congressional committee.',
+            'FAA claims flight manifests were merely tallies of endangered migratory seabirds.',
+            'Kash Patel insists Palm Beach safe only contained gold diaper pins and coupon circulars.'
+          ],
+          lines: [
+            () => `[08:14] FLIGHT MANIFEST: <span class="crit-target target-epstein" data-type="epstein">JEFFREY EPSTEIN</span> CLEARED RUNWAY WITH <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span>`,
+            () => `[09:30] LOGBOOK ALTERATION: COPILOT ORDERED TO PURGE CO-MENTION OF <span class="crit-target target-epstein" data-type="epstein">LOLITA EXPRESS</span>`,
+            () => `[10:45] COURIER TRANSFERRED GUEST LEDGERS FROM <span class="crit-target target-epstein" data-type="epstein">TAIL #N212JE</span> INTO <span class="crit-target target-don" data-type="don">MAR-A-LAGO BOX 18</span>`,
+            () => `[12:10] WATER TAXI CREW ORDERED NEVER TO DISCUSS GUESTS DEBARKING AT <span class="crit-target target-epstein" data-type="epstein">PRIVATE ISLAND</span>`,
+            () => `[14:50] SAFE RECOVERED WITH TAPES MARKED <span class="crit-target target-don" data-type="don">THE BOSS</span> // <span class="crit-target target-epstein" data-type="epstein">JEFFREY</span>`,
+            () => `[16:15] SPECIAL AGENT DEPOSITION: WITNESS RECALLED <span class="crit-target target-don" data-type="don">DIAPER DON</span> BOARDING PRIVATE CABIN`,
+            () => `[19:00] GUEST COTTAGE LOG: ROOM RESERVED FOR <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> DIRECTLY OPPOSITE <span class="crit-target target-epstein">EPSTEIN SUITE</span>`,
+            () => `[23:15] EXECUTIVE ORDER: MAXIMUM REDACTION MANDATE FOR ANY RECORD LINKING <span class="crit-target target-don" data-type="don">THE BOSS</span> TO <span class="crit-target target-epstein">LOLITA EXPRESS</span>`
+          ]
+        },
+        {
+          id: 'birthday_party',
+          titleTag: '🔥 FIRE #2: 1992 VIP BIRTHDAY BASH',
+          exhibit: 'EXHIBIT #1992-B',
+          docRef: 'EXHIBIT #1992-B<br>MAR-A-LAGO BALLROOM',
+          subject: 'MAR-A-LAGO 1992 // THE 28-CALENDAR VIP BASH',
+          entities: 'DONNY & EPSTEIN (2 GUESTS) // 28 CALENDAR MODELS // TAPE 4',
+          kashQuote: 'BIRTHDAY FOOTAGE SHREDDED! BUT LOOK AT SCOTLAND YARD — PRINCE ANDREW IS BLOWING UP!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: PRINCE ANDREW WOKING PIZZA ALIBI CRUMBLING // MET POLICE SUBPOENAS ON WIRE!',
+          headlines: [
+            'BREAKING: Unsealed 1992 VHS tape captures Mar-a-Lago party with exactly two male VIPs in attendance.',
+            'Witness statement: Donny whispered to Epstein by the buffet: "He likes them on the younger side."',
+            'Catering invoice for 1992 VIP bash reveals $45,000 billed for 28 bottles of Dom Pérignon.',
+            'Bureau scrambles to classify all calendar company sponsorships before morning press briefing.'
+          ],
+          lines: [
+            () => `[20:00] BALLROOM ROSTER CONFIRMED: EXCLUSIVE 2-MAN GUEST LIST OF <span class="crit-target target-don" data-type="don">DONNY</span> AND <span class="crit-target target-epstein" data-type="epstein">JEFFREY EPSTEIN</span>`,
+            () => `[20:45] DJ CONTRACT DEMANDED VIP STAGE PERFORMANCES BY <span class="crit-target target-party" data-type="party">28 CALENDAR MODELS</span>`,
+            () => `[21:30] SECURITY INTERCEPT: <span class="crit-target target-don" data-type="don">THE BOSS</span> SEEN HIGH-FIVING <span class="crit-target target-epstein">JEFFREY</span> OVER VIP CAKE`,
+            () => `[22:15] CONFIDENTIAL CAMCORDER OPERATOR MARKED CASSETTE AS <span class="crit-target target-party" data-type="party">INFAMOUS BIRTHDAY TAPE 4</span>`,
+            () => `[22:50] CATERING RECEIPT: PRIVATE DINNER CHARGED DIRECTLY TO <span class="crit-target target-don">MAR-A-LAGO ACCOUNT</span>`,
+            () => `[23:20] WITNESS SWORN TESTIMONY: <span class="crit-target target-don">INDIVIDUAL 1</span> QUOTED PRAISING <span class="crit-target target-party" data-type="party">CALENDAR GIRLS BASH</span>`,
+            () => `[00:10] MORNING-AFTER MEMO: BURN ALL INVITATION ENVELOPES CO-SIGNED BY <span class="crit-target target-epstein">EPSTEIN</span>`,
+            () => `[01:00] EMERGENCY VAULT DEPOSIT: CASSETTE TRANSFERRED BEHIND <span class="crit-target target-don">MAR-A-LAGO BOX 18</span>`
+          ]
+        },
+        {
+          id: 'royal_alibi',
+          titleTag: '🔥 FIRE #3: ROYAL ESCAPADE & WOKING ALIBI',
+          exhibit: 'EXHIBIT #007-ROYAL',
+          docRef: 'EXHIBIT #007-ROYAL<br>WOKING ALIBI',
+          subject: 'ROYAL LODGE // TRAMP NIGHTCLUB INTERCEPTS',
+          entities: 'PRINCE ANDREW // VIRGINIA G. // PIZZA EXPRESS // VALET MEMOS',
+          kashQuote: 'ROYAL PHONE LOGS SUPPRESSED! BUT THE BILLIONAIRE BLACK BOOK JUST LEAKED TO THE JOURNAL!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: BILLIONAIRE BLACK BOOK CONTACTS LEAKING ON DARK WEB // WALL STREET IN PANIC!',
+          headlines: [
+            'BREAKING: Prince Andrew insists he was eating garlic dough balls in Woking during royal summit.',
+            'Scotland Yard examines royal phone records showing 42 encrypted calls to Epstein residence.',
+            'Royal valet admits under oath: "The Duke does, in fact, perspire profusely when questioned by FBI."',
+            'Settlement wire transfer of £12 Million intercepted before offshore Cayman clearing.'
+          ],
+          lines: [
+            () => `[18:30] ROYAL DEFENSE MEMO: <span class="crit-target target-royal" data-type="royal">PRINCE ANDREW</span> CLAIMS HE WAS AT <span class="crit-target target-royal" data-type="royal">PIZZA EXPRESS WOKING</span>`,
+            () => `[19:45] TRAMP NIGHTCLUB LOG: WITNESS OBSERVED <span class="crit-target target-royal" data-type="royal">THE DUKE</span> DANCING WITH <span class="crit-target target-epstein" data-type="epstein">VIRGINIA G.</span>`,
+            () => `[21:10] INTERCEPTED TELEGRAM: BUCKINGHAM PALACE ASKS FOR REMOVAL OF <span class="crit-target target-royal" data-type="royal">ROYAL LODGE LOGS</span>`,
+            () => `[22:00] SETTLEMENT LEDGER: SECRET £12,000,000 TRANSFER AUTHORIZED FROM <span class="crit-target target-royal" data-type="royal">ROYAL COFFERS</span>`,
+            () => `[22:45] MET POLICE MEMO: INVESTIGATION FROZEN AFTER DIRECT CALL FROM <span class="crit-target target-don" data-type="don">THE BOSS</span>`,
+            () => `[23:30] JET MANIFEST: ROYAL CHOPPER TRACKED HEADING DIRECTLY FOR <span class="crit-target target-epstein">LOLITA EXPRESS RUNWAY</span>`,
+            () => `[00:15] MEDICAL AFFIDAVIT CLAIMING INABILITY TO SWEAT FILED UNDER <span class="crit-target target-royal" data-type="royal">ROYAL IMMUNITY</span>`
+          ]
+        },
+        {
+          id: 'black_book',
+          titleTag: '🔥 FIRE #4: BILLIONAIRES BLACK BOOK',
+          exhibit: 'EXHIBIT #88-BB',
+          docRef: 'EXHIBIT #88-BB<br>UNREDACTED LEDGER',
+          subject: 'THE LITTLE BLACK BOOK // 92 PRIVILEGED CONTACTS',
+          entities: 'LES WEXNER // BILL GATES // HARVEY WEINSTEIN // ALAN DERSHOWITZ',
+          kashQuote: 'BLACK BOOK HUSH-MONEY COURIERS ARRESTED! BUT BOXES IN THE BATHROOM WERE FOUND BY INVESTIGATORS!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: 300 BOXES LOCATED IN MAR-A-LAGO CHANDELIER BATHROOM // SHOWER CURTAIN STASH EXPOSED!',
+          headlines: [
+            'BREAKING: Unredacted Little Black Book found circulating among Upper East Side moguls.',
+            'Les Wexner multi-billion power of attorney documentation subpoenaed by federal grand jury.',
+            'Harvard endowment audit flags mysterious $6.5M donation processed under Larry Summers advisory office.',
+            'Alan Dershowitz requests full redaction of "all references to keeping underwear on during massage."'
+          ],
+          lines: [
+            () => `[10:00] WEXNER DOSSIER: COMPLETE POWER OF ATTORNEY GRANTED OVER FORTUNE OF <span class="crit-target target-vip" data-type="vip">LES WEXNER</span>`,
+            () => `[11:30] DINNER CALENDAR: MULTI-HOUR PHILANTHROPY SESSION CO-HOSTED WITH <span class="crit-target target-vip" data-type="vip">BILL GATES</span>`,
+            () => `[13:45] HOLLYWOOD PHONE SLIP: 14 MESSAGES FROM <span class="crit-target target-vip" data-type="vip">HARVEY WEINSTEIN</span> REQUESTING AUDITIONS`,
+            () => `[15:20] PALM BEACH CABANA INVOICE: MASSAGE SLIP LOGGED FOR <span class="crit-target target-vip" data-type="vip">ALAN DERSHOWITZ</span>`,
+            () => `[17:00] CAMBRIDGE ENDOWMENT TRANSFER: DIRECT WIRE APPROVED BY <span class="crit-target target-vip" data-type="vip">LARRY SUMMERS</span>`,
+            () => `[18:40] PRIVATE ISLAND DONOR PLAQUE DEDICATED TO <span class="crit-target target-epstein">JEFFREY EPSTEIN</span> BY WALL STREET TITANS`,
+            () => `[21:15] ATTORNEY MEMO: DELETE CONTACT ENTRIES 40 THROUGH 88 PRIOR TO <span class="crit-target target-don" data-type="don">THE BOSS REVIEWS</span>`
+          ]
+        },
+        {
+          id: 'bathroom_boxes',
+          titleTag: '🔥 FIRE #5: BATHROOM CHANDELIER STASH',
+          exhibit: 'EXHIBIT #MAL-SHOWER',
+          docRef: 'EXHIBIT #MAL-SHOWER<br>PULLMAN SUITE',
+          subject: 'CHANDELIER BATHROOM // BOXES 18 THROUGH 34',
+          entities: 'BOX 18 BEHIND SHOWER CURTAIN // WAR PLANS // NURSE NATALIA',
+          kashQuote: 'SHOWER CURTAIN BOXES EVACUATED! BUT THE SUBPOENA DEADLINE IN THE INCINERATOR EXPIRES IN 5 MINUTES!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: CONGRESSIONAL SUBPOENA INCINERATOR DEADLINE // DESTROY ALL PAPERS ON SIGHT!',
+          headlines: [
+            'BREAKING: Photos show 45 cardboard boxes stacked to the crystal chandelier next to the toilet.',
+            'Nurse Natalia observed labeling classified nuclear war plans with gold Sharpie hearts.',
+            'Surveillance video of storage room erased after pool drain valve "accidentally" floods server room.',
+            'DOJ finds top secret folders mixed with golf shoes, newspapers, and commemorative ketchup bottles.'
+          ],
+          lines: [
+            () => `[09:00] PHOTO EVIDENCE: 45 BOXES STACKED FLUSH WITH SHOWER CURTAIN IN <span class="crit-target target-don" data-type="don">MAR-A-LAGO SUITE</span>`,
+            () => `[10:30] TOP SECRET LABEL OVERLAID WITH GOLDEN SAFETY PIN STICKER BY <span class="crit-target target-don" data-type="don">NURSE NATALIA</span>`,
+            () => `[12:15] POOL DRAIN VALVE MYSTERIOUSLY TRIPPED, FLOODING HARD DRIVES OF <span class="crit-target target-epstein">SURVEILLANCE ARCHIVE</span>`,
+            () => `[14:00] CLASSIFIED WAR PLANS DISCOVERED IN <span class="crit-target target-don" data-type="don">MAR-A-LAGO BOX 18</span> NEXT TO GOLF POLOS`,
+            () => `[16:45] MEMO FROM KASH: 'ALL 300 BOXES WERE MENTALLY DECLASSIFIED BY AURA BEFORE LUNCH'`,
+            () => `[19:10] WITNESS SAW TRUCK MOVING BOXES TO PRIVATE JET HEADED DIRECTLY FOR <span class="crit-target target-don" data-type="don">BEDMINSTER</span>`,
+            () => `[22:00] EMERGENCY MOTION: CLAIM EXECUTIVE PRIVILEGE OVER ENTIRE CLUB PLUMBING SYSTEM`
+          ]
+        },
+        {
+          id: 'incinerator_bunker',
+          titleTag: '🔥 FIRE #6: SUBPOENA INCINERATOR',
+          exhibit: 'EXHIBIT #000-BURN',
+          docRef: 'EXHIBIT #000-BURN<br>BASEMENT FURNACE',
+          subject: 'SUBPOENA INCINERATOR // 10:00 AM CONGRESSIONAL DEADLINE',
+          entities: 'KASH INDUSTRIAL MAGNET // 500 GAL DIESEL // EXECUTIVE IMMUNITY',
+          kashQuote: 'INCINERATOR PURGE SUCCESSFUL! BUT A LEAKED FLIGHT MANIFEST JUST RESURFACED ON TWITTER!',
+          nextFireAlert: '🔥 NEXT FIRE IMMINENT: EPSTEIN FLIGHT LOGS RESURFACING // THE VICIOUS CYCLE OF COVER-UPS CONTINUES!',
+          headlines: [
+            'BREAKING: D.C. firefighters respond to dense purple smoke pouring from White House chimney.',
+            'Kash Patel spotted wheeling 40-pound industrial degaussing magnet through DOJ hallway.',
+            'Congressional subpoena deadline expires in 12 minutes; bureau shredders set to maximum RPM.',
+            'Witness affirms: "I saw them roasting marshmallows over the unsealed 302 FBI files."'
+          ],
+          lines: [
+            () => `[08:00] HOUSE COMMITTEE DEADLINE: 10:00 AM SURRENDER DEMANDED FOR UNREDACTED <span class="crit-target target-don" data-type="don">THE BOSS</span> FILES`,
+            () => `[08:30] KASH PATEL ROLLS INDUSTRIAL MAGNET OVER SERVERS CONTAINING <span class="crit-target target-epstein">EPSTEIN TAPE BACKUPS</span>`,
+            () => `[09:00] 500 GALLONS INDUSTRIAL SOLVENT DELIVERED TO <span class="crit-target target-don" data-type="don">BASEMENT INCINERATOR</span>`,
+            () => `[09:25] WHITE HOUSE CHIMNEY DETECTED SPEWING 400 LBS OF SMOLDERING <span class="crit-target target-epstein">SUBPOENA TRANSCRIPTS</span>`,
+            () => `[09:45] AFFIDAVIT EXECUTED: ALL FORMER AIDES SWORN TO FORGET THE NAME <span class="crit-target target-epstein">JEFFREY</span>`,
+            () => `[09:59] FINAL DOCUMENT PLACED IN SHREDDER: THE SACRED CO-SIGNED PLEDGE BETWEEN <span class="crit-target target-don" data-type="don">INDIVIDUAL 1</span> AND <span class="crit-target target-epstein">EPSTEIN</span>`
+          ]
+        }
+      ];
+
+      // 5. DOM REFERENCES
+      const container = document.getElementById('app-container');
+      const startMenu = document.getElementById('start-menu');
+      const startBreachBtn = document.getElementById('start-breach-btn');
+      const startSaveCard = document.getElementById('start-save-card');
+      const startSaveStats = document.getElementById('start-save-stats');
+      const startSavePrestige = document.getElementById('start-save-prestige');
+      const startClearSaveBtn = document.getElementById('start-clear-save-btn');
+
+      const headerPrestigeBadge = document.getElementById('header-prestige-badge');
+      const clearanceText = document.getElementById('clearance-text');
+      const hooverPrestigeBtn = document.getElementById('hoover-prestige-btn');
+      const drawerPrestigeCard = document.getElementById('drawer-prestige-card');
+      const drawerPrestigeBtn = document.getElementById('drawer-prestige-btn');
+      const prestigeCardSub = document.getElementById('prestige-card-sub');
+
+      const statRedactions = document.getElementById('stat-redactions');
+      const statVips = document.getElementById('stat-vips');
+      const statSecrets = document.getElementById('stat-secrets');
+      const statRps = document.getElementById('stat-rps');
+      const clickPowerBadge = document.getElementById('click-power-badge');
+      const dossierPage = document.getElementById('dossier-page');
+      const dossierMeta = document.getElementById('dossier-meta');
+      const dossierDocRef = document.getElementById('dossier-doc-ref');
+      const documentLines = document.getElementById('document-lines');
+      const shredStamp = document.getElementById('shred-stamp');
+      const fumeFill = document.getElementById('fume-fill');
+      const fumeStatusText = document.getElementById('fume-status-text');
+      const upgradesDrawer = document.getElementById('upgrades-drawer');
+      const drawerToggle = document.getElementById('drawer-toggle');
+      const drawerIcon = document.getElementById('drawer-icon');
+      const drawerRpsSummary = document.getElementById('drawer-rps-summary');
+      const upgradesList = document.getElementById('upgrades-list');
+      const chyronText = document.getElementById('chyron-text');
+      const soundBtn = document.getElementById('sound-btn');
+      const settingsBtn = document.getElementById('settings-btn');
+      const settingsModal = document.getElementById('settings-modal');
+      const settingsCloseBtn = document.getElementById('settings-close-btn');
+      const settingsSoundToggle = document.getElementById('settings-sound-toggle');
+      const settingsLifetimeStat = document.getElementById('settings-lifetime-stat');
+      const settingsVipsStat = document.getElementById('settings-vips-stat');
+      const settingsSecretsStat = document.getElementById('settings-secrets-stat');
+      const settingsRpsStat = document.getElementById('settings-rps-stat');
+      const settingsPrestigeStat = document.getElementById('settings-prestige-stat');
+      const wipeDataBtn = document.getElementById('wipe-data-btn');
+
+      const prestigeModal = document.getElementById('prestige-modal');
+      const prestigeCloseBtn = document.getElementById('prestige-close-btn');
+      const executePrestigeBtn = document.getElementById('execute-prestige-btn');
+      const prestigeTierDisplay = document.getElementById('prestige-tier-display');
+      const prestigeLinesReq = document.getElementById('prestige-lines-req');
+      const prestigeClicksReq = document.getElementById('prestige-clicks-req');
+      const prestigeNextBonus = document.getElementById('prestige-next-bonus');
+
+      const kashAvatar = document.getElementById('kash-avatar');
+      const kashBubble = document.getElementById('kash-bubble');
+
+      const crisisFireBanner = document.getElementById('crisis-fire-banner');
+      const crisisTitleTag = document.getElementById('crisis-title-tag');
+      const crisisTargetsLeft = document.getElementById('crisis-targets-left');
+
+      let isAdvancingCrisis = false;
+
+      // 6. CRISIS DOSSIER GENERATION & TARGET MANAGEMENT
+      function getCurrentCrisis() {
+        const crisisIdx = (state.crisisIndex || 0) % CRISIS_DOSSIERS.length;
+        return CRISIS_DOSSIERS[crisisIdx];
+      }
+
+      function getNextCrisis() {
+        const nextIdx = ((state.crisisIndex || 0) + 1) % CRISIS_DOSSIERS.length;
+        return CRISIS_DOSSIERS[nextIdx];
+      }
+
+      function generateCrisisDossierPage() {
+        documentLines.innerHTML = '';
+        state.pageLineIndex = 0;
+        isAdvancingCrisis = false;
+
+        const crisis = getCurrentCrisis();
+        dossierDocRef.innerHTML = crisis.docRef;
+        dossierMeta.innerHTML = `
+          <div><strong>SUBJECT:</strong> ${crisis.subject}</div>
+          <div><strong>SENSITIVE ENTITIES:</strong> ${crisis.entities}</div>
+        `;
+
+        if (crisisTitleTag) crisisTitleTag.textContent = crisis.titleTag;
+        if (crisisFireBanner) crisisFireBanner.classList.remove('contained');
+
+        // Render themed crisis text lines
+        crisis.lines.forEach((lineFn, i) => {
+          const line = document.createElement('div');
+          line.className = 'text-line';
+          line.dataset.index = i;
+
+          const textSpan = document.createElement('span');
+          textSpan.className = 'pseudo-text';
+          textSpan.innerHTML = lineFn();
+
+          const redactBar = document.createElement('div');
+          redactBar.className = 'redaction-bar';
+          const rot = (Math.random() - 0.5) * 1.8;
+          redactBar.style.transform = `rotate(${rot}deg) scaleX(0)`;
+
+          line.appendChild(textSpan);
+          line.appendChild(redactBar);
+          documentLines.appendChild(line);
+
+          // Clicking directly on an unredacted line also blacks it out
+          line.addEventListener('pointerdown', (e) => {
+            if (e.target.closest('.crit-target')) return;
+            handleLineDirectClick(e, line);
+          });
+        });
+
+        attachCrisisTargetListeners();
+        updateRemainingTargetsDisplay();
+        rebuildTickerText();
+      }
+
+      function updateRemainingTargetsDisplay() {
+        const unredactedTargets = documentLines.querySelectorAll('.crit-target:not(.crit-redacted)');
+        if (crisisTargetsLeft) {
+          crisisTargetsLeft.textContent = unredactedTargets.length;
+        }
+        return unredactedTargets.length;
+      }
+
+      function attachCrisisTargetListeners() {
+        const targets = documentLines.querySelectorAll('.crit-target');
+        targets.forEach(el => {
+          el.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            handleTargetClick(e, el);
+          });
+        });
+      }
+
+      // GENERIC CRITICAL TARGET CLICK HANDLER
+      function handleTargetClick(e, targetEl) {
+        getAudioContext();
+        if (targetEl.classList.contains('crit-redacted') || isAdvancingCrisis) return;
+
+        targetEl.classList.add('crit-redacted');
+        const now = performance.now();
+        const type = targetEl.dataset.type || 'epstein';
+
+        const prestigeMult = getPrestigeMultiplier();
+        const multiplier = (state.frenzyActive ? 2 : 1) * (state.privilegeActive ? 7 : 1);
+        const baseGain = state.baseClickPower * prestigeMult * multiplier;
+
+        let gain = baseGain * 10;
+        let floatLabel = '+10x CRIT REDACTION!';
+        let floatClass = 'crit';
+
+        if (type === 'epstein') {
+          state.lastEpsteinHit = now;
+          gain = baseGain * 10;
+          floatLabel = `+10x EPSTEIN REDACTED! (+${formatNumber(gain)})`;
+          floatClass = 'crit';
+          playCriticalSound();
+          state.vipsProtected++;
+        } else if (type === 'don') {
+          state.lastDonHit = now;
+          gain = baseGain * 15;
+          floatLabel = `+15x PROTECT THE BOSS! (+${formatNumber(gain)})`;
+          floatClass = 'boss';
+          playDonCoverupSound();
+          state.secretsBuried++;
+        } else if (type === 'party') {
+          gain = baseGain * 12;
+          floatLabel = `+12x 1992 PARTY COVER-UP! (+${formatNumber(gain)})`;
+          floatClass = 'frenzy';
+          playCriticalSound();
+          state.vipsProtected++;
+        } else if (type === 'royal') {
+          gain = baseGain * 14;
+          floatLabel = `+14x ROYAL IMMUNITY! (+${formatNumber(gain)})`;
+          floatClass = 'combo';
+          playBrassFanfare();
+          state.secretsBuried++;
+        } else if (type === 'vip') {
+          gain = baseGain * 11;
+          floatLabel = `+11x BLACK BOOK HUSH MONEY! (+${formatNumber(gain)})`;
+          floatClass = 'crit';
+          playCriticalSound();
+          state.vipsProtected++;
+        }
+
+        state.redactions += gain;
+        state.totalRedactedEver += gain;
+        state.runRedacted = (state.runRedacted || 0) + gain;
+        state.runManualClicks = (state.runManualClicks || 0) + 1;
+
+        triggerKashPanic();
+        checkPrivilegeCombo(now);
+
+        // Splatters and particles
+        const deskRect = canvas.getBoundingClientRect();
+        const x = (e.clientX || deskRect.left + deskRect.width / 2) - deskRect.left;
+        const y = (e.clientY || deskRect.top + deskRect.height / 2) - deskRect.top;
+
+        if (type === 'don') {
+          spawnDonParticles(x, y);
+        } else {
+          spawnInkSplatter(x, y, 16, state.frenzyActive, true);
+        }
+        spawnFloatText(x - 25, y - 16, floatLabel, floatClass);
+
+        // Also blackout the parent line if not yet blacked out
+        const parentLine = targetEl.closest('.text-line');
+        if (parentLine && !parentLine.classList.contains('redacted')) {
+          parentLine.classList.add('redacted');
+        }
+
+        const remaining = updateRemainingTargetsDisplay();
+        updateUI();
+
+        // If all manual targets on this file are clicked -> FIRE CONTAINED! ADVANCE TO NEXT PAGE!
+        if (remaining === 0) {
+          onCrisisContained(true);
+        }
+      }
+
+      // DIRECT CLICK ON A TEXT LINE
+      function handleLineDirectClick(e, line) {
+        getAudioContext();
+        if (isAdvancingCrisis) return;
+
+        if (!line.classList.contains('redacted')) {
+          line.classList.add('redacted');
+        }
+
+        handleClick(e);
+
+        const remaining = updateRemainingTargetsDisplay();
+        if (remaining === 0) {
+          onCrisisContained(true);
+        }
+      }
+
+      // EXECUTIVE PRIVILEGE COMBO CHECK (within 2.5s)
+      function checkPrivilegeCombo(now) {
+        if (state.lastEpsteinHit > 0 && state.lastDonHit > 0) {
+          const diff = Math.abs(state.lastEpsteinHit - state.lastDonHit);
+          if (diff <= 2500 && !state.privilegeActive) {
+            triggerExecutivePrivilegeFrenzy();
+          }
+        }
+      }
+
+      function triggerExecutivePrivilegeFrenzy() {
+        state.privilegeActive = true;
+        state.privilegeRemaining = 15.0; // 15 seconds
+        container.classList.add('privilege-active');
+
+        playBrassFanfare();
+        kashBubble.textContent = "EXECUTIVE PRIVILEGE INVOKED! 7X SPEED!";
+
+        const rect = canvas.getBoundingClientRect();
+        spawnFloatText(rect.width / 2 - 80, rect.height / 2 - 50, '⚡ EXECUTIVE PRIVILEGE! (7X RPS) ⚡', 'combo');
+      }
+
+      function endExecutivePrivilegeFrenzy() {
+        state.privilegeActive = false;
+        state.privilegeRemaining = 0;
+        container.classList.remove('privilege-active');
+      }
+
+      // AUTOMATED WORKFORCE / BACKGROUND REDACTIONS
+      function redactNextLine(isManual = false) {
+        const lines = documentLines.querySelectorAll('.text-line:not(.redacted)');
+        if (lines.length > 0) {
+          const targetLine = lines[0];
+          targetLine.classList.add('redacted');
+          state.pageLineIndex++;
+        }
+      }
+
+      // CRISIS CONTAINMENT & DYNAMIC PAGE ADVANCE
+      function onCrisisContained(isManual = false) {
+        if (isAdvancingCrisis) return;
+        isAdvancingCrisis = true;
+
+        if (crisisFireBanner) {
+          crisisFireBanner.classList.add('contained');
+          crisisFireBanner.innerHTML = '<span>✅ FIRE CONTAINED!</span><span>DISPATCHING NEXT DOSSIER...</span>';
+        }
+
+        shredStamp.classList.add('active');
+        if (isManual) playStampSound();
+
+        const currentCrisis = getCurrentCrisis();
+        const rps = getCurrentRPS();
+        const prestigeMult = getPrestigeMultiplier();
+        const bonus = Math.max(100 * prestigeMult, Math.floor(rps * 8));
+
+        state.redactions += bonus;
+        state.totalRedactedEver += bonus;
+        state.runRedacted = (state.runRedacted || 0) + bonus;
+        state.pageNumber = (state.pageNumber || 1) + 1;
+
+        // Kash quote reacting to the containment
+        kashBubble.textContent = currentCrisis.kashQuote || 'FIRE CONTAINED! CHECK THE NEWS FOR THE NEXT LEAK!';
+
+        const rect = dossierPage.getBoundingClientRect();
+        const deskRect = canvas.getBoundingClientRect();
+        spawnFloatText(rect.left - deskRect.left + rect.width / 2 - 60, rect.top - deskRect.top + rect.height / 2, `+${formatNumber(bonus)} FIRE CONTAINED!`, 'frenzy');
+
+        // Slide out the finished file
+        dossierPage.classList.add('dossier-slide-out');
+
+        setTimeout(() => {
+          shredStamp.classList.remove('active');
+          dossierPage.classList.remove('dossier-slide-out');
+
+          // Advance crisis index to next fire!
+          state.crisisIndex = ((state.crisisIndex || 0) + 1) % CRISIS_DOSSIERS.length;
+          generateCrisisDossierPage();
+
+          // Slide in the new crisis dossier!
+          dossierPage.classList.add('dossier-slide-in');
+          setTimeout(() => dossierPage.classList.remove('dossier-slide-in'), 400);
+
+          updateUI();
+        }, 420);
+      }
+
+      // 7. REGULAR CLICK HANDLING
+      function handleClick(e) {
+        getAudioContext();
+
+        const prestigeMult = getPrestigeMultiplier();
+        const multiplier = (state.frenzyActive ? 2 : 1) * (state.privilegeActive ? 7 : 1);
+        const gain = state.baseClickPower * prestigeMult * multiplier;
+
+        state.redactions += gain;
+        state.totalRedactedEver += gain;
+        state.runRedacted = (state.runRedacted || 0) + gain;
+        state.runManualClicks = (state.runManualClicks || 0) + 1;
+
+        dossierPage.classList.add('clicked');
+        setTimeout(() => dossierPage.classList.remove('clicked'), 70);
+
+        playMarkerSqueak();
+        redactNextLine(true);
+
+        if (Math.random() < 0.2) triggerKashPanic();
+
+        if (!state.frenzyActive) {
+          state.fumeCharge = Math.min(100, state.fumeCharge + 5.5);
+          if (state.fumeCharge >= 100) triggerFumeFrenzy();
+        }
+
+        const deskRect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : deskRect.left + deskRect.width / 2);
+        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : deskRect.top + deskRect.height / 2);
+
+        const x = clientX - deskRect.left;
+        const y = clientY - deskRect.top;
+
+        spawnInkSplatter(x, y, state.frenzyActive ? 16 : 9, state.frenzyActive, false);
+        spawnFloatText(x - 15, y - 10, `+${formatNumber(gain)} REDACTED!`, state.frenzyActive ? 'frenzy' : '');
+
+        updateUI();
+      }
+
+      function triggerFumeFrenzy() {
+        state.frenzyActive = true;
+        state.frenzyRemaining = 6.0;
+        state.fumeCharge = 100;
+        container.classList.add('frenzy-active');
+
+        playCriticalSound();
+
+        const rect = canvas.getBoundingClientRect();
+        spawnFloatText(rect.width / 2 - 60, rect.height / 2 - 40, '⚡ FUME FRENZY! (2X) ⚡', 'frenzy');
+      }
+
+      function endFumeFrenzy() {
+        state.frenzyActive = false;
+        state.frenzyRemaining = 0;
+        state.fumeCharge = 0;
+        container.classList.remove('frenzy-active');
+      }
+
+      dossierPage.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('.crit-target') || e.target.closest('.text-line')) return;
+        e.preventDefault();
+        handleClick(e);
+      });
+
+      // Backward-compatible alias
+      const generateDualTargetDossierPage = generateCrisisDossierPage;
+      // 10. GENERATOR SCALING & PURCHASING
+      function getCurrentRPS() {
+        let baseTotal = 0;
+        generators.forEach(g => {
+          baseTotal += g.count * g.rps;
+        });
+        const prestigeMult = getPrestigeMultiplier();
+        const mult = state.privilegeActive ? 7 : 1;
+        return baseTotal * prestigeMult * mult;
+      }
+
+      function getGeneratorCost(g) {
+        return Math.floor(g.baseCost * Math.pow(1.15, g.count));
+      }
+
+      function formatNumber(num) {
+        if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+        if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+        if (num >= 10000) return (num / 1000).toFixed(1) + 'K';
+        return Math.floor(num).toLocaleString();
+      }
+
+      function renderGenerators() {
+        upgradesList.innerHTML = '';
+        const prestigeMult = getPrestigeMultiplier();
+        generators.forEach((g, index) => {
+          const cost = getGeneratorCost(g);
+          const canAfford = state.redactions >= cost;
+          const effectiveRate = g.rps * prestigeMult;
+          const totalContrib = g.count * effectiveRate;
+
+          const card = document.createElement('div');
+          card.className = 'upgrade-card' + (canAfford ? ' affordable' : '');
+          card.dataset.index = index;
+
+          card.innerHTML = `
+            <div class="upgrade-left">
+              <div class="upgrade-icon-box">${g.icon}</div>
+              <div class="upgrade-text-box">
+                <div class="upgrade-name">${g.name}</div>
+                <div class="upgrade-desc">${g.desc}</div>
+                <div class="upgrade-stats-row">
+                  <span class="upgrade-rate">+${effectiveRate >= 100 ? formatNumber(effectiveRate) : effectiveRate} RPS/ea</span>
+                  <span class="upgrade-total-contrib">Total: +${totalContrib >= 100 ? formatNumber(totalContrib) : totalContrib.toFixed(1)}</span>
+                </div>
+              </div>
+            </div>
+            <div class="upgrade-action-box">
+              <div class="upgrade-owned-badge">x${g.count}</div>
+              <button class="buy-btn ${canAfford ? 'can-buy' : ''}" data-index="${index}" ${!canAfford ? 'disabled' : ''}>
+                ${formatNumber(cost)}
+              </button>
+            </div>
+          `;
+
+          const buyBtn = card.querySelector('.buy-btn');
+          buyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            buyGenerator(index);
+          });
+
+          upgradesList.appendChild(card);
+        });
+      }
+
+      function buyGenerator(index) {
+        getAudioContext();
+        const g = generators[index];
+        const cost = getGeneratorCost(g);
+        if (state.redactions >= cost) {
+          state.redactions -= cost;
+          g.count++;
+          playPurchaseSound();
+          updateUI();
+          renderGenerators();
+        }
+      }
+
+      // 11. UPGRADE DRAWER TOGGLE
+      drawerToggle.addEventListener('click', () => {
+        if (state.drawerState === 'normal') {
+          state.drawerState = 'expanded';
+          upgradesDrawer.classList.remove('collapsed');
+          upgradesDrawer.classList.add('expanded');
+          drawerIcon.textContent = '▼';
+        } else if (state.drawerState === 'expanded') {
+          state.drawerState = 'collapsed';
+          upgradesDrawer.classList.remove('expanded');
+          upgradesDrawer.classList.add('collapsed');
+          drawerIcon.textContent = '▲';
+        } else {
+          state.drawerState = 'normal';
+          upgradesDrawer.classList.remove('collapsed', 'expanded');
+          drawerIcon.textContent = '▲';
+        }
+        setTimeout(resizeCanvas, 260);
+      });
+
+      // 12. NEWS TICKER
+      let currentHeadlinesList = [...baseHeadlines];
+      let tickerOffset = 0;
+      let lastTickerUpdateScore = 0;
+
+      function updateNewsHeadlinesPool() {
+        const crisis = getCurrentCrisis ? getCurrentCrisis() : null;
+        const nextCrisis = getNextCrisis ? getNextCrisis() : null;
+
+        const activeHeadlines = [];
+
+        // 1. Prominent alert for the NEXT fire threatening to break out!
+        if (crisis && crisis.nextFireAlert) {
+          activeHeadlines.push(crisis.nextFireAlert);
+        } else if (nextCrisis && nextCrisis.nextFireAlert) {
+          activeHeadlines.push(nextCrisis.nextFireAlert);
+        }
+
+        // 2. Breaking crisis-specific headlines
+        if (crisis && crisis.headlines) {
+          activeHeadlines.push(...crisis.headlines);
+        }
+
+        // 3. Score-unlocked and satirical base headlines
+        unlockableHeadlines.forEach(h => {
+          if (state.totalRedactedEver >= h.minScore) {
+            activeHeadlines.push(h.text);
+          }
+        });
+        activeHeadlines.push(...baseHeadlines);
+
+        currentHeadlinesList = activeHeadlines;
+      }
+
+      function rebuildTickerText() {
+        updateNewsHeadlinesPool();
+        const separator = "  •••  ";
+        const content = currentHeadlinesList.join(separator) + separator;
+        chyronText.textContent = content + content;
+      }
+
+      function updateTicker(dt) {
+        const speed = 48;
+        tickerOffset -= speed * dt;
+
+        const halfWidth = chyronText.scrollWidth / 2;
+        if (halfWidth > 0 && Math.abs(tickerOffset) >= halfWidth) {
+          tickerOffset += halfWidth;
+          if (state.totalRedactedEver - lastTickerUpdateScore > 100) {
+            lastTickerUpdateScore = state.totalRedactedEver;
+            updateNewsHeadlinesPool();
+          }
+        }
+        chyronText.style.transform = `translate3d(${tickerOffset}px, 0, 0)`;
+      }
+
+      // 13. UI COUNTERS & BUTTON UPDATES
+      function updateUI() {
+        const prestigeMult = getPrestigeMultiplier();
+        statRedactions.textContent = formatNumber(state.redactions);
+        statVips.textContent = formatNumber(state.vipsProtected);
+        statSecrets.textContent = formatNumber(state.secretsBuried);
+
+        const rps = getCurrentRPS();
+        statRps.textContent = rps >= 100 ? formatNumber(rps) : rps.toFixed(1);
+        drawerRpsSummary.textContent = `Workforce: +${rps >= 100 ? formatNumber(rps) : rps.toFixed(1)} RPS`;
+
+        const targetLevel = (state.prestigeLevel || 0) + 1;
+        const reqLines = getPrestigeLineRequirement(targetLevel);
+        const reqClicks = getPrestigeClickRequirement();
+        const canP = canPrestige();
+
+        if (headerPrestigeBadge) {
+          headerPrestigeBadge.textContent = `[TIER ${state.prestigeLevel} IMMUNITY: ${prestigeMult}x MULTIPLIER]`;
+        }
+
+        if (clearanceText) {
+          clearanceText.textContent = `STACKED CLEARANCE: ${prestigeMult}x POWER`;
+        }
+
+        if (hooverPrestigeBtn) {
+          if (canP) {
+            hooverPrestigeBtn.classList.remove('locked');
+            hooverPrestigeBtn.textContent = '🔥 BURN HOOVER BLDG';
+            hooverPrestigeBtn.title = 'Prestige Ready! Burn Hoover Building for +1x Multiplier';
+          } else {
+            hooverPrestigeBtn.classList.add('locked');
+            hooverPrestigeBtn.textContent = `🔒 BURN HOOVER (${formatNumber(reqLines)})`;
+            hooverPrestigeBtn.title = `Locked: Requires ${formatNumber(reqLines)} lines & ${reqClicks} manual clicks`;
+          }
+        }
+
+        if (prestigeCardSub) {
+          prestigeCardSub.textContent = `Soft reset staff & balance for Tier ${targetLevel} (${prestigeMult + 1}x All Power)`;
+        }
+
+        if (prestigeCardReq) {
+          if (canP) {
+            prestigeCardReq.className = 'prestige-card-req ready';
+            prestigeCardReq.textContent = `🔥 READY: ${formatNumber(state.totalRedactedEver)} Lines • ${state.runManualClicks || 0} Clicks`;
+          } else {
+            prestigeCardReq.className = 'prestige-card-req';
+            prestigeCardReq.textContent = `🔒 Req: ${formatNumber(reqLines)} Lines (${formatNumber(state.totalRedactedEver)}) • ${reqClicks} Clicks (${state.runManualClicks || 0})`;
+          }
+        }
+
+        if (drawerPrestigeBtn) {
+          if (canP) {
+            drawerPrestigeBtn.classList.remove('locked');
+            drawerPrestigeBtn.textContent = 'PRESTIGE';
+          } else {
+            drawerPrestigeBtn.classList.add('locked');
+            drawerPrestigeBtn.textContent = 'LOCKED';
+          }
+        }
+
+        // Update prestige modal requirement meters
+        if (prestigeReqBadge && prestigeReqLinesVal && prestigeReqClicksVal) {
+          const linesPct = Math.min(100, ((state.totalRedactedEver || 0) / reqLines) * 100);
+          const clicksPct = Math.min(100, (((state.runManualClicks || 0) / reqClicks) * 100));
+
+          prestigeReqBadge.className = 'prestige-req-badge ' + (canP ? 'ready' : 'locked');
+          prestigeReqBadge.textContent = canP ? 'APPROVED' : 'LOCKED';
+
+          prestigeReqLinesVal.textContent = `${formatNumber(state.totalRedactedEver || 0)} / ${formatNumber(reqLines)} Lines (${linesPct.toFixed(0)}%)`;
+          prestigeReqLinesVal.className = 'req-val' + ((state.totalRedactedEver || 0) >= reqLines ? ' met' : '');
+          prestigeReqLinesFill.style.width = linesPct + '%';
+          prestigeReqLinesFill.className = 'req-progress-fill' + ((state.totalRedactedEver || 0) >= reqLines ? ' met' : '');
+
+          prestigeReqClicksVal.textContent = `${state.runManualClicks || 0} / ${reqClicks} Clicks (${clicksPct.toFixed(0)}%)`;
+          prestigeReqClicksVal.className = 'req-val' + ((state.runManualClicks || 0) >= reqClicks ? ' met' : '');
+          prestigeReqClicksFill.style.width = clicksPct + '%';
+          prestigeReqClicksFill.className = 'req-progress-fill' + ((state.runManualClicks || 0) >= reqClicks ? ' met' : '');
+
+          if (prestigeReqExplainer) {
+            if (targetLevel <= 5) {
+              prestigeReqExplainer.textContent = `Tier 1–5: +200M lines each tier & 1.25x clicks of previous prestige (${reqClicks} clicks).`;
+            } else {
+              prestigeReqExplainer.textContent = `Tier ${targetLevel}: +${formatNumber(getPrestigeStep(targetLevel))} lines (10x step increase) & 2x clicks of previous prestige (${reqClicks} clicks).`;
+            }
+          }
+
+          if (executePrestigeBtn) {
+            if (canP) {
+              executePrestigeBtn.disabled = false;
+              executePrestigeBtn.classList.remove('locked');
+              executePrestigeBtn.textContent = '🔥 BURN THE HOOVER BUILDING (EXECUTE RESET)';
+            } else {
+              executePrestigeBtn.disabled = true;
+              executePrestigeBtn.classList.add('locked');
+              executePrestigeBtn.textContent = `🔒 LOCKED (${formatNumber(reqLines)} LINES & ${reqClicks} CLICKS)`;
+            }
+          }
+        }
+
+        if (state.privilegeActive) {
+          clickPowerBadge.className = 'stat-badge privilege';
+          clickPowerBadge.textContent = `7X PRIVILEGE (${state.privilegeRemaining.toFixed(1)}s)`;
+        } else if (state.frenzyActive) {
+          clickPowerBadge.className = 'stat-badge frenzy';
+          clickPowerBadge.textContent = `2X FRENZY (${state.frenzyRemaining.toFixed(1)}s)`;
+          fumeStatusText.textContent = `⚡ 2X FRENZY (${state.frenzyRemaining.toFixed(1)}s) ⚡`;
+          fumeFill.style.width = (state.frenzyRemaining / 6.0 * 100) + '%';
+        } else {
+          clickPowerBadge.className = 'stat-badge';
+          const effectiveClick = state.baseClickPower * prestigeMult;
+          clickPowerBadge.textContent = `+${effectiveClick}`;
+          fumeStatusText.textContent = `${Math.floor(state.fumeCharge)}% (TAP FASTER!)`;
+          fumeFill.style.width = state.fumeCharge + '%';
+        }
+
+        const cards = upgradesList.querySelectorAll('.upgrade-card');
+        generators.forEach((g, i) => {
+          const cost = getGeneratorCost(g);
+          const canAfford = state.redactions >= cost;
+          const card = cards[i];
+          if (card) {
+            const btn = card.querySelector('.buy-btn');
+            if (btn) {
+              btn.disabled = !canAfford;
+              if (canAfford) {
+                btn.classList.add('can-buy');
+                card.classList.add('affordable');
+              } else {
+                btn.classList.remove('can-buy');
+                card.classList.remove('affordable');
+              }
+            }
+          }
+        });
+      }
+
+      // PRESTIGE SYSTEM (BURN THE HOOVER BUILDING)
+      function openPrestigeModal() {
+        getAudioContext();
+        const prestigeMult = getPrestigeMultiplier();
+        const targetLevel = (state.prestigeLevel || 0) + 1;
+        const nextMult = prestigeMult + 1;
+        prestigeCurDisplay.textContent = `TIER ${state.prestigeLevel} (${prestigeMult}x)`;
+        prestigeNextDisplay.textContent = `TIER ${targetLevel} (${nextMult}x)`;
+        updateUI();
+        prestigeModal.classList.add('active');
+      }
+
+      function closePrestigeModal() {
+        prestigeModal.classList.remove('active');
+      }
+
+      function executePrestigeReset() {
+        getAudioContext();
+        if (!canPrestige()) {
+          const targetLevel = (state.prestigeLevel || 0) + 1;
+          const reqLines = getPrestigeLineRequirement(targetLevel);
+          const reqClicks = getPrestigeClickRequirement();
+          alert(`SUBPOENA CRITERIA NOT MET:\n\nYou must accumulate ${formatNumber(reqLines)} total redacted lines (current: ${formatNumber(state.totalRedactedEver)}) and click the dossier at least ${reqClicks} times (current: ${state.runManualClicks || 0}) before you can burn the Hoover Building!`);
+          return;
+        }
+
+        // Record clicks accumulated at time of prestige
+        state.lastPrestigeClicks = state.runManualClicks || 50;
+        state.runManualClicks = 0;
+        state.runRedacted = 0;
+
+        state.prestigeLevel = (state.prestigeLevel || 0) + 1;
+        state.prestigeCount = (state.prestigeCount || 0) + 1;
+        state.lifetimeMultipliers = 1 + state.prestigeLevel;
+
+        // Soft reset unspent lines & staff workforce
+        state.redactions = 0;
+        generators.forEach(g => g.count = 0);
+        state.pageLineIndex = 0;
+        state.pageNumber = 1;
+        state.fumeCharge = 0;
+        state.frenzyActive = false;
+        state.privilegeActive = false;
+        container.classList.remove('frenzy-active', 'privilege-active');
+
+        playPrestigeBurnSound();
+        saveGame();
+        closePrestigeModal();
+
+        generateDualTargetDossierPage();
+        renderGenerators();
+        updateUI();
+
+        const pMult = getPrestigeMultiplier();
+        const rect = canvas.getBoundingClientRect();
+        spawnFloatText(rect.width / 2 - 90, rect.height / 2 - 40, `🔥 HOOVER BLDG BURNED! TIER ${state.prestigeLevel} (${pMult}x) 🔥`, 'boss');
+        kashBubble.textContent = `HOOVER BUILDING IS ASHES! WE HAVE ${pMult}X STACKED IMMUNITY!`;
+      }
+
+      // 14. MAIN GAME LOOP
+      let passiveAccumulator = 0;
+      let lineAccumulator = 0;
+
+      function gameLoop(now) {
+        const dt = Math.min((now - state.lastTime) / 1000, 0.1);
+        state.lastTime = now;
+
+        const rps = getCurrentRPS();
+        if (rps > 0) {
+          passiveAccumulator += rps * dt;
+          if (passiveAccumulator >= 1) {
+            const wholeAdd = Math.floor(passiveAccumulator);
+            passiveAccumulator -= wholeAdd;
+            state.redactions += wholeAdd;
+            state.totalRedactedEver += wholeAdd;
+            state.runRedacted = (state.runRedacted || 0) + wholeAdd;
+          }
+
+          lineAccumulator += rps * dt;
+          if (lineAccumulator >= 1) {
+            const linesToRedact = Math.floor(lineAccumulator);
+            lineAccumulator -= linesToRedact;
+            for (let i = 0; i < Math.min(linesToRedact, 4); i++) {
+              redactNextLine();
+            }
+          }
+        }
+
+        // Executive Privilege Frenzy Timer
+        if (state.privilegeActive) {
+          state.privilegeRemaining -= dt;
+          if (state.privilegeRemaining <= 0) {
+            endExecutivePrivilegeFrenzy();
+          }
+        }
+
+        // Fume Frenzy Timer
+        if (state.frenzyActive) {
+          state.frenzyRemaining -= dt;
+          if (state.frenzyRemaining <= 0) {
+            endFumeFrenzy();
+          }
+        } else {
+          if (state.fumeCharge > 0) {
+            state.fumeCharge = Math.max(0, state.fumeCharge - 9.5 * dt);
+          }
+        }
+
+        updateTicker(dt);
+        updateParticles(dt);
+        updateUI();
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      // 15. LOCALSTORAGE PERSISTENCE
+      const SAVE_KEY = 'kash_redaction_save';
+
+      function saveGame() {
+        const saveData = {
+          totalRedactedEver: state.totalRedactedEver,
+          redactions: state.redactions,
+          vipsProtected: state.vipsProtected,
+          secretsBuried: state.secretsBuried,
+          prestigeLevel: state.prestigeLevel || 0,
+          prestigeCount: state.prestigeCount || 0,
+          lifetimeMultipliers: 1 + (state.prestigeLevel || 0),
+          runManualClicks: state.runManualClicks || 0,
+          lastPrestigeClicks: state.lastPrestigeClicks || 0,
+          runRedacted: state.runRedacted || 0,
+          pageNumber: state.pageNumber,
+          generators: generators.map(g => ({ id: g.id, count: g.count })),
+          lastTimestamp: Date.now()
+        };
+        try {
+          localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+        } catch(e) {}
+      }
+
+      function loadGameAndCalculateOffline() {
+        try {
+          const raw = localStorage.getItem(SAVE_KEY);
+          if (!raw) {
+            startSaveCard.style.display = 'none';
+            return;
+          }
+
+          const data = JSON.parse(raw);
+          state.totalRedactedEver = data.totalRedactedEver || 0;
+          state.redactions = data.redactions || 0;
+          state.vipsProtected = data.vipsProtected || 0;
+          state.secretsBuried = data.secretsBuried || 0;
+          state.prestigeLevel = data.prestigeLevel || 0;
+          state.prestigeCount = data.prestigeCount !== undefined ? data.prestigeCount : (data.prestigeLevel || 0);
+          state.lifetimeMultipliers = 1 + (state.prestigeLevel || 0);
+          state.runManualClicks = data.runManualClicks || 0;
+          state.lastPrestigeClicks = data.lastPrestigeClicks || 40;
+          state.runRedacted = data.runRedacted !== undefined ? data.runRedacted : (data.redactions || 0);
+          state.pageNumber = data.pageNumber || 1;
+
+          if (Array.isArray(data.generators)) {
+            data.generators.forEach(sg => {
+              const found = generators.find(g => g.id === sg.id);
+              if (found) found.count = sg.count || 0;
+            });
+          }
+
+          if (state.totalRedactedEver > 0 || state.redactions > 0 || state.prestigeLevel > 0) {
+            const pMult = getPrestigeMultiplier();
+            startSaveStats.textContent = `SAVED DOSSIER: ${formatNumber(state.totalRedactedEver)} Lines • ${state.secretsBuried} Secrets`;
+            if (state.prestigeLevel > 0) {
+              startSavePrestige.textContent = `STACKED CLEARANCE: TIER ${state.prestigeLevel} (${pMult}x MULTIPLIER)`;
+              startSavePrestige.style.display = 'block';
+            } else {
+              startSavePrestige.style.display = 'none';
+            }
+            startSaveCard.style.display = 'flex';
+          } else {
+            startSaveCard.style.display = 'none';
+          }
+
+          if (data.lastTimestamp) {
+            const now = Date.now();
+            let offlineSeconds = (now - data.lastTimestamp) / 1000;
+            const maxOfflineSeconds = 12 * 3600;
+            offlineSeconds = Math.min(offlineSeconds, maxOfflineSeconds);
+
+            const rps = getCurrentRPS();
+            if (offlineSeconds > 10 && rps > 0) {
+              const earned = Math.floor(offlineSeconds * rps * 0.8);
+              if (earned > 0) {
+                state.redactions += earned;
+                state.totalRedactedEver += earned;
+
+                let timeStr = "";
+                if (offlineSeconds < 60) {
+                  timeStr = `${Math.floor(offlineSeconds)} seconds`;
+                } else if (offlineSeconds < 3600) {
+                  const mins = Math.floor(offlineSeconds / 60);
+                  timeStr = `${mins} minute${mins > 1 ? 's' : ''}`;
+                } else {
+                  const hrs = Math.floor(offlineSeconds / 3600);
+                  const remMins = Math.floor((offlineSeconds % 3600) / 60);
+                  timeStr = `${hrs} hour${hrs > 1 ? 's' : ''} and ${remMins} minute${remMins > 1 ? 's' : ''}`;
+                }
+
+                offlineReportText.textContent = `INCIDENT REPORT: While you were evading the House Oversight Committee for ${timeStr}, your staff blacked out ${formatNumber(earned)} lines.`;
+                offlineGainNumber.textContent = `+${formatNumber(earned)} LINES`;
+                offlineModal.classList.add('active');
+              }
+            }
+          }
+        } catch(e) {}
+      }
+
+      setInterval(saveGame, 5000);
+      window.addEventListener('beforeunload', saveGame);
+      window.addEventListener('pagehide', saveGame);
+
+      // 16. CONTROLS & LISTENERS
+      startBreachBtn.addEventListener('click', () => {
+        getAudioContext();
+        playStampSound();
+        state.gameStarted = true;
+        startMenu.classList.add('hidden');
+      });
+
+      startClearSaveBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const confirmClear = confirm("PURGE DOSSIER:\n\nClear all saved records, VIP protection tallies, prestige multipliers, and reset your classified balance?");
+        if (confirmClear) {
+          localStorage.removeItem(SAVE_KEY);
+          location.reload();
+        }
+      });
+
+      offlineCollectBtn.addEventListener('click', () => {
+        getAudioContext();
+        playStampSound();
+        offlineModal.classList.remove('active');
+        updateUI();
+      });
+
+      function toggleSound() {
+        getAudioContext();
+        state.soundEnabled = !state.soundEnabled;
+        const icon = state.soundEnabled ? '🔊' : '🔇';
+        soundBtn.textContent = icon;
+        settingsSoundToggle.textContent = icon;
+      }
+
+      soundBtn.addEventListener('click', toggleSound);
+      settingsSoundToggle.addEventListener('click', toggleSound);
+
+      // Prestige Button Listeners
+      headerPrestigeBadge.addEventListener('click', openPrestigeModal);
+      hooverPrestigeBtn.addEventListener('click', openPrestigeModal);
+      drawerPrestigeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPrestigeModal();
+      });
+      drawerPrestigeCard.addEventListener('click', openPrestigeModal);
+      settingsPrestigeBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('active');
+        openPrestigeModal();
+      });
+      prestigeCloseBtn.addEventListener('click', closePrestigeModal);
+      executePrestigeBtn.addEventListener('click', executePrestigeReset);
+
+      settingsBtn.addEventListener('click', () => {
+        getAudioContext();
+        settingsLifetimeStat.textContent = formatNumber(state.totalRedactedEver);
+        settingsVipsStat.textContent = formatNumber(state.vipsProtected);
+        settingsSecretsStat.textContent = formatNumber(state.secretsBuried);
+        const rps = getCurrentRPS();
+        settingsRpsStat.textContent = `${rps >= 100 ? formatNumber(rps) : rps.toFixed(1)} RPS`;
+        const pMult = getPrestigeMultiplier();
+        settingsPrestigeStat.textContent = `TIER ${state.prestigeLevel} (${pMult}x)`;
+        settingsModal.classList.add('active');
+      });
+
+      settingsCloseBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('active');
+      });
+
+      wipeDataBtn.addEventListener('click', () => {
+        const confirmWipe = confirm("SECURITY CLEARANCE OVERRIDE:\n\nAre you absolutely sure you want to PURGE all classified records, wipe all workforce tiers, and reset your bureau? This cannot be undone.");
+        if (confirmWipe) {
+          localStorage.removeItem(SAVE_KEY);
+          location.reload();
+        }
+      });
+
+      // INITIALIZATION
+      loadGameAndCalculateOffline();
+      generateDualTargetDossierPage();
+      renderGenerators();
+      rebuildTickerText();
+      updateUI();
+      requestAnimationFrame(gameLoop);
+
+      // ==========================================
+      // PWA SERVICE WORKER & APP INSTALL LIFECYCLE
+      // ==========================================
+      let deferredInstallPrompt = null;
+      const installPwaBtn = document.getElementById('start-install-pwa-btn');
+
+      // Register Service Worker for 100% offline gameplay
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => {
+              console.log('[PWA] Service Worker active, scope:', reg.scope);
+            })
+            .catch(err => {
+              console.warn('[PWA] Service Worker registration:', err);
+            });
+        });
+      }
+
+      // Listen for browser install availability
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent default mini-infobar on mobile
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        if (installPwaBtn) {
+          installPwaBtn.style.display = 'flex';
+        }
+      });
+
+      // Handle user click on install button
+      if (installPwaBtn) {
+        installPwaBtn.addEventListener('click', async () => {
+          if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            if (outcome === 'accepted') {
+              installPwaBtn.style.display = 'none';
+            }
+            deferredInstallPrompt = null;
+          } else {
+            // Fallback instruction for iOS / unsupported browsers
+            alert("BUREAU AGENT NOTICE:\n\nTo install this app on iOS / Safari:\nTap 'Share' (square with arrow) -> 'Add to Home Screen'.\n\nOn Chrome/Edge Desktop:\nClick the Install icon in the address bar.");
+          }
+        });
+      }
+
+      // Hide install button when app is already installed
+      window.addEventListener('appinstalled', () => {
+        console.log('[PWA] Bureau App installed successfully');
+        if (installPwaBtn) {
+          installPwaBtn.style.display = 'none';
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>

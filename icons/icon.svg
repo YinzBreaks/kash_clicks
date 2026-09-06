@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="60%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#991b1b" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas with rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  
+  <!-- Outer Gold Border -->
+  <rect x="18" y="18" width="476" height="476" rx="98" fill="none" stroke="url(#goldGrad)" stroke-width="8" opacity="0.9" />
+  
+  <!-- Dashed Security Periphery -->
+  <rect x="34" y="34" width="444" height="444" rx="84" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="10,10" opacity="0.5" />
+
+  <!-- Central Security Shield Badge -->
+  <path d="M 256 95 L 375 145 L 375 275 C 375 350 256 415 256 415 C 256 415 137 350 137 275 L 137 145 Z" 
+        fill="#0b1120" stroke="url(#goldGrad)" stroke-width="6" filter="url(#glow)" />
+
+  <!-- Document Dossier Silhouette -->
+  <rect x="190" y="160" width="132" height="175" rx="10" fill="#f8fafc" />
+  <polygon points="282,160 322,200 282,200" fill="#cbd5e1" />
+
+  <!-- Redaction Marker Thick Bars -->
+  <rect x="206" y="195" width="66" height="14" rx="3" fill="#0f172a" />
+  <rect x="206" y="225" width="100" height="14" rx="3" fill="#0f172a" />
+  <rect x="206" y="255" width="85" height="14" rx="3" fill="#0f172a" />
+  <rect x="206" y="285" width="60" height="14" rx="3" fill="#0f172a" />
+
+  <!-- Diagonal Classified Red Stamp Banner -->
+  <g transform="rotate(-15 256 255)">
+    <rect x="100" y="230" width="312" height="50" rx="6" fill="url(#redGrad)" stroke="#fecaca" stroke-width="3" filter="url(#glow)" />
+    <text x="256" y="264" font-family="Impact, Arial Black, sans-serif" font-size="26" font-weight="900" fill="#ffffff" letter-spacing="5" text-anchor="middle">TOP SECRET</text>
+  </g>
+
+  <!-- Bureau Star Monogram -->
+  <circle cx="256" cy="370" r="26" fill="#1e293b" stroke="url(#goldGrad)" stroke-width="4" />
+  <polygon points="256,350 262,364 276,366 266,376 269,390 256,382 243,390 246,376 236,366 250,364" fill="#facc15" />
+
+  <!-- Trilateral Subtext -->
+  <text x="256" y="468" font-family="'Courier New', monospace" font-size="20" font-weight="900" letter-spacing="4" text-anchor="middle">
+    <tspan fill="#ef4444">KLIC</tspan><tspan fill="#ffffff">KASH</tspan><tspan fill="#3b82f6">KLIC</tspan>
+  </text>
+</svg>
