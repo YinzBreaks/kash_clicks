@@ -1811,7 +1811,315 @@
     }
 
     .danger-btn:active { transform: scale(0.95); filter: brightness(1.2); }
-  </style>
+
+    /* ========================================= */
+    /* BUREAUCRATIC THREAT LEVEL & RAID STYLING  */
+    /* ========================================= */
+    #threat-bar-container {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 6px 0 8px 0;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .threat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .threat-title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .threat-title {
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .threat-tier-label {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+      background: rgba(0, 0, 0, 0.4);
+      transition: color 0.3s ease;
+    }
+
+    .threat-percent-text {
+      font-family: 'JetBrains Mono', monospace;
+      color: #f1f5f9;
+      font-weight: 800;
+    }
+
+    .threat-track {
+      width: 100%;
+      height: 9px;
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .threat-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+    }
+
+    @keyframes threatPulseRed {
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 12px #ef4444;
+      }
+      50% {
+        opacity: 0.35;
+        box-shadow: 0 0 4px #ef4444;
+      }
+    }
+
+    .threat-flashing {
+      animation: threatPulseRed 0.6s infinite ease-in-out;
+    }
+
+    /* Screen vignette flashes red during raid */
+    .raid-active::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      box-shadow: inset 0 0 70px rgba(239, 68, 68, 0.8), inset 0 0 140px rgba(220, 38, 38, 0.5);
+      animation: raidVignettePulse 0.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes raidVignettePulse {
+      from {
+        box-shadow: inset 0 0 40px rgba(239, 68, 68, 0.4), inset 0 0 90px rgba(220, 38, 38, 0.3);
+      }
+      to {
+        box-shadow: inset 0 0 90px rgba(239, 68, 68, 0.9), inset 0 0 180px rgba(220, 38, 38, 0.7);
+      }
+    }
+
+    /* Raid QTE Modal Overlay */
+    .raid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 0, 0, 0.82);
+      backdrop-filter: blur(5px);
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .raid-overlay.hidden {
+      display: none !important;
+    }
+
+    .raid-modal {
+      background: linear-gradient(180deg, #240b0e 0%, #17070a 100%);
+      border: 2px solid #ef4444;
+      border-radius: 16px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(239, 68, 68, 0.5), 0 20px 40px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: popInModal 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popInModal {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .raid-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .raid-header h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #fee2e2;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+    }
+
+    .raid-siren-icon {
+      font-size: 1.6rem;
+      animation: sirenShake 0.4s infinite alternate ease-in-out;
+    }
+
+    @keyframes sirenShake {
+      from { transform: rotate(-15deg) scale(1); }
+      to { transform: rotate(15deg) scale(1.15); }
+    }
+
+    .raid-subtext {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #fca5a5;
+      line-height: 1.35;
+    }
+
+    .raid-timer-section {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .raid-timer-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #fecaca;
+    }
+
+    .raid-timer-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: #fbbf24;
+    }
+
+    .raid-timer-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .raid-timer-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ef4444, #f59e0b);
+      border-radius: 6px;
+      transition: width 0.1s linear;
+    }
+
+    .raid-incinerate-btn {
+      background: linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #dc2626 100%);
+      color: #ffffff;
+      border: 2px solid #fca5a5;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), 0 4px 12px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.05s ease, filter 0.1s ease;
+    }
+
+    .raid-incinerate-btn:active {
+      transform: scale(0.96);
+      filter: brightness(1.2);
+    }
+
+    .raid-stakes-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 10px;
+    }
+
+    .raid-stakes-info .win-stake {
+      color: #86efac;
+    }
+
+    .raid-stakes-info .fail-stake {
+      color: #fca5a5;
+    }
+
+    /* Shop lock & penalty styling */
+    .shop-penalty-banner {
+      background: rgba(220, 38, 38, 0.25);
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fee2e2;
+    }
+
+    .shop-penalty-banner .penalty-icon {
+      font-size: 1.4rem;
+    }
+
+    .shop-penalty-banner .penalty-headline {
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      display: block;
+    }
+
+    .shop-penalty-banner .penalty-subtext {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+    }
+
+    .shop-locked #upgrades-list,
+    .shop-locked .generator-card,
+    .shop-locked .buy-btn {
+      pointer-events: none !important;
+      opacity: 0.4 !important;
+      filter: grayscale(0.85) !important;
+      cursor: not-allowed !important;
+    }
+
+    /* Drawer Scroll Optimization for 50 items */
+    #upgrades-drawer {
+      contain: content;
+    }
+
+    #upgrades-list {
+      contain: content;
+      -webkit-overflow-scrolling: touch;
+      will-change: scroll-position;
+      overscroll-behavior: contain;
+    }
+  
+    </style>
 </head>
 <body>
 
@@ -1907,6 +2215,23 @@
         <span class="prestige-flame-icon">🏛️🔥</span>
         <span class="prestige-logo-badge" id="header-prestige-status">LOCKED</span>
       </button>
+    </div>
+
+    <!-- DEF-CLERK THREAT LEVEL BAR -->
+    <div id="threat-bar-container">
+      <div class="threat-header">
+        <div class="threat-title-group">
+          <span>⚠️</span>
+          <span class="threat-title">DEF-CLERK THREAT LEVEL:</span>
+          <span id="threat-tier-label" class="threat-tier-label" style="color: #22c55e;">TIER 5 (SECURE)</span>
+        </div>
+        <div class="threat-percent-wrap">
+          <span id="threat-percent-text" class="threat-percent-text">0%</span>
+        </div>
+      </div>
+      <div class="threat-track">
+        <div id="threat-fill" class="threat-fill" style="width: 0%; background: #22c55e;"></div>
+      </div>
     </div>
 
     <!-- 3. ENHANCED DUAL-STAT STATS PANEL -->
@@ -2030,6 +2355,14 @@
           <div class="prestige-card-req" id="prestige-card-req">🔒 Req: 200.00M Lines (0) • 50 Clicks (0)</div>
         </div>
         <button class="prestige-burn-btn locked" id="drawer-prestige-btn">LOCKED</button>
+      </div>
+      <!-- SHOP SEIZED PENALTY BANNER -->
+      <div id="shop-penalty-banner" class="shop-penalty-banner" style="display: none;">
+        <span class="penalty-icon">🚨</span>
+        <div class="penalty-text-group">
+          <span class="penalty-headline">SUBPOENA SERVED - REDACTION SHOP SEIZED!</span>
+          <span class="penalty-subtext">Bureau under federal audit. Upgrades locked for <span id="penalty-time-left" style="font-weight: bold; color: #fbbf24;">20</span>s!</span>
+        </div>
       </div>
       <div id="upgrades-list"></div>
     </footer>
@@ -2310,133 +2643,61 @@
 
       // 2. TIERED AUTOMATED GENERATORS (INCORPORATING ALL THEMED TIERS)
       // Cost scaling formula: cost = baseCost * Math.pow(1.15, count)
+      // 50 ESCALATING CHAOS GENERATORS (Tiers 1 to 50: 15 to 35 Ud)
       const generators = [
-        {
-          id: 'intern',
-          name: 'Unpaid Intern',
-          icon: '🖊️',
-          baseCost: 15,
-          rps: 0.5,
-          count: 0,
-          desc: 'Squeaks dried-out dollar-store markers.'
-        },
-        {
-          id: 'magnum_roller',
-          name: 'Magnum Sharpie Roller',
-          icon: '🖌️',
-          baseCost: 100,
-          rps: 4.0,
-          count: 0,
-          desc: '4-inch paint roller dipped in black ink.'
-        },
-        {
-          id: 'whiteout_swarm',
-          name: 'White-Out Tape Swarm',
-          icon: '📼',
-          baseCost: 350,
-          rps: 12.0,
-          count: 0,
-          desc: 'Correction tape swarm blanking entire manifests.'
-        },
-        {
-          id: 'crosscut_shredder',
-          name: 'Cross-Cut Shredder',
-          icon: '⚙️',
-          baseCost: 1100,
-          rps: 32.0,
-          count: 0,
-          desc: 'Chews binders into confetti.'
-        },
-        {
-          id: 'beltfed_shredder',
-          name: 'Belt-Fed Shredder 9000',
-          icon: '🌪️',
-          baseCost: 4500,
-          rps: 85.0,
-          count: 0,
-          desc: 'Military-grade automated hopper processing logs.'
-        },
-        {
-          id: 'natalia_swabs',
-          name: 'Nurse Natalia Ink Swabs',
-          icon: '🩹',
-          baseCost: 8500,
-          rps: 180.0,
-          count: 0,
-          desc: 'Hospital-grade sterile swabs drenched in permanent black ink.'
-        },
-        {
-          id: 'pneumatic_stamp',
-          name: "Pneumatic 'CLASSIFIED' Stamp",
-          icon: '🔨',
-          baseCost: 12000,
-          rps: 260.0,
-          count: 0,
-          desc: 'Heavy hydraulic blackout piston.'
-        },
-        {
-          id: 'safe_degausser',
-          name: 'Safe Degausser',
-          icon: '🧲',
-          baseCost: 45000,
-          rps: 650.0,
-          count: 0,
-          desc: 'Industrial magnet scrambling hard drives in vault safe.'
-        },
-        {
-          id: 'chandelier_hider',
-          name: 'Ballroom Chandelier Hider',
-          icon: '💡',
-          baseCost: 95000,
-          rps: 2100.0,
-          count: 0,
-          desc: 'Ceiling rigging concealing classified files behind crystals.'
-        },
-        {
-          id: 'duraflame_hearth',
-          name: 'Executive Duraflame Hearth',
-          icon: '🔥',
-          baseCost: 130000,
-          rps: 1400.0,
-          count: 0,
-          desc: 'Open fireplace data elimination.'
-        },
-        {
-          id: 'radar_amnesia',
-          name: 'FAA Radar Amnesia',
-          icon: '📡',
-          baseCost: 400000,
-          rps: 4200.0,
-          count: 0,
-          desc: 'Deletes transponder tracks over the Virgin Islands.'
-        },
-        {
-          id: 'declass_mind',
-          name: 'Declassified By Mind Protocol',
-          icon: '🧠',
-          baseCost: 1200000,
-          rps: 18500.0,
-          count: 0,
-          desc: 'Telepathic declassification field eliminating records instantly.'
-        },
-        {
-          id: 'subbasement_incinerator',
-          name: 'Sub-Basement Incinerator',
-          icon: '🏭',
-          baseCost: 1400000,
-          rps: 7800.0,
-          count: 0,
-          desc: 'Industrial furnace burning FOIA requests.'
-        },
-        {
-          id: 'quantum_memory_hole',
-          name: 'Quantum Memory Hole',
-          icon: '🕳️',
-          baseCost: 5000000,
-          rps: 38000.0,
-          count: 0,
-          desc: 'Erases passenger records from the fabric of space-time.'
-        }
+        // Early Game Fundamentals (Tiers 1 to 12)
+        { id: 'tier_1', name: 'Unpaid Intern', icon: '🖊️', baseCost: 15, rps: 0.5, count: 0, desc: 'Squeaks dried-out dollar-store markers.' },
+        { id: 'tier_2', name: 'Paperclip Sorter', icon: '📎', baseCost: 35, rps: 1.2, count: 0, desc: 'Straightens clips to pick file cabinet padlocks.' },
+        { id: 'tier_3', name: 'Magnum Sharpie Roller', icon: '🖌️', baseCost: 80, rps: 2.5, count: 0, desc: '4-inch paint roller dipped in black ink.' },
+        { id: 'tier_4', name: 'White-Out Tape Swarm', icon: '📼', baseCost: 150, rps: 4.5, count: 0, desc: 'Correction tape swarm blanking entire manifests.' },
+        { id: 'tier_5', name: 'Carbon Paper Shredder', icon: '📄', baseCost: 240, rps: 7.0, count: 0, desc: 'Hand-cranked shredder eating triplicate carbon slips.' },
+        { id: 'tier_6', name: 'Cross-Cut Shredder', icon: '⚙️', baseCost: 350, rps: 9.5, count: 0, desc: 'Chews sensitive binders into confetti.' },
+        { id: 'tier_7', name: 'Belt-Fed Shredder 9000', icon: '🌪️', baseCost: 480, rps: 12.0, count: 0, desc: 'Military-grade automated hopper processing flight logs.' },
+        { id: 'tier_8', name: 'Nurse Natalia Ink Swabs', icon: '🩹', baseCost: 620, rps: 14.5, count: 0, desc: 'Hospital-grade sterile swabs drenched in permanent black ink.' },
+        { id: 'tier_9', name: "Pneumatic 'CLASSIFIED' Stamp", icon: '🔨', baseCost: 700, rps: 16.0, count: 0, desc: 'Heavy hydraulic blackout piston.' },
+        { id: 'tier_10', name: 'Safe Degausser', icon: '🧲', baseCost: 750, rps: 16.8, count: 0, desc: 'Industrial magnet scrambling hard drives in vault safe.' },
+        { id: 'tier_11', name: 'Ballroom Chandelier Hider', icon: '💡', baseCost: 800, rps: 17.2, count: 0, desc: 'Ceiling rigging concealing classified files behind crystals.' },
+        { id: 'tier_12', name: 'Executive Duraflame Hearth', icon: '🔥', baseCost: 825, rps: 17.6, count: 0, desc: 'Open fireplace data elimination.' },
+
+        // 38 New Tiers of Redaction Insanity (Tiers 13 to 50)
+        { id: 'tier_13', name: 'Liquid Paper Spitball Cannons', icon: '🎯', baseCost: 850, rps: 18, count: 0, desc: 'Interns lobbing wads of correction fluid via Bic pen blowguns.' },
+        { id: 'tier_14', name: 'Chisel-Tip Paint Roller Rig', icon: '🎨', baseCost: 7500, rps: 120, count: 0, desc: 'Three 4-inch paint rollers dipped into pure bitumen asphalt.' },
+        { id: 'tier_15', name: 'Overtime Deposition Typists', icon: '⌨️', baseCost: 65000, rps: 850, count: 0, desc: 'Transcribers who replace every proper noun with [COUGH].' },
+        { id: 'tier_16', name: 'Document Guillotine Blade', icon: '⚔️', baseCost: 550000, rps: 5400, count: 0, desc: 'Industrial paper shearers slicing the bottom two inches off every page.' },
+        { id: 'tier_17', name: 'Commercial Tar Dipping Vats', icon: '🛢️', baseCost: 4.2e6, rps: 34000, count: 0, desc: 'Files are dipped in roofing sealant and dried into black bricks.' },
+        { id: 'tier_18', name: 'Mar-a-Lago Shower File Racks', icon: '🚿', baseCost: 35e6, rps: 220000, count: 0, desc: 'Storing 40 banker boxes behind moisture-resistant bathroom curtains.' },
+        { id: 'tier_19', name: 'White House Paper-Eating Mastiffs', icon: '🐕', baseCost: 280e6, rps: 1.5e6, count: 0, desc: 'Trained canines chewing subpoena envelopes before opening.' },
+        { id: 'tier_20', name: 'Pneumatic Black-Toner Mortar', icon: '💣', baseCost: 2.1e9, rps: 9.8e6, count: 0, desc: 'Shoots compressed cartridges of printer toner through file cabinets.' },
+        { id: 'tier_21', name: 'Industrial Ash-Baling Press', icon: '🧱', baseCost: 18e9, rps: 72e6, count: 0, desc: 'Compresses incinerated grand jury testimony into decorative patio pavers.' },
+        { id: 'tier_22', name: 'DOJ Magnetron Battery', icon: '📡', baseCost: 150e9, rps: 510e6, count: 0, desc: 'High-output microwave arrays wiping floppy disks through concrete walls.' },
+        { id: 'tier_23', name: 'Sub-Aquatic Potomac Sinking Barge', icon: '🚢', baseCost: 1.4e12, rps: 3.9e9, count: 0, desc: 'Barges carrying 90 tons of binder pages directly to the riverbed.' },
+        { id: 'tier_24', name: 'Automated FOIA Denial Algorithm', icon: '🤖', baseCost: 12e12, rps: 28e9, count: 0, desc: 'Instantly replies to journalists with an attachment of a 0-byte file.' },
+        { id: 'tier_25', name: 'Congressional Stenographer Hypnosis', icon: '🌀', baseCost: 95e12, rps: 190e9, count: 0, desc: 'Hypnotizes court reporters into hearing static whenever names are said.' },
+        { id: 'tier_26', name: 'Air Force One Dump Chute', icon: '✈️', baseCost: 800e12, rps: 1.4e12, count: 0, desc: 'Discharges unredacted flight logs at 30,000 feet over the Atlantic.' },
+        { id: 'tier_27', name: 'Little St. James Radar Blindspot', icon: '🏝️', baseCost: 6.5e15, rps: 9.8e12, count: 0, desc: 'Deletes 400 square miles of airspace data from civil aviation servers.' },
+        { id: 'tier_28', name: 'Executive Privilege Faraday Cage', icon: '📦', baseCost: 50e15, rps: 68e12, count: 0, desc: 'A copper vault preventing any electromagnetic signal from escaping.' },
+        { id: 'tier_29', name: 'Synthetic Amnesia HVAC Aerosol', icon: '💨', baseCost: 420e15, rps: 490e12, count: 0, desc: 'Marker fumes piped through Capitol Hill air conditioning ducts.' },
+        { id: 'tier_30', name: 'Hard Drive Shredder Truck Fleet', icon: '🚛', baseCost: 3.5e18, rps: 3.6e18, count: 0, desc: 'Mobile woodchippers running hard disks into fine magnetic gravel.' },
+        { id: 'tier_31', name: 'Deep State Memory-Hole Chute', icon: '🕳️', baseCost: 30e18, rps: 27e18, count: 0, desc: 'A pneumatic tube leading straight into an underground coal fire.' },
+        { id: 'tier_32', name: 'Retroactive NDA Drone Swarms', icon: '🛸', baseCost: 250e18, rps: 210e18, count: 0, desc: 'Micro-drones slapping physical gag orders over speaking witnesses.' },
+        { id: 'tier_33', name: 'Stratospheric Sharpie Aerosol', icon: '☁️', baseCost: 2.1e21, rps: 1.6e21, count: 0, desc: 'Blackens the sky so surveillance satellites only see pitch black.' },
+        { id: 'tier_34', name: 'Federal Register Nullifier Worm', icon: '🐛', baseCost: 18e21, rps: 13e21, count: 0, desc: 'Software virus replacing every legal statute with black highlight bars.' },
+        { id: 'tier_35', name: 'Sub-Pentagon Geothermal Melter', icon: '🌋', baseCost: 160e21, rps: 110e21, count: 0, desc: 'Shovels archives directly into the Earth mantle.' },
+        { id: 'tier_36', name: 'Quantum Deposition Scrambler', icon: '🎲', baseCost: 1.4e24, rps: 920e21, count: 0, desc: 'Reorders letters in witness statements until they read as kitchen recipes.' },
+        { id: 'tier_37', name: 'The 1990s Erasure Array', icon: '📼', baseCost: 12e24, rps: 7.5e24, count: 0, desc: 'Systematically purges the entire decade of 1990-1999 from libraries.' },
+        { id: 'tier_38', name: 'Palm Beach Bermuda Triangle', icon: '📐', baseCost: 110e24, rps: 62e24, count: 0, desc: 'Any courier carrying evidence into Florida vanishes without a trace.' },
+        { id: 'tier_39', name: 'Continental Shelf Disposal Rig', icon: '⚓', baseCost: 950e24, rps: 510e24, count: 0, desc: 'Deep-sea drill dropping legal briefs into the Mariana Trench.' },
+        { id: 'tier_40', name: 'Selective Neural Net Amnesia', icon: '🧠', baseCost: 8.5e27, rps: 4.2e27, count: 0, desc: 'Trains public AI models to claim Jeffrey Epstein was a fictional playwright.' },
+        { id: 'tier_41', name: 'Grand Jury Ultrasound Jammer', icon: '🔊', baseCost: 75e27, rps: 36e27, count: 0, desc: 'Low-frequency drone that erases the short-term memory of jurors.' },
+        { id: 'tier_42', name: 'Supreme Court Liquid-Ink Gavel', icon: '⚖️', baseCost: 680e27, rps: 310e27, count: 0, desc: 'Every gavel strike releases a shockwave that blacks out nearby paperwork.' },
+        { id: 'tier_43', name: 'Trans-Dimensional Waste Chute', icon: '🌀', baseCost: 6.2e30, rps: 2.7e30, count: 0, desc: 'Dumps subpoena boxes into alternate timelines where nobody cares.' },
+        { id: 'tier_44', name: 'Gravitational Lens File Darkener', icon: '🔭', baseCost: 55e30, rps: 23e30, count: 0, desc: 'Bends light around incriminating pages so they appear fully black.' },
+        { id: 'tier_45', name: 'Tectonic Subduction Sorter', icon: '🌍', baseCost: 500e30, rps: 200e30, count: 0, desc: 'Pushes National Archive microfilms directly under the North American plate.' },
+        { id: 'tier_46', name: 'Event Horizon Evidence Crusher', icon: '🌌', baseCost: 4.5e33, rps: 1.8e33, count: 0, desc: 'Feeds physical tape reels into a lab-grown micro-black hole.' },
+        { id: 'tier_47', name: 'Dark Matter Ink Nebula', icon: '✨', baseCost: 42e33, rps: 16e33, count: 0, desc: 'Floods solar orbits with ink that blocks telescopic observation.' },
+        { id: 'tier_48', name: 'Multiverse Subpoena Deflector', icon: '🔮', baseCost: 390e33, rps: 145e33, count: 0, desc: 'Bounces federal court orders into parallel universes.' },
+        { id: 'tier_49', name: 'Temporal Paradox Scrub Engine', icon: '⏳', baseCost: 3.6e36, rps: 1.3e36, count: 0, desc: 'Changes history so the witnesses were never born.' },
+        { id: 'tier_50', name: 'The Omnipresent Sharpie Void', icon: '⬛', baseCost: 35e36, rps: 12e36, count: 0, desc: 'Replaces all physical and digital existence with a solid black rectangle.' }
       ];
 
       // 3. SATIRICAL NEWS HEADLINES
@@ -2551,6 +2812,18 @@
       const crisisTitleTag = document.getElementById('crisis-title-tag');
       const crisisTargetsLeft = document.getElementById('crisis-targets-left');
       let isAdvancingCrisis = false;
+
+      const threatFill = document.getElementById('threat-fill');
+      const threatTierLabel = document.getElementById('threat-tier-label');
+      const threatPercentText = document.getElementById('threat-percent-text');
+
+      const raidOverlay = document.getElementById('raid-overlay');
+      const raidTimerText = document.getElementById('raid-timer-text');
+      const raidTimerFill = document.getElementById('raid-timer-fill');
+      const raidIncinerateBtn = document.getElementById('raid-incinerate-btn');
+      const raidClicksCount = document.getElementById('raid-clicks-count');
+      const shopPenaltyBanner = document.getElementById('shop-penalty-banner');
+      const penaltyTimeLeft = document.getElementById('penalty-time-left');
       const canvas = document.getElementById('fx-canvas');
       const ctx = canvas.getContext('2d');
 
@@ -2848,6 +3121,66 @@
           playBellTone(987.77, now + 0.02, 0.22);
           playBellTone(1318.51, now + 0.09, 0.32);
         } catch(e) {}
+      }
+
+      // SYNTHESIZED RAPID TWO-TONE RAID SIREN (Zero External Files)
+      function playRaidSiren() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          for (let i = 0; i < 4; i++) {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sawtooth';
+            const startTime = now + i * 0.35;
+            osc.frequency.setValueAtTime(700, startTime);
+            osc.frequency.setValueAtTime(950, startTime + 0.17);
+
+            gain.gain.setValueAtTime(0.18, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.34);
+
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.35);
+          }
+        } catch (e) {
+          console.warn('Siren audio error:', e);
+        }
+      }
+
+      // INCINERATOR BUTTON FLAME WHOOSH
+      function playIncineratorWhoosh() {
+        if (!state.soundEnabled) return;
+        const actx = getAudioContext();
+        if (!actx) return;
+        try {
+          const now = actx.currentTime;
+          const bufferSize = actx.sampleRate * 0.15;
+          const buffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          const noise = actx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = actx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(600, now);
+          filter.frequency.exponentialRampToValueAtTime(150, now + 0.14);
+
+          const gain = actx.createGain();
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.14);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(actx.destination);
+          noise.start(now);
+        } catch (e) {}
       }
 
       function playStampSound() {
@@ -3427,7 +3760,7 @@
       // Ensure every single line is directly clickable to redact any active target on that line!
       function handleLineDirectClick(e, line) {
         getAudioContext();
-        if (isAdvancingCrisis) return;
+        if (state.raidActive || isAdvancingCrisis) return;
 
         // If line has an unredacted target, trigger it directly!
         const unredactedTarget = line.querySelector('.crit-target:not(.crit-redacted)');
@@ -3451,7 +3784,7 @@
       // TARGET CLICK HANDLER
       function handleTargetClick(e, targetEl) {
         getAudioContext();
-        if (targetEl.classList.contains('crit-redacted') || isAdvancingCrisis) return;
+        if (state.raidActive || targetEl.classList.contains('crit-redacted') || isAdvancingCrisis) return;
 
         targetEl.classList.add('crit-redacted');
         const now = performance.now();
@@ -3506,6 +3839,8 @@
 
         triggerKashPanic();
         checkPrivilegeCombo(now);
+        // Target click increases threat level by +3%
+        increaseThreat(3.0);
 
         const deskRect = canvas.getBoundingClientRect();
         const x = (e.clientX || deskRect.left + deskRect.width / 2) - deskRect.left;
@@ -3686,6 +4021,7 @@
       }
 
       dossierPage.addEventListener('pointerdown', (e) => {
+        if (state.raidActive) return;
         if (e.target.closest('.crit-target') || e.target.closest('.text-line')) return;
         e.preventDefault();
         handleClick(e);
@@ -3699,18 +4035,49 @@
           baseTotal += g.count * g.rps;
         });
         const prestigeMult = getPrestigeMultiplier();
-        const mult = state.privilegeActive ? 3 : 1;
+        let mult = state.privilegeActive ? 3 : 1;
+
+        // Raid 30s +25% RPS buff
+        if (state.raidBuffRemaining > 0) {
+          mult *= 1.25;
+        }
+
+        // Raid 20s -50% RPS penalty
+        if (state.raidPenaltyRemaining > 0) {
+          mult *= 0.50;
+        }
+
         return baseTotal * prestigeMult * mult;
       }
 
       function getGeneratorCost(g) {
-        return Math.floor(g.baseCost * Math.pow(1.18, g.count));
+        return Math.floor(g.baseCost * Math.pow(1.15, g.count));
       }
 
+      const BIG_SUFFIXES = [
+        { value: 1e36, symbol: ' Ud' },
+        { value: 1e33, symbol: ' Dc' },
+        { value: 1e30, symbol: ' No' },
+        { value: 1e27, symbol: ' Oc' },
+        { value: 1e24, symbol: ' Sp' },
+        { value: 1e21, symbol: ' Sx' },
+        { value: 1e18, symbol: ' Qi' },
+        { value: 1e15, symbol: ' Qa' },
+        { value: 1e12, symbol: ' T' },
+        { value: 1e9, symbol: ' B' },
+        { value: 1e6, symbol: ' M' },
+        { value: 1e3, symbol: ' K' },
+      ];
+
       function formatNumber(num) {
-        if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-        if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-        if (num >= 10000) return (num / 1000).toFixed(1) + 'K';
+        if (!num || isNaN(num)) return '0';
+        if (num < 1000) return Math.floor(num).toLocaleString();
+        for (let i = 0; i < BIG_SUFFIXES.length; i++) {
+          if (num >= BIG_SUFFIXES[i].value) {
+            const formatted = (num / BIG_SUFFIXES[i].value).toFixed(2);
+            return (formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted) + BIG_SUFFIXES[i].symbol;
+          }
+        }
         return Math.floor(num).toLocaleString();
       }
 
@@ -4282,5 +4649,37 @@
 
     })();
   </script>
+  <!-- FEDERAL RAID QTE OVERLAY -->
+  <div id="raid-overlay" class="raid-overlay hidden">
+    <div class="raid-modal">
+      <div class="raid-header">
+        <span class="raid-siren-icon">🚨</span>
+        <h2>FEDERAL RAID IN PROGRESS</h2>
+        <span class="raid-siren-icon">🚨</span>
+      </div>
+      <p class="raid-subtext">The Subpoena has breached the facility! Incinerate before the feds break into the vault!</p>
+
+      <div class="raid-timer-section">
+        <div class="raid-timer-header">
+          <span>COUNTDOWN:</span>
+          <span id="raid-timer-text" class="raid-timer-text">7.0s</span>
+        </div>
+        <div class="raid-timer-track">
+          <div id="raid-timer-fill" class="raid-timer-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <button id="raid-incinerate-btn" class="raid-incinerate-btn" type="button">
+        <span>🔥📜🔥</span>
+        <span>INCINERATE SUBPOENA (<span id="raid-clicks-count">0</span>/25)</span>
+      </button>
+
+      <div class="raid-stakes-info">
+        <span class="win-stake">✓ Success: Reset Threat + 600s Windfall + 25% Boost (30s)</span>
+        <span class="fail-stake">✗ Failure: Shop Seized & -50% RPS Penalty (20s)</span>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
