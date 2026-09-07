@@ -3,917 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>KLICKASHKLIC - Midnight Redaction Bureau</title>
-  <meta name="description" content="Midnight Redaction Bureau: Classified document redaction and cover-up simulator. Redact sensitive dossiers, manage chaos tiers, and prestige your clearance.">
-  <meta name="theme-color" content="#111726">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="KLICKASHKLIC">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
-  <link rel="alternate icon" type="image/png" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>KLICKASHKLIC: The Oval Office Redaction Engine</title>
   <style>
-    /* RESET & CORE MOBILE-FIRST PHONE LOCK */
+
+    /* ==========================================================
+       ADVENTURE CAPITALIST MOBILE-FIRST ARCHITECTURE
+       ========================================================== */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
     }
 
     html, body {
       width: 100%;
       height: 100%;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
       overflow: hidden;
-      overscroll-behavior: none;
-      touch-action: manipulation;
-      background-color: #0b0f19;
-      background-image: radial-gradient(ellipse at 50% 20%, #182238 0%, #0b0f19 75%);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Courier New", Courier, monospace, sans-serif;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #030712;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #f8fafc;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    /* 9:16 MOBILE VIEWPORT PHONE FRAME (Max 450x800) */
     #app-container {
       width: 100vw;
+      max-width: 460px;
+      height: 100dvh;
       height: 100vh;
-      max-width: 450px;
-      max-height: 800px;
-      background: #111726;
+      margin: 0 auto;
       position: relative;
       display: flex;
       flex-direction: column;
+      background: #080c16;
       overflow: hidden;
-      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     }
 
-    /* VIGNETTE & FRENZY OVERLAYS */
+    /* VIGNETTE */
     #vignette {
       position: absolute;
       inset: 0;
       pointer-events: none;
-      box-shadow: inset 0 0 70px rgba(0,0,0,0.65);
-      z-index: 50;
-      transition: box-shadow 0.3s ease;
-    }
-
-    /* Fume Frenzy (Purple/Green) */
-    #app-container.frenzy-active #vignette {
-      box-shadow: inset 0 0 80px rgba(168, 85, 247, 0.5), inset 0 0 30px rgba(34, 197, 94, 0.5);
-      animation: frenzyPulse 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes frenzyPulse {
-      0% { box-shadow: inset 0 0 70px rgba(168, 85, 247, 0.4), inset 0 0 35px rgba(34, 197, 94, 0.3); }
-      100% { box-shadow: inset 0 0 100px rgba(217, 70, 239, 0.7), inset 0 0 60px rgba(34, 197, 94, 0.6); }
-    }
-
-    /* Executive Privilege Frenzy (Gold/Amber) */
-    #app-container.privilege-active #vignette {
-      box-shadow: inset 0 0 90px rgba(234, 179, 8, 0.75), inset 0 0 45px rgba(249, 115, 22, 0.75);
-      animation: goldPrivilegePulse 0.8s ease-in-out infinite alternate;
-    }
-
-    @keyframes goldPrivilegePulse {
-      0% { box-shadow: inset 0 0 80px rgba(234, 179, 8, 0.6), inset 0 0 35px rgba(249, 115, 22, 0.5); }
-      100% { box-shadow: inset 0 0 120px rgba(250, 204, 21, 0.95), inset 0 0 65px rgba(245, 158, 11, 0.85); }
-    }
-
-    /* START MENU OVERLAY */
-    #start-menu {
-      position: absolute;
-      inset: 0;
-      z-index: 200;
-      background: radial-gradient(circle at 50% 42%, #1e293b 0%, #090d16 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
-      opacity: 1;
-      transform: scale(1);
-      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    #start-menu.hidden {
-      opacity: 0;
-      transform: scale(1.04);
-      pointer-events: none;
-    }
-
-    .start-watermark-layer {
-      position: absolute;
-      inset: -60%;
-      width: 220%;
-      height: 220%;
-      pointer-events: none;
-      opacity: 0.045;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      transform: rotate(-32deg);
-      user-select: none;
-      z-index: 1;
-    }
-
-    .watermark-row {
-      white-space: nowrap;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #ffffff;
-    }
-
-    .hazard-stripe-bar {
-      height: 14px;
-      width: 100%;
-      background: repeating-linear-gradient(-45deg, #eab308 0px, #eab308 12px, #000000 12px, #000000 24px);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.7);
-      flex-shrink: 0;
-      position: relative;
-      z-index: 5;
-    }
-
-    .start-menu-content {
-      position: relative;
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
       z-index: 10;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 20px;
-      text-align: center;
-      gap: 14px;
     }
 
-    .start-restricted-badge {
-      display: inline-block;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 10px;
-      font-weight: 900;
-      color: #ef4444;
-      border: 2px solid #ef4444;
-      padding: 3px 10px;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      transform: rotate(-1.5deg);
-      background: rgba(239, 68, 68, 0.1);
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-    }
-
-    .start-title-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .brand-wordmark {
-      font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
-      font-size: 42px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      display: inline-flex;
-      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95), 0 0 22px rgba(255, 255, 255, 0.18);
-    }
-
-    .klic-red { color: #ef4444; text-shadow: 0 0 16px rgba(239, 68, 68, 0.5); }
-    .kash-white { color: #ffffff; text-shadow: 0 0 14px rgba(255, 255, 255, 0.6); }
-    .klic-blue { color: #3b82f6; text-shadow: 0 0 16px rgba(59, 130, 246, 0.5); }
-
-    .start-subtitle {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 2.2px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      margin-top: 6px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    }
-
-    .start-emblem-box {
-      width: 74px;
-      height: 74px;
-      border-radius: 50%;
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle, #1e293b 0%, #0b101c 100%);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-      font-size: 34px;
-      position: relative;
-    }
-
-    .start-emblem-box::after {
-      content: "TOP SECRET";
-      position: absolute;
-      bottom: -7px;
-      background: #b91c1c;
-      color: #fff;
-      font-family: monospace;
-      font-size: 7.5px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-
-    #start-save-card {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 6px;
-      padding: 8px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      max-width: 290px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-
-    .save-card-label {
-      font-family: 'Courier New', monospace;
-      font-size: 9px;
-      font-weight: 800;
-      color: #38bdf8;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .save-card-stats {
-      font-size: 12px;
-      font-weight: 900;
-      color: #f8fafc;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .save-clear-link {
-      font-family: 'Courier New', monospace;
-      font-size: 9px;
-      color: #ef4444;
-      text-decoration: underline;
-      cursor: pointer;
-      margin-top: 2px;
-      display: inline-block;
-      opacity: 0.85;
-      font-weight: 700;
-    }
-
-    .save-clear-link:hover { opacity: 1; }
-
-    .start-breach-btn {
-      width: 100%;
-      max-width: 280px;
-      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
-      border: 2px solid #fca5a5;
-      border-radius: 8px;
-      padding: 14px 20px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.55), 0 6px 20px rgba(0, 0, 0, 0.6);
-      transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      animation: startPulse 1.8s infinite alternate ease-in-out;
-    }
-
-    @keyframes startPulse {
-      0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.45), 0 6px 16px rgba(0,0,0,0.6); }
-      100% { transform: scale(1.025); box-shadow: 0 0 30px rgba(239, 68, 68, 0.75), 0 8px 24px rgba(0,0,0,0.7); }
-    }
-
-    .start-breach-btn:active { transform: scale(0.96) !important; filter: brightness(1.2); }
-    .btn-main-text {
-      font-family: 'Impact', 'Arial Black', -apple-system, sans-serif;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      color: #ffffff;
-      text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
-    }
-    .btn-sub-text {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #fecaca;
-      text-transform: uppercase;
-    }
-
-    /* 1. DYNAMIC SATIRICAL NEWS CHYRON */
+    /* 1. NEWS CHYRON (Sleek 20px marquee) */
     #news-chyron {
-      height: 26px;
-      background: #991b1b;
+      height: 20px;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
       display: flex;
       align-items: center;
       overflow: hidden;
-      border-bottom: 1px solid #dc2626;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
       flex-shrink: 0;
-      z-index: 25;
+      z-index: 30;
     }
 
     .chyron-badge {
-      background: #000;
-      color: #fef08a;
-      padding: 0 8px;
+      background: #dc2626;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      padding: 0 6px;
       height: 100%;
       display: flex;
       align-items: center;
-      font-weight: 900;
-      white-space: nowrap;
-      border-right: 2px solid #ef4444;
+      gap: 4px;
       flex-shrink: 0;
-      gap: 5px;
-      z-index: 2;
     }
 
     .chyron-badge .dot {
-      width: 7px;
-      height: 7px;
-      background: #ef4444;
+      width: 4px;
+      height: 4px;
+      background: #fff;
       border-radius: 50%;
-      box-shadow: 0 0 6px #ef4444;
-      animation: blink 0.8s infinite;
+      animation: blinkRed 1s infinite;
     }
 
-    @keyframes blink {
+    @keyframes blinkRed {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
+      50% { opacity: 0.3; }
     }
 
     .chyron-track {
-      display: flex;
-      white-space: nowrap;
-      overflow: hidden;
       flex: 1;
-      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0 8px;
     }
 
     .chyron-text {
       display: inline-block;
-      white-space: nowrap;
-      will-change: transform;
-      color: #ffffff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-      padding-left: 20px;
+      font-family: monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #cbd5e1;
+      letter-spacing: 0.5px;
+      animation: tickerScroll 30s linear infinite;
     }
 
-    /* 2. HEADER */
-    #header {
-      padding: 7px 12px 5px;
-      background: linear-gradient(180deg, #182032 0%, #101625 100%);
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* 2. UNIFIED STREAMLINED HUD */
+    #unified-hud {
+      padding: 6px 12px 4px;
+      background: linear-gradient(180deg, #162032 0%, #0d1424 100%);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hud-main-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-shrink: 0;
-      z-index: 20;
     }
 
-    .title-group { display: flex; flex-direction: column; }
-    .agency-classification {
-      font-size: 7.5px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #ef4444;
+    .hud-currency-group {
       display: flex;
-      align-items: center;
-      gap: 4px;
+      flex-direction: column;
+      gap: 1px;
     }
 
-    .agency-title {
-      font-size: 14.5px;
+    .hud-currency-val {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      font-size: 19px;
       font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #f8fafc;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      color: #38bdf8;
+      letter-spacing: -0.3px;
+      line-height: 1;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
 
-    .header-actions { display: flex; align-items: center; gap: 6px; }
-    .icon-btn {
+    .stat-badge {
+      font-size: 9px;
+      font-weight: 800;
       background: #1e293b;
+      color: #facc15;
+      padding: 1px 4px;
+      border-radius: 4px;
       border: 1px solid #334155;
-      color: #cbd5e1;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      transition: all 0.1s;
     }
 
-    .icon-btn:active { transform: scale(0.92); background: #334155; }
+    .hud-sub-metrics {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9.5px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
 
-    /* PRESTIGE SYSTEM & STACKED CLEARANCE STYLES */
+    .hud-rps-badge strong {
+      color: #4ade80;
+      font-weight: 800;
+    }
+
+    .hud-divider {
+      color: #475569;
+      font-size: 7px;
+    }
+
+    .hud-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
     .header-prestige-badge {
       display: inline-flex;
       align-items: center;
       background: linear-gradient(135deg, #b45309 0%, #f59e0b 28%, #fef08a 50%, #f59e0b 72%, #b45309 100%);
       background-size: 200% auto;
       color: #0b101c;
-      font-size: 7.5px;
+      font-size: 8px;
       font-weight: 900;
-      letter-spacing: 0.6px;
-      padding: 2px 7px;
-      border-radius: 4px;
+      letter-spacing: 0.5px;
+      padding: 3px 7px;
+      border-radius: 5px;
       border: 1px solid #fde047;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      animation: shineGoldBadge 2.4s linear infinite;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
       cursor: pointer;
       text-transform: uppercase;
       white-space: nowrap;
-      transition: transform 0.1s;
+      animation: shineGoldBadge 2.4s linear infinite;
     }
-
-    .header-prestige-badge:active { transform: scale(0.95); }
 
     @keyframes shineGoldBadge {
       0% { background-position: 0% center; }
       100% { background-position: 200% center; }
     }
 
-    #clearance-bar {
-      padding: 3px 10px;
-      background: linear-gradient(90deg, #1e1b4b 0%, #0d121f 50%, #1e1b4b 100%);
-      border-bottom: 1px solid rgba(250, 204, 21, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-
-    .clearance-badge-wrap {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .clearance-shield { font-size: 11px; }
-
-    .clearance-text {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 9.5px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #facc15;
-      text-shadow: 0 0 8px rgba(250, 204, 21, 0.55);
-    }
-
-    .hoover-prestige-btn {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      border: 1px solid #f87171;
-      color: #ffffff;
-      font-size: 8px;
-      font-weight: 900;
-      letter-spacing: 0.6px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
-      transition: all 0.12s;
-      white-space: nowrap;
-    }
-
-    .hoover-prestige-btn:active { transform: scale(0.94); filter: brightness(1.2); }
-
-    /* PRESTIGE CARD IN UPGRADE DRAWER */
-    .prestige-card {
-      margin: 6px 10px 2px;
-      background: linear-gradient(135deg, #2b1104 0%, #150902 100%);
-      border: 1.5px solid #f97316;
+    .icon-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      width: 26px;
+      height: 26px;
       border-radius: 6px;
-      padding: 6px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      box-shadow: 0 0 12px rgba(249, 115, 22, 0.28);
-      flex-shrink: 0;
-    }
-
-    .prestige-card-icon {
-      font-size: 20px;
-      width: 32px;
-      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #431407;
-      border-radius: 6px;
-      border: 1px solid #ea580c;
-      flex-shrink: 0;
+      cursor: pointer;
+      font-size: 12px;
+      transition: transform 0.1s;
     }
 
-    .prestige-card-content {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      flex: 1;
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: #334155;
     }
 
-    .prestige-card-title {
-      font-size: 10.5px;
-      font-weight: 900;
-      color: #fed7aa;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .prestige-card-sub {
-      font-size: 8.5px;
-      font-weight: 600;
-      color: #fdba74;
-      line-height: 1.25;
+    /* 3px INTEGRATED SHARPIE FUME GAUGE UNDER HUD */
+    .fume-hud-line {
+      width: 100%;
+      height: 3px;
+      background: #1e293b;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
       margin-top: 1px;
     }
 
-    .prestige-card-req {
-      font-size: 8px;
-      font-weight: 700;
-      color: #f87171;
-      line-height: 1.25;
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .prestige-card-req.ready {
-      color: #4ade80;
-    }
-
-    .hoover-prestige-btn.locked {
-      background: #1e293b;
-      border-color: #475569;
-      color: #94a3b8;
-      box-shadow: none;
-    }
-
-    .prestige-burn-btn {
-      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
-      border: 1px solid #fb923c;
-      color: #ffffff;
-      font-size: 9px;
-      font-weight: 900;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
-      letter-spacing: 0.5px;
-      flex-shrink: 0;
-      transition: all 0.12s;
-    }
-
-    .prestige-burn-btn.locked {
-      background: #1e293b;
-      border-color: #475569;
-      color: #64748b;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    .prestige-burn-btn:active { transform: scale(0.94); filter: brightness(1.2); }
-
-    /* PRESTIGE MODAL DETAILS */
-    .prestige-banner-hero {
-      text-align: center;
-      background: #180c05;
-      border: 1px solid #7c2d12;
-      border-radius: 8px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .hero-fire {
-      font-size: 30px;
-      animation: fireFlicker 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes fireFlicker {
-      0% { transform: scale(1) rotate(-2deg); }
-      100% { transform: scale(1.12) rotate(2deg); filter: drop-shadow(0 0 10px #f97316); }
-    }
-
-    .hero-title {
-      font-size: 11.5px;
-      font-weight: 900;
-      color: #fdba74;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .hero-desc {
-      font-size: 9px;
-      color: #cbd5e1;
-      line-height: 1.35;
-    }
-
-    .prestige-compare-grid {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      background: #090e1a;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 8px;
-      gap: 6px;
-    }
-
-    .prestige-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .compare-tag {
-      font-size: 8px;
-      font-weight: 800;
-      color: #94a3b8;
-      letter-spacing: 0.8px;
-    }
-
-    .compare-val {
-      font-size: 13.5px;
-      font-weight: 900;
-      color: #e2e8f0;
-    }
-
-    .prestige-col.next .compare-val {
-      color: #facc15;
-      text-shadow: 0 0 10px rgba(250, 204, 21, 0.7);
-    }
-
-    .compare-arrow {
-      font-size: 17px;
-      color: #f97316;
-      font-weight: 900;
-    }
-
-    /* PRESTIGE REQUIREMENTS BOX IN MODAL */
-    .prestige-req-box {
-      background: #090e1a;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 9px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .prestige-req-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .prestige-req-title {
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      color: #f59e0b;
-      text-transform: uppercase;
-    }
-
-    .prestige-req-badge {
-      font-size: 8px;
-      font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .prestige-req-badge.locked {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-    }
-
-    .prestige-req-badge.ready {
-      background: rgba(34, 197, 94, 0.2);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.4);
-    }
-
-    .prestige-req-item {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .req-label-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 8.5px;
-      color: #cbd5e1;
-    }
-
-    .req-name {
-      font-weight: 700;
-      color: #94a3b8;
-    }
-
-    .req-val {
-      font-weight: 800;
-      font-family: 'Courier New', Courier, monospace;
-      color: #f1f5f9;
-    }
-
-    .req-val.met {
-      color: #4ade80;
-    }
-
-    .req-progress-bar {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .req-progress-fill {
+    .fume-hud-line .fume-fill {
       height: 100%;
-      background: linear-gradient(90deg, #f59e0b, #ef4444);
       width: 0%;
-      transition: width 0.2s ease;
-      border-radius: 3px;
+      background: linear-gradient(90deg, #38bdf8 0%, #a855f7 50%, #ec4899 100%);
+      box-shadow: 0 0 8px rgba(168, 85, 247, 0.7);
+      transition: width 0.1s linear;
     }
 
-    .req-progress-fill.met {
-      background: linear-gradient(90deg, #10b981, #22c55e);
+    .fume-tooltip {
+      display: none;
     }
 
-    .prestige-bullet-points {
+    /* 3. MAIN GAME VIEWPORT CONTAINER */
+    #game-main-area {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      font-size: 9.5px;
-      line-height: 1.35;
-      background: #0b1120;
-      border-radius: 6px;
-      padding: 8px 10px;
-      border-left: 3px solid #f59e0b;
     }
 
-    .bullet-row {
+    .game-view {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      background: #080c16;
+    }
+
+    .game-view.active {
       display: flex;
-      align-items: flex-start;
-      gap: 5px;
-      color: #cbd5e1;
     }
 
-    .bullet-icon {
-      color: #facc15;
-      font-weight: 900;
+    /* TAB 1: DOSSIER DESK */
+    #view-dossier {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
     }
 
-    .modal-action-btn.burn-action {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      border: 1px solid #f87171;
-      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
-      color: #fff;
-    }
-
-    .modal-action-btn.burn-action:active {
-      transform: scale(0.96);
-      filter: brightness(1.2);
-    }
-
-    .modal-action-btn.burn-action.locked {
-      background: #1e293b !important;
-      border-color: #475569 !important;
-      color: #64748b !important;
-      cursor: not-allowed !important;
-      box-shadow: none !important;
-      filter: grayscale(0.8);
-      transform: none !important;
-    }
-
-    /* 3. ENHANCED DUAL-STAT STATS PANEL */
-    #stats-panel {
-      padding: 5px 10px;
-      background: #0d121f;
-      border-bottom: 1px solid #1e293b;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      align-items: center;
-      flex-shrink: 0;
-      z-index: 20;
-      gap: 4px;
-    }
-
-    .stat-block { display: flex; flex-direction: column; }
-    .stat-label {
-      font-size: 7.5px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stat-value-group { display: flex; align-items: baseline; gap: 3px; }
-    #stat-redactions {
-      font-size: 18px;
-      font-weight: 900;
-      color: #38bdf8;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
-      line-height: 1.1;
-    }
-
-    #stat-vips {
-      font-size: 15px;
-      font-weight: 900;
-      color: #facc15;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
-    }
-
-    #stat-secrets {
-      font-size: 15px;
-      font-weight: 900;
-      color: #fb923c;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 8px rgba(251, 146, 60, 0.4);
-    }
-
-    #stat-rps {
-      font-size: 14px;
-      font-weight: 800;
-      color: #4ade80;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .stat-badge {
-      font-size: 7.5px;
-      padding: 1px 4px;
-      border-radius: 3px;
-      background: #1e293b;
-      color: #f1f5f9;
-      font-weight: 700;
-    }
-
-    .stat-badge.frenzy {
-      background: #9333ea;
-      color: #fdf4ff;
-      animation: pulseBadge 0.6s infinite alternate;
-    }
-
-    .stat-badge.privilege {
-      background: #f59e0b;
-      color: #000000;
-      font-weight: 900;
-      animation: pulseBadge 0.5s infinite alternate;
-    }
-
-    @keyframes pulseBadge {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.08); filter: brightness(1.2); }
-    }
-
-    /* 4. MAHOGANY DESK & CENTRAL CORE DOSSIER */
     #desk-viewport {
       flex: 1;
+      min-height: 0;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 4px 8px 2px;
+      padding: 6px 8px;
       overflow: hidden;
       background:
         radial-gradient(ellipse at 50% 35%, rgba(138, 58, 28, 0.65) 0%, rgba(68, 22, 10, 0.85) 60%, rgba(20, 6, 3, 0.98) 100%),
@@ -933,9 +307,8 @@
     #dossier-wrapper {
       position: relative;
       width: 100%;
-      max-width: 410px;
+      max-width: 420px;
       height: 100%;
-      max-height: 405px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -946,747 +319,845 @@
       position: relative;
       width: 100%;
       height: 100%;
-      background: #f4eedb;
+      max-height: 520px;
+      background: #fdfbf7;
       background-image:
-        radial-gradient(circle at 80% 20%, rgba(205, 175, 125, 0.3) 0%, transparent 60%),
-        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 22px;
-      border-radius: 4px;
-      box-shadow: 0 14px 26px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.15);
-      color: #1c1917;
-      padding: 8px 12px;
+        radial-gradient(#e2d9cc 1px, transparent 0),
+        linear-gradient(180deg, rgba(245, 235, 218, 0.95) 0%, rgba(238, 224, 203, 0.98) 100%);
+      background-size: 16px 16px, 100% 100%;
+      border-radius: 3px;
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.8),
+        0 2px 6px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
-      transform-origin: center center;
-      transition: transform 0.06s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 8px 10px 6px;
       overflow: hidden;
+      user-select: none;
     }
-
-    #dossier-page.clicked { transform: scale(0.985); }
 
     .paper-clip {
       position: absolute;
       top: -4px;
       left: 18px;
-      width: 16px;
-      height: 34px;
-      border: 3px solid #94a3b8;
-      border-radius: 8px 8px 0 0;
+      width: 11px;
+      height: 28px;
+      border: 2px solid #94a3b8;
       border-bottom: none;
-      box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-      pointer-events: none;
-      z-index: 10;
+      border-radius: 5px 5px 0 0;
+      z-index: 5;
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     }
 
     .dossier-header {
-      border-bottom: 2px solid #b91c1c;
-      padding-bottom: 3px;
-      margin-bottom: 5px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
+      align-items: flex-start;
+      border-bottom: 2px solid #991b1b;
+      padding-bottom: 3px;
+      margin-bottom: 3px;
     }
 
     .stamp-sci {
-      font-size: 9.5px;
+      border: 2px solid #dc2626;
+      color: #dc2626;
+      font-family: 'Courier New', Courier, monospace;
       font-weight: 900;
-      color: #b91c1c;
-      letter-spacing: 1.2px;
-      border: 2px solid #b91c1c;
+      font-size: 8px;
       padding: 1px 5px;
-      text-transform: uppercase;
+      letter-spacing: 0.8px;
       transform: rotate(-1.5deg);
       display: inline-block;
-      box-shadow: 0 0 3px rgba(185, 28, 28, 0.4);
+      background: rgba(220, 38, 38, 0.05);
     }
 
     .doc-ref {
-      font-family: "Courier New", monospace;
-      font-size: 8.5px;
-      color: #57534e;
-      font-weight: 800;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 7.5px;
+      font-weight: 700;
+      color: #475569;
       text-align: right;
-      line-height: 1.2;
+      line-height: 1.1;
     }
 
     .doc-meta {
-      font-family: "Courier New", monospace;
-      font-size: 11px;
-      line-height: 1.3;
-      color: #1f1d1b;
-      font-weight: 700;
-      margin-bottom: 6px;
-      flex-shrink: 0;
-      letter-spacing: 0.1px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 7.5px;
+      color: #334155;
+      line-height: 1.25;
+      margin-bottom: 4px;
+      background: rgba(0, 0, 0, 0.03);
+      padding: 2px 5px;
+      border-left: 2px solid #64748b;
     }
 
-    .doc-meta strong { color: #000; }
+    .crisis-fire-banner {
+      background: linear-gradient(90deg, #fef2f2 0%, #fee2e2 100%);
+      border: 1px solid #f87171;
+      border-left: 3px solid #ef4444;
+      padding: 2px 6px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 7.5px;
+      font-weight: 800;
+      color: #991b1b;
+      letter-spacing: 0.4px;
+    }
+
+    .crisis-targets-left {
+      background: #ef4444;
+      color: #fff;
+      padding: 0 4px;
+      border-radius: 2px;
+      font-size: 7.5px;
+      margin-left: 3px;
+    }
+
     .doc-watermark {
       position: absolute;
-      right: 12px;
-      top: 45px;
-      width: 82px;
-      height: 82px;
-      opacity: 0.12;
+      top: 50%;
+      right: 8%;
+      transform: translateY(-50%) rotate(12deg);
+      width: 140px;
+      height: 140px;
+      opacity: 0.07;
       pointer-events: none;
-      transform: rotate(12deg);
+      z-index: 1;
     }
 
-    /* CLASSIFIED TEXT LINES */
     #document-lines {
       flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-evenly;
       gap: 2px;
       position: relative;
+      z-index: 2;
     }
 
-    .text-line {
-      position: relative;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      border-radius: 2px;
-    }
-
-    .text-line {
-      cursor: pointer;
-    }
-    .text-line:hover {
-      background: rgba(0, 0, 0, 0.03);
-    }
-    .text-line .pseudo-text {
-      font-family: "Courier New", monospace;
-      font-size: 11px;
-      color: #1f1d1b;
-      letter-spacing: 0.15px;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 100%;
-      text-overflow: ellipsis;
-      opacity: 0.95;
-      font-weight: 800;
-      line-height: 18px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .crit-target {
-      min-height: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1px 5px !important;
-      cursor: pointer !important;
-      user-select: none;
-      z-index: 10;
-    }
-
-    /* DUAL TARGET CLASSES */
-    /* 1. EPSTEIN TARGET (Yellow Border) */
-    .target-epstein {
-      color: #854d0e;
-      background: #fef08a;
-      border: 1.5px dashed #ca8a04;
-      border-radius: 3px;
-      padding: 0 4px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: epsteinPulse 0.9s infinite alternate ease-in-out;
-      box-shadow: 0 0 6px rgba(202, 138, 4, 0.4);
-    }
-
-    @keyframes epsteinPulse {
-      0% { border-color: #ca8a04; background: #fef08a; color: #854d0e; box-shadow: 0 0 4px rgba(202, 138, 4, 0.4); }
-      100% { border-color: #eab308; background: #fde047; color: #713f12; box-shadow: 0 0 10px rgba(234, 179, 8, 0.7); }
-    }
-
-    /* 2. DIAPER DON TARGET (Orange/Gold Border) */
-    .target-don {
-      color: #9a3412;
-      background: #ffedd5;
-      border: 2px dashed #ea580c;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: donPulse 0.8s infinite alternate ease-in-out;
-      box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
-    }
-
-    @keyframes donPulse {
-      0% { border-color: #ea580c; background: #ffedd5; color: #9a3412; transform: scale(1); }
-      100% { border-color: #f97316; background: #fed7aa; color: #7c2d12; transform: scale(1.03); box-shadow: 0 0 14px rgba(249, 115, 22, 0.9); }
-    }
-
-    /* 3. 1992 BIRTHDAY PARTY TARGET (Electric Pink/Magenta) */
-    .target-party {
-      color: #831843;
-      background: #fce7f3;
-      border: 2px dashed #ec4899;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: partyPulse 0.75s infinite alternate ease-in-out;
-      box-shadow: 0 0 9px rgba(236, 72, 153, 0.6);
-    }
-
-    @keyframes partyPulse {
-      0% { border-color: #ec4899; background: #fce7f3; color: #831843; transform: scale(1); }
-      100% { border-color: #f43f5e; background: #fbcfe8; color: #4c0519; transform: scale(1.03); box-shadow: 0 0 16px rgba(244, 63, 94, 0.85); }
-    }
-
-    /* 4. ROYAL ESCAPADE & WOKING ALIBI TARGET (Majestic Royal Violet) */
-    .target-royal {
-      color: #3b0764;
-      background: #ede9fe;
-      border: 2px dashed #8b5cf6;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: royalPulse 0.85s infinite alternate ease-in-out;
-      box-shadow: 0 0 8px rgba(139, 92, 246, 0.55);
-    }
-
-    @keyframes royalPulse {
-      0% { border-color: #8b5cf6; background: #ede9fe; color: #3b0764; }
-      100% { border-color: #a855f7; background: #ddd6fe; color: #2e1065; box-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
-    }
-
-    /* 5. BILLIONAIRE BLACK BOOK TARGET (Emerald Hush Money) */
-    .target-vip {
-      color: #064e3b;
-      background: #d1fae5;
-      border: 2px dashed #10b981;
-      border-radius: 3px;
-      padding: 0 5px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      animation: vipPulse 0.8s infinite alternate ease-in-out;
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.55);
-    }
-
-    @keyframes vipPulse {
-      0% { border-color: #10b981; background: #d1fae5; color: #064e3b; }
-      100% { border-color: #059669; background: #a7f3d0; color: #022c22; box-shadow: 0 0 14px rgba(5, 150, 105, 0.8); }
-    }
-
-    /* CRISIS FIRE BANNER */
-    .crisis-fire-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      border-radius: 4px;
-      padding: 3px 8px;
-      margin-bottom: 6px;
+    .doc-line {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 9.5px;
+      font-size: 8.5px;
+      line-height: 1.35;
+      color: #0f172a;
+      font-weight: 700;
+      letter-spacing: -0.15px;
+      cursor: pointer;
+      position: relative;
+      padding: 1px 3px;
+      border-radius: 2px;
+      transition: background 0.08s;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .doc-line:active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .crit-target {
+      display: inline-block;
+      padding: 0 3px;
+      border-radius: 2px;
       font-weight: 900;
-      color: #ef4444;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      box-shadow: inset 0 0 8px rgba(239, 68, 68, 0.1);
-      transition: all 0.25s ease;
-    }
-    .crisis-fire-banner.contained {
-      background: rgba(34, 197, 94, 0.18);
-      border-color: rgba(34, 197, 94, 0.6);
-      color: #22c55e;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
-    }
-    .crisis-targets-left {
-      font-variant-numeric: tabular-nums;
-      font-weight: 900;
-      color: #facc15;
+      position: relative;
+      cursor: pointer;
+      margin: 0 1px;
     }
 
-    /* DOSSIER TRANSITION ANIMATIONS */
-    .dossier-slide-out {
-      animation: dossierSlideOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
-      pointer-events: none;
-    }
-    @keyframes dossierSlideOut {
-      0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
-      35% { transform: scale(0.97) translateY(8px) rotate(1deg); opacity: 0.95; }
-      100% { transform: scale(0.85) translateY(-85px) rotate(-7deg); opacity: 0; }
+    .target-epstein {
+      border: 1px dashed #ca8a04;
+      background: rgba(254, 240, 138, 0.55);
+      color: #854d0e;
     }
 
-    .dossier-slide-in {
-      animation: dossierSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-    }
-    @keyframes dossierSlideIn {
-      0% { transform: scale(0.9) translateY(75px) rotate(5deg); opacity: 0; }
-      100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+    .target-don {
+      border: 1px dashed #ea580c;
+      background: rgba(254, 215, 170, 0.55);
+      color: #9a3412;
     }
 
-    .crit-redacted {
-      background: #000000 !important;
-      color: #000000 !important;
-      border-color: #000000 !important;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.9) !important;
-      animation: none !important;
-      pointer-events: none;
+    .target-party {
+      border: 1px dashed #db2777;
+      background: rgba(252, 231, 243, 0.65);
+      color: #9d174d;
     }
 
-    /* Regular Line Redaction Bar */
+    .target-royal {
+      border: 1px dashed #7c3aed;
+      background: rgba(237, 233, 254, 0.65);
+      color: #5b21b6;
+    }
+
+    .target-blackbook {
+      border: 1px dashed #059669;
+      background: rgba(209, 250, 229, 0.65);
+      color: #065f46;
+    }
+
+    /* REDACTION MARKER BARS (Jagged Sharpie Stroke) */
     .redaction-bar {
       position: absolute;
-      inset: -2px -5px;
-      background: #09090b;
-      border-radius: 2px;
-      opacity: 0;
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.08s ease;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #020617;
+      border-radius: 1.5px;
       pointer-events: none;
-      z-index: 5;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      transform-origin: center;
+      animation: sharpieSlash 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 3;
     }
 
     .redaction-bar::before {
-      content: "";
+      content: '';
       position: absolute;
       left: -3px;
       top: 0;
       bottom: 0;
-      width: 6px;
-      background: #09090b;
-      clip-path: polygon(100% 0, 0 45%, 100% 100%);
+      width: 4px;
+      background: #020617;
+      clip-path: polygon(100% 0, 0 50%, 100% 100%);
     }
 
     .redaction-bar::after {
-      content: "";
+      content: '';
       position: absolute;
-      right: -4px;
+      right: -3px;
       top: 0;
       bottom: 0;
-      width: 7px;
-      background: #09090b;
-      clip-path: polygon(0 0, 100% 55%, 0 100%);
+      width: 4px;
+      background: #020617;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
     }
 
-    .text-line.redacted .redaction-bar {
-      opacity: 1;
-      transform: scaleX(1);
+    @keyframes sharpieSlash {
+      0% { transform: scaleX(0.05) skewY(-2deg); opacity: 0.6; }
+      100% { transform: scaleX(1) skewY(0deg); opacity: 1; }
     }
 
     #shred-stamp {
       position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(0.2);
       opacity: 0;
-      transform: scale(2.2) rotate(-18deg);
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 30;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 20;
     }
 
-    #shred-stamp.active {
-      opacity: 1;
-      transform: scale(1) rotate(-12deg);
+    #shred-stamp.stamped {
+      opacity: 0.92;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(1);
     }
 
     .stamp-box {
-      border: 5px solid #dc2626;
-      color: #dc2626;
-      font-size: 24px;
+      border: 4px solid #b91c1c;
+      color: #b91c1c;
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: 20px;
       font-weight: 900;
       padding: 6px 14px;
-      border-radius: 8px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
-      background: rgba(254, 242, 242, 0.92);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       text-align: center;
+      letter-spacing: 2px;
+      background: rgba(254, 226, 226, 0.9);
+      box-shadow: 0 0 15px rgba(185, 28, 28, 0.4);
     }
 
     .stamp-sub {
-      font-size: 9.5px;
+      font-size: 9px;
+      font-family: monospace;
       letter-spacing: 1px;
-      color: #991b1b;
       margin-top: 2px;
     }
 
-    /* KASH PERSISTENT PANIC DIALOGUE BUBBLE */
-    #kash-dialogue-anchor {
-      position: absolute;
-      bottom: 8px;
-      right: 12px;
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      pointer-events: none;
-      z-index: 45;
-    }
-
-    #kash-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #1e3a8a 100%);
-      border: 2px solid #60a5fa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      flex-shrink: 0;
-    }
-
-    #kash-bubble {
-      background: #ffffff;
-      color: #0f172a;
-      padding: 5px 9px;
-      border-radius: 8px 8px 0 8px;
-      font-size: 9.5px;
-      font-weight: 800;
-      line-height: 1.25;
-      max-width: 170px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      position: relative;
-      border: 1.5px solid #0284c7;
-      animation: bubbleBounce 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    #kash-bubble::after {
-      content: "";
-      position: absolute;
-      right: -6px;
-      bottom: 4px;
-      border-width: 5px 0 5px 6px;
-      border-style: solid;
-      border-color: transparent transparent transparent #ffffff;
-    }
-
-    /* FX CANVAS & PARTICLES */
     #fx-canvas {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 40;
+      z-index: 15;
     }
 
-    .float-text {
-      position: absolute;
-      font-weight: 900;
-      font-size: 14px;
-      color: #ef4444;
-      pointer-events: none;
-      animation: floatUp 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 10px rgba(239, 68, 68, 0.4);
-      z-index: 45;
-      white-space: nowrap;
-    }
-
-    .float-text.frenzy { color: #d946ef; font-size: 17px; text-shadow: 0 0 12px rgba(217, 70, 239, 0.8); }
-    .float-text.crit { color: #fbbf24; font-size: 18px; text-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 0 2px 6px rgba(0,0,0,0.9); }
-    .float-text.boss { color: #facc15; font-size: 19px; text-shadow: 0 0 16px rgba(250, 204, 21, 1), 0 2px 8px rgba(0,0,0,0.9); font-weight: 900; }
-    .float-text.combo { color: #38bdf8; font-size: 20px; text-shadow: 0 0 20px rgba(56, 189, 248, 1); font-weight: 900; }
-
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translate3d(0, 0, 0) scale(0.75); }
-      30% { transform: translate3d(0, -20px, 0) scale(1.15); }
-      100% { opacity: 0; transform: translate3d(0, -45px, 0) scale(1); }
-    }
-
-    /* 5. MARKER FUME COMBO METER */
-    #fume-section {
-      width: 100%;
-      padding: 4px 12px 4px;
-      background: #0f172a;
+    /* DOCKED QUICK-BUY BAR */
+    .dossier-quick-buy-dock {
+      padding: 6px 12px;
+      background: #0b111e;
       border-top: 1px solid #1e293b;
-      border-bottom: 1px solid #1e293b;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-
-    .fume-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .fume-title { display: flex; align-items: center; gap: 5px; color: #a855f7; }
-    .fume-title .toxic-icon { font-size: 11px; animation: spinToxic 6s linear infinite; }
-
-    @keyframes spinToxic {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #fume-status-text { color: #cbd5e1; font-variant-numeric: tabular-nums; }
-    .fume-track {
-      width: 100%;
-      height: 8px;
-      background: #020617;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid #334155;
-      position: relative;
-    }
-
-    #fume-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #10b981 0%, #06b6d4 40%, #a855f7 75%, #ec4899 100%);
-      border-radius: 6px;
-      transition: width 0.08s linear;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-    }
-
-    #app-container.frenzy-active #fume-fill {
-      background: linear-gradient(90deg, #ec4899, #f43f5e, #eab308, #22c55e);
-      animation: rainbowGlow 0.4s linear infinite alternate;
-    }
-
-    @keyframes rainbowGlow {
-      0% { filter: brightness(1); }
-      100% { filter: brightness(1.4); }
-    }
-
-    /* 6. UPGRADE DRAWER (CHAOS WORKFORCE) */
-    #upgrades-drawer {
-      height: 235px;
-      background: #0a0f1d;
-      border-top: 1px solid #1e293b;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      z-index: 30;
-      transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-
-    #upgrades-drawer.expanded { height: 380px; }
-    #upgrades-drawer.collapsed { height: 42px; }
-
-    .drawer-handle-bar {
-      height: 36px;
-      padding: 0 12px;
-      background: linear-gradient(180deg, #162035 0%, #0e1626 100%);
-      border-bottom: 1px solid #1f2a40;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-      flex-shrink: 0;
-    }
-
-    .drawer-handle-bar:active { background: #19243c; }
-
-    .drawer-title-group {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 800;
-      color: #f1f5f9;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .drawer-title-group .dept-badge {
-      background: #ea580c;
-      color: #fff;
-      font-size: 8px;
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-weight: 900;
-    }
-
-    .drawer-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      color: #94a3b8;
-      font-weight: 700;
-    }
-
-    .drawer-toggle-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      width: 22px;
-      height: 22px;
-      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      flex-shrink: 0;
+      z-index: 25;
     }
 
-    #upgrades-list {
+    .quick-buy-btn {
+      width: 100%;
+      height: 38px;
+      background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #15803d 100%);
+      border: 1px solid #4ade80;
+      border-radius: 8px;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(22, 163, 74, 0.35);
+      transition: all 0.12s;
+    }
+
+    .quick-buy-btn:active {
+      transform: scale(0.97);
+      filter: brightness(1.15);
+    }
+
+    .quick-buy-btn.locked {
+      background: #1e293b;
+      border-color: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .qb-badge {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .qb-name {
+      max-width: 170px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .qb-cost {
+      font-family: monospace;
+      font-weight: 700;
+      color: #fef08a;
+    }
+
+    .quick-buy-btn.locked .qb-cost {
+      color: #94a3b8;
+    }
+
+    /* TAB 2: STAFF OPERATIONS */
+    #view-staff {
+      display: none;
+      flex-direction: column;
       flex: 1;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding: 6px 10px 8px;
+      min-height: 0;
+      background: #080c16;
+    }
+
+    .staff-header-bar {
+      padding: 8px 12px;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .staff-title-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      background: #080d1a;
+      gap: 1px;
     }
 
-    #upgrades-list::-webkit-scrollbar { width: 5px; }
-    #upgrades-list::-webkit-scrollbar-thumb { background: #25334d; border-radius: 4px; }
+    .staff-title {
+      font-size: 11px;
+      font-weight: 900;
+      color: #f8fafc;
+      letter-spacing: 0.5px;
+    }
+
+    .staff-rps {
+      font-size: 10px;
+      font-weight: 700;
+      color: #4ade80;
+      font-family: monospace;
+    }
+
+    .buy-mult-selector {
+      display: flex;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .mult-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .mult-btn.active {
+      background: #38bdf8;
+      color: #04101e;
+    }
+
+    .staff-cards-container {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 8px 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
 
     .upgrade-card {
-      background: #111827;
-      border: 1px solid #1f293d;
-      border-radius: 6px;
-      padding: 6px 10px;
+      background: #0d1527;
+      border: 1px solid #1e2a44;
+      border-radius: 8px;
+      padding: 8px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      transition: background 0.15s, border-color 0.15s;
+      transition: border-color 0.15s, background 0.15s;
     }
 
-    .upgrade-card.affordable { border-color: #2563eb; background: #131d33; }
-    .upgrade-left { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; }
+    .upgrade-card.affordable {
+      border-color: #3b82f6;
+      background: linear-gradient(180deg, #101a31 0%, #0c1424 100%);
+    }
+
+    .upgrade-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex: 1;
+      min-width: 0;
+    }
 
     .upgrade-icon-box {
-      font-size: 20px;
-      width: 34px;
-      height: 34px;
+      font-size: 22px;
+      width: 38px;
+      height: 38px;
+      background: #172033;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #090e1a;
-      border-radius: 6px;
-      border: 1px solid #1e293b;
       flex-shrink: 0;
+      border: 1px solid #28354f;
     }
 
-    .upgrade-text-box { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .upgrade-text-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
     .upgrade-name {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
-      color: #f8fafc;
-      letter-spacing: 0.2px;
+      color: #f1f5f9;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .upgrade-desc {
-      font-size: 8.5px;
-      font-weight: 500;
+      font-size: 9px;
       color: #94a3b8;
-      line-height: 1.25;
-      margin-top: 1px;
-      white-space: nowrap;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .upgrade-stats-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-      font-size: 8.5px;
+      gap: 6px;
+      font-size: 9px;
       font-weight: 700;
+      font-family: monospace;
+      margin-top: 1px;
     }
 
-    .upgrade-rate { color: #4ade80; }
-    .upgrade-total-contrib { color: #38bdf8; }
+    .upgrade-rate { color: #38bdf8; }
+    .upgrade-total-contrib { color: #64748b; }
 
-    .upgrade-action-box { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
-    .upgrade-owned-badge { font-size: 10.5px; font-weight: 800; color: #cbd5e1; font-variant-numeric: tabular-nums; }
+    .upgrade-action-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .upgrade-owned-badge {
+      font-size: 9px;
+      font-weight: 800;
+      font-family: monospace;
+      color: #facc15;
+    }
 
     .buy-btn {
+      min-width: 68px;
+      height: 28px;
+      padding: 0 8px;
       background: #1e293b;
-      border: 1px solid #475569;
-      color: #94a3b8;
-      font-size: 10px;
+      border: 1px solid #334155;
+      color: #64748b;
+      border-radius: 6px;
+      font-size: 11px;
       font-weight: 800;
-      padding: 5px 8px;
-      border-radius: 5px;
-      cursor: pointer;
+      font-family: monospace;
+      cursor: not-allowed;
       display: flex;
       align-items: center;
-      gap: 4px;
-      min-width: 68px;
       justify-content: center;
       transition: all 0.1s;
-      font-variant-numeric: tabular-nums;
     }
 
     .buy-btn.can-buy {
       background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
       border-color: #60a5fa;
-      color: #ffffff;
-      box-shadow: 0 2px 7px rgba(37, 99, 235, 0.45);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
     }
 
-    .buy-btn.can-buy:active { transform: scale(0.93); filter: brightness(1.2); }
-    .buy-btn:disabled { cursor: not-allowed; opacity: 0.45; }
+    .buy-btn.can-buy:active {
+      transform: scale(0.93);
+      filter: brightness(1.2);
+    }
 
-    /* 7. ARCADE MODALS */
-    .modal-backdrop {
+    /* TAB 3: CLEARANCE & KASH HUB */
+    #view-clearance {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px;
+      gap: 12px;
+      background: #080c16;
+    }
+
+    .clearance-hub-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .kash-command-box {
+      background: linear-gradient(135deg, #131c30 0%, #0c1220 100%);
+      border: 1px solid #223252;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kash-avatar-large {
+      font-size: 28px;
+      width: 44px;
+      height: 44px;
+      background: #1e2a42;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .kash-speech-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .kash-name-tag {
+      font-size: 8.5px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #38bdf8;
+    }
+
+    .kash-speech-bubble {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.3;
+    }
+
+    .prestige-card {
+      background: linear-gradient(180deg, #1a1528 0%, #120e1d 100%);
+      border: 1px solid #7e22ce;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(126, 34, 206, 0.25);
+    }
+
+    .prestige-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .prestige-card-icon {
+      font-size: 26px;
+    }
+
+    .prestige-card-title {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      color: #facc15;
+    }
+
+    .prestige-card-sub {
+      font-size: 10px;
+      color: #cbd5e1;
+      line-height: 1.3;
+    }
+
+    .prestige-req-list {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10px;
+      font-family: monospace;
+    }
+
+    .req-row {
+      display: flex;
+      justify-content: space-between;
+      color: #cbd5e1;
+    }
+
+    .prestige-burn-btn {
+      width: 100%;
+      height: 38px;
+      background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+      border: 1px solid #f87171;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+      transition: all 0.12s;
+    }
+
+    .prestige-burn-btn.locked {
+      background: #1e293b;
+      border-color: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .prestige-burn-btn:not(.locked):active {
+      transform: scale(0.96);
+      filter: brightness(1.2);
+    }
+
+    .bureau-record-card {
+      background: #0d1527;
+      border: 1px solid #1e2a44;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .record-card-title {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    .record-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .record-cell {
+      background: #131c30;
+      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .record-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .record-val {
+      font-size: 13px;
+      font-weight: 900;
+      color: #f1f5f9;
+      font-family: monospace;
+    }
+
+    /* 4. ADVENTURE CAPITALIST FIXED BOTTOM NAV */
+    #bottom-nav {
+      height: 52px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: #090e1a;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-shrink: 0;
+      z-index: 40;
+    }
+
+    .nav-tab {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .nav-label {
+      font-size: 9.5px;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-tab.active {
+      color: #38bdf8;
+    }
+
+    .nav-tab.active .nav-icon {
+      transform: scale(1.1);
+    }
+
+    .nav-badge {
       position: absolute;
+      top: 4px;
+      right: calc(50% - 16px);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #22c55e;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-badge.fire-badge {
+      background: #f97316;
+      animation: pulseFlame 1.5s infinite;
+    }
+
+    .nav-badge.hidden {
+      display: none;
+    }
+
+    @keyframes pulseFlame {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+
+    /* MODALS & OVERLAYS */
+    .modal-backdrop {
+      position: fixed;
       inset: 0;
-      background: rgba(4, 7, 13, 0.85);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      z-index: 150;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 18px;
+      padding: 16px;
     }
 
-    .modal-backdrop.active { display: flex; animation: modalFadeIn 0.2s ease-out; }
-
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
+    .modal-backdrop.active {
+      display: flex;
     }
 
     .modal-window {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
       width: 100%;
       max-width: 380px;
-      background: #0f172a;
-      border: 2px solid #334155;
-      border-radius: 10px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(56, 189, 248, 0.15);
-      overflow: hidden;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
       display: flex;
       flex-direction: column;
     }
 
     .modal-header {
-      padding: 10px 14px;
-      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      padding: 12px 14px;
+      background: #1e293b;
       border-bottom: 1px solid #334155;
       display: flex;
       align-items: center;
@@ -1696,15 +1167,12 @@
     .modal-title {
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #f8fafc;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-
-    .modal-title.incident { color: #f59e0b; }
-    .modal-title.settings { color: #38bdf8; }
 
     .modal-close-btn {
       background: transparent;
@@ -1712,193 +1180,154 @@
       color: #94a3b8;
       font-size: 16px;
       cursor: pointer;
-      font-weight: 900;
       padding: 2px 6px;
     }
 
-    .modal-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; }
-    .incident-badge {
-      font-family: "Courier New", monospace;
-      font-size: 9px;
-      font-weight: 800;
-      color: #ef4444;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 3px 6px;
-      border-radius: 4px;
-      display: inline-block;
-      align-self: flex-start;
-    }
-
-    .incident-message {
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      line-height: 1.45;
-      color: #e2e8f0;
-      background: #090e1a;
-      padding: 12px;
-      border-radius: 6px;
-      border-left: 3px solid #f59e0b;
-    }
-
-    .offline-gain-display {
-      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-      border: 1px solid #6366f1;
-      border-radius: 8px;
-      padding: 12px;
-      text-align: center;
+    .modal-body {
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 10px;
     }
-
-    .offline-gain-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #a5b4fc; text-transform: uppercase; }
-    .offline-gain-val { font-size: 26px; font-weight: 900; color: #38bdf8; text-shadow: 0 0 14px rgba(56, 189, 248, 0.5); }
-
-    .modal-action-btn {
-      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-      color: #fff;
-      border: 1px solid #60a5fa;
-      padding: 10px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-      transition: all 0.1s;
-    }
-
-    .modal-action-btn:active { transform: scale(0.96); }
 
     .settings-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 7px 10px;
-      background: #090e1a;
-      border-radius: 6px;
       font-size: 11px;
-      font-weight: 700;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .settings-danger-box {
-      border: 1px solid #991b1b;
-      background: rgba(153, 27, 27, 0.15);
+    .modal-action-btn {
+      width: 100%;
+      height: 36px;
       border-radius: 6px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      background: #2563eb;
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-action-btn.burn-action {
+      background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+    }
+
+    .modal-action-btn.locked {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .danger-btn {
+      width: 100%;
+      height: 32px;
+      border-radius: 6px;
+      background: #7f1d1d;
+      border: 1px solid #dc2626;
+      color: #fca5a5;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
       margin-top: 4px;
     }
 
-    .settings-danger-title { font-size: 10px; font-weight: 900; color: #ef4444; letter-spacing: 1px; text-transform: uppercase; }
-    .danger-btn {
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      color: #fff;
-      border: 1px solid #f87171;
-      padding: 8px 12px;
-      border-radius: 5px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
-      transition: all 0.1s;
-    }
-
-    .danger-btn:active { transform: scale(0.95); filter: brightness(1.2); }
-  
-    /* ONE-TAP QUICK-BUY BUTTON */
-    .quick-buy-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #1e293b;
-      border: 1.5px solid #475569;
-      color: #94a3b8;
-      padding: 4px 8px;
+    .settings-danger-box {
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid #7f1d1d;
       border-radius: 6px;
+    }
+
+    .settings-danger-title {
       font-size: 9.5px;
-      font-weight: 800;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.15s;
-      white-space: nowrap;
-      max-width: 190px;
-      flex-shrink: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .quick-buy-btn.can-buy {
-      background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #15803d 100%);
-      border-color: #4ade80;
-      color: #ffffff;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
-    }
-
-    .quick-buy-btn.can-buy:active { transform: scale(0.94); filter: brightness(1.2); }
-    .quick-buy-btn.locked { opacity: 0.65; cursor: not-allowed; }
-
-    .qb-badge {
-      background: rgba(0, 0, 0, 0.35);
-      padding: 1px 4px;
-      border-radius: 3px;
-      font-size: 8px;
       font-weight: 900;
+      color: #f87171;
+      margin-bottom: 3px;
     }
 
-    .qb-icon { font-size: 11px; }
-
-    .qb-name {
-      font-weight: 800;
-      max-width: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    /* PRESTIGE MODAL STYLES */
+    .prestige-hero-card {
+      background: #181124;
+      border: 1px solid #7e22ce;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
     }
 
-    .qb-cost {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      color: #fef08a;
-      font-size: 9px;
+    .prestige-badge-seal { font-size: 28px; margin-bottom: 4px; }
+    .hero-title { font-size: 13px; font-weight: 900; color: #facc15; }
+    .hero-sub { font-size: 9.5px; color: #cbd5e1; }
+
+    .prestige-flow-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 6px;
+      background: #131c30;
+      padding: 8px;
+      border-radius: 6px;
+      text-align: center;
     }
 
-    /* RESPONSIVE SCALING (TABLET & DESKTOP >= 768px) */
+    .flow-card { display: flex; flex-direction: column; gap: 2px; }
+    .flow-tag { font-size: 8px; font-weight: 700; color: #64748b; }
+    .flow-val { font-size: 11px; font-weight: 900; color: #f1f5f9; }
+    .flow-arrow { font-size: 14px; color: #38bdf8; }
+
+    .prestige-req-item { display: flex; flex-direction: column; gap: 3px; }
+    .req-label-row { display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; }
+    .req-name { color: #cbd5e1; }
+    .req-val { color: #facc15; font-family: monospace; }
+    .prestige-req-bar { height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
+    .prestige-req-fill { height: 100%; width: 0%; background: #38bdf8; transition: width 0.2s; }
+
+    /* RESPONSIVE SCALING FOR DESKTOP / TABLET (>= 768px) */
     @media (min-width: 768px) {
       #app-container {
-        max-width: 780px !important;
+        max-width: 1080px !important;
         height: 94vh !important;
-        max-height: 980px !important;
+        max-height: 960px !important;
         border-radius: 14px !important;
         box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 0 1px #22304d !important;
       }
 
+      #game-main-area {
+        flex-direction: row !important;
+      }
+
+      #view-dossier {
+        display: flex !important;
+        flex: 1.25 !important;
+        border-right: 1px solid #1e293b !important;
+      }
+
+      #view-staff {
+        display: flex !important;
+        flex: 1 !important;
+      }
+
+      #view-clearance {
+        display: none !important;
+      }
+
+      #bottom-nav {
+        display: none !important;
+      }
+
       #desk-viewport {
-        padding: 12px 16px !important;
+        padding: 14px 18px !important;
       }
 
       #dossier-wrapper {
         max-width: 480px !important;
-        max-height: 480px !important;
       }
 
-      #upgrades-drawer {
-        height: 270px;
-      }
-
-      #upgrades-drawer.expanded {
-        height: 420px;
-      }
-
-      .drawer-handle-bar {
-        height: 40px;
-        padding: 0 16px;
+      #dossier-page {
+        max-height: 560px !important;
       }
     }
 
@@ -1919,195 +1348,240 @@
       </div>
     </div>
 
-    <!-- 2. HEADER -->
-    <header id="header">
-      <div class="title-group">
-        <div class="agency-classification">
-          <span>★ CLASSIFIED LEVEL 5 ★</span>
-          <span id="header-prestige-badge" class="header-prestige-badge" title="Click to view Hoover Building Prestige Clearance">[TIER 0 IMMUNITY: 1x MULTIPLIER]</span>
+    <!-- 2. STREAMLINED UNIFIED EXECUTIVE HUD -->
+    <header id="unified-hud">
+      <div class="hud-main-row">
+        <!-- Currency & Rates -->
+        <div class="hud-currency-group">
+          <div class="hud-currency-val">
+            <span id="stat-redactions">0</span>
+            <span class="stat-badge" id="click-power-badge">+1</span>
+          </div>
+          <div class="hud-sub-metrics">
+            <span class="hud-rps-badge">Bureau: <strong id="stat-rps">0.0</strong>/s</span>
+            <span class="hud-divider">•</span>
+            <span class="hud-vip-stat">🛡️ <span id="stat-vips">0</span></span>
+            <span class="hud-divider">•</span>
+            <span class="hud-secret-stat">👑 <span id="stat-secrets">0</span></span>
+          </div>
         </div>
-        <div class="agency-title">
-          <span class="klic-red">KLIC</span><span class="kash-white">KASH</span><span class="klic-blue">KLIC</span>
+
+        <!-- Controls & Clearance -->
+        <div class="hud-controls-group">
+          <button id="header-prestige-badge" class="header-prestige-badge" title="Prestige Clearance">
+            <span id="clearance-text">TIER 0 (1x)</span>
+          </button>
+          <button class="icon-btn" id="sound-btn" title="Toggle Sound">🔊</button>
+          <button class="icon-btn" id="settings-btn" title="Bureau Settings">⚙️</button>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="icon-btn" id="sound-btn" title="Toggle Sound">🔊</button>
-        <button class="icon-btn" id="settings-btn" title="Bureau Settings">⚙️</button>
+
+      <!-- Sleek 3px Fume Meter Line -->
+      <div id="fume-section" class="fume-hud-line" title="Sharpie Fume Gauge">
+        <div id="fume-fill" class="fume-fill"></div>
+        <span id="fume-status-text" class="fume-tooltip">0% (TAP FASTER!)</span>
+      </div>
+
+      <!-- Hidden compat anchor for legacy clearance-bar buttons -->
+      <div id="clearance-bar" style="display:none;">
+        <button id="hoover-prestige-btn"><span id="header-prestige-status">LOCKED</span></button>
       </div>
     </header>
 
-    <!-- STACKED CLEARANCE & PRESTIGE BAR -->
-    <div id="clearance-bar">
-      <div class="clearance-badge-wrap">
-        <span class="clearance-shield">🛡️</span>
-        <span class="clearance-text" id="clearance-text">STACKED CLEARANCE: 1x POWER</span>
-      </div>
-      <button class="header-prestige-logo-btn locked" id="hoover-prestige-btn" title="Prestige Clearance: Burn Hoover Building">
-        <span class="prestige-flame-icon">🏛️🔥</span>
-        <span class="prestige-logo-badge" id="header-prestige-status">LOCKED</span>
-      </button>
-    </div>
+    <!-- 3. MAIN GAME VIEWPORT CONTAINER -->
+    <div id="game-main-area">
 
-    <!-- 3. ENHANCED DUAL-STAT STATS PANEL -->
-    <div id="stats-panel">
-      <div class="stat-block">
-        <div class="stat-label">Lines Done</div>
-        <div class="stat-value-group">
-          <span id="stat-redactions">0</span>
-          <span class="stat-badge" id="click-power-badge">+1</span>
-        </div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-label">VIPs Shielded</div>
-        <div class="stat-value-group">
-          <span id="stat-vips">0</span>
-          <span style="font-size: 10px;">🛡️</span>
-        </div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-label">Secrets Buried</div>
-        <div class="stat-value-group">
-          <span id="stat-secrets">0</span>
-          <span style="font-size: 10px;">👑</span>
-        </div>
-      </div>
-      <div class="stat-block" style="text-align: right; align-items: flex-end;">
-        <div class="stat-label">Bureau RPS</div>
-        <div class="stat-value-group">
-          <span id="stat-rps">0.0</span>
-        </div>
-      </div>
-    </div>
+      <!-- TAB 1: DOSSIER DESK (Active View) -->
+      <section id="view-dossier" class="game-view active">
+        <main id="desk-viewport">
+          <div class="desk-mat"></div>
 
-    <!-- 4. CENTRAL CLICK TARGET: MAHOGANY DESK & PROCEDURAL DOSSIER -->
-    <main id="desk-viewport">
-      <div class="desk-mat"></div>
+          <div id="dossier-wrapper">
+            <div id="dossier-page">
+              <div class="paper-clip"></div>
 
-      <div id="dossier-wrapper">
-        <div id="dossier-page">
-          <div class="paper-clip"></div>
+              <div class="dossier-header">
+                <div class="stamp-sci">TOP SECRET // SCI // NOFORN</div>
+                <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #104-B<br>TAIL #N212JE</div>
+              </div>
 
-          <div class="dossier-header">
-            <div class="stamp-sci">TOP SECRET // SCI // NOFORN</div>
-            <div class="doc-ref" id="dossier-doc-ref">EXHIBIT #104-B<br>TAIL #N212JE</div>
+              <div class="doc-meta" id="dossier-meta">
+                <div><strong>SUBJECT:</strong> FLIGHT LOG: TAIL #N212JE</div>
+                <div><strong>LOCATION:</strong> PALM BEACH MANSION // MAR-A-LAGO BOX 18</div>
+              </div>
+
+              <div class="crisis-fire-banner" id="crisis-fire-banner">
+                <span id="crisis-title-tag">🔥 ACTIVE CRISIS: FLIGHT LOGS</span>
+                <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">6</span> ACTIVE</span>
+              </div>
+
+              <svg class="doc-watermark" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="4" fill="none"/>
+                <circle cx="50" cy="50" r="38" stroke="#000" stroke-width="1.5" stroke-dasharray="3,3" fill="none"/>
+                <polygon points="50,15 59,38 84,38 63,52 71,76 50,60 29,76 37,52 16,38 41,38" fill="#000"/>
+                <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">OFFICIAL BUREAU SEAL</text>
+              </svg>
+
+              <!-- Procedural Flight Log Lines with Dual Targets -->
+              <div id="document-lines"></div>
+
+              <!-- Page Complete Stamp -->
+              <div id="shred-stamp">
+                <div class="stamp-box">
+                  100% REDACTED
+                  <div class="stamp-sub">APPROVED FOR SHREDDING</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="doc-meta" id="dossier-meta">
-            <div><strong>SUBJECT:</strong> FLIGHT LOG: TAIL #N212JE</div>
-            <div><strong>LOCATION:</strong> PALM BEACH MANSION // MAR-A-LAGO BOX 18</div>
+          <canvas id="fx-canvas"></canvas>
+        </main>
+
+        <!-- DOCKED ONE-TAP QUICK-BUY BAR -->
+        <div class="dossier-quick-buy-dock">
+          <button id="quick-buy-btn" class="quick-buy-btn locked" type="button" title="Quick-Buy Most Expensive Upgrade">
+            <span class="qb-badge">⚡ BUY</span>
+            <span id="quick-buy-icon" class="qb-icon">🖊️</span>
+            <span id="quick-buy-name" class="qb-name">Unpaid Intern</span>
+            <span id="quick-buy-cost" class="qb-cost">(15)</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 2: STAFF OPERATIONS (Chaos Workforce) -->
+      <section id="view-staff" class="game-view">
+        <div class="staff-header-bar">
+          <div class="staff-title-group">
+            <span class="staff-title">📂 CHAOS WORKFORCE</span>
+            <span id="drawer-rps-summary" class="staff-rps">Bureau: 0.0 RPS</span>
+          </div>
+          <!-- Buy Multiplier Selector: 1x | 10x | MAX -->
+          <div class="buy-mult-selector">
+            <button class="mult-btn active" data-mult="1">1x</button>
+            <button class="mult-btn" data-mult="10">10x</button>
+            <button class="mult-btn" data-mult="max">MAX</button>
+          </div>
+        </div>
+
+        <div id="upgrades-list" class="staff-cards-container"></div>
+      </section>
+
+      <!-- TAB 3: CLEARANCE & KASH HUB -->
+      <section id="view-clearance" class="game-view">
+        <div class="clearance-hub-container">
+          <!-- Kash Avatar & Speech -->
+          <div class="kash-command-box">
+            <div id="kash-avatar" class="kash-avatar-large">👓</div>
+            <div class="kash-speech-col">
+              <div class="kash-name-tag">KASH PATEL // REDACTION CHIEF</div>
+              <div id="kash-bubble" class="kash-speech-bubble">The Boss is watching. Clear the active targets!</div>
+            </div>
           </div>
 
-          <div class="crisis-fire-banner" id="crisis-fire-banner">
-            <span id="crisis-title-tag">🔥 ACTIVE CRISIS: FLIGHT LOGS</span>
-            <span>TARGETS: <span class="crisis-targets-left" id="crisis-targets-left">6</span> ACTIVE</span>
+          <!-- Hoover Building Prestige Card -->
+          <div class="prestige-card" id="drawer-prestige-card">
+            <div class="prestige-card-header">
+              <div class="prestige-card-icon">🏛️🔥</div>
+              <div>
+                <div class="prestige-card-title">BURN THE HOOVER BUILDING</div>
+                <div class="prestige-card-sub" id="prestige-card-sub">Reset staff & balance for +1x Permanent Stacked Clearance</div>
+              </div>
+            </div>
+
+            <div class="prestige-req-list">
+              <div class="req-row">
+                <span>📁 Classified Lines Target:</span>
+                <span id="prestige-card-req">200.00M Lines</span>
+              </div>
+            </div>
+
+            <button class="prestige-burn-btn locked" id="drawer-prestige-btn">
+              🔒 CLEARANCE LOCKED
+            </button>
           </div>
 
-          <svg class="doc-watermark" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="4" fill="none"/>
-            <circle cx="50" cy="50" r="38" stroke="#000" stroke-width="1.5" stroke-dasharray="3,3" fill="none"/>
-            <polygon points="50,15 59,38 84,38 63,52 71,76 50,60 29,76 37,52 16,38 41,38" fill="#000"/>
-            <text x="50" y="90" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle">OFFICIAL BUREAU SEAL</text>
-          </svg>
-
-          <!-- Procedural Flight Log Lines with Dual Targets -->
-          <div id="document-lines"></div>
-
-          <!-- Page Complete Stamp -->
-          <div id="shred-stamp">
-            <div class="stamp-box">
-              100% REDACTED
-              <div class="stamp-sub">APPROVED FOR SHREDDING</div>
+          <!-- Bureau Career Records -->
+          <div class="bureau-record-card">
+            <div class="record-card-title">★ CLASSIFIED SERVICE RECORD ★</div>
+            <div class="record-grid">
+              <div class="record-cell">
+                <div class="record-label">VIPs Protected</div>
+                <div class="record-val" id="career-vips-val">0</div>
+              </div>
+              <div class="record-cell">
+                <div class="record-label">Secrets Buried</div>
+                <div class="record-val" id="career-secrets-val">0</div>
+              </div>
+              <div class="record-cell">
+                <div class="record-label">All-Time Lines</div>
+                <div class="record-val" id="career-lines-val">0</div>
+              </div>
+              <div class="record-cell">
+                <div class="record-label">Clearance Tier</div>
+                <div class="record-val" id="career-prestige-val">Tier 0</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
+    </div>
 
+    <!-- 4. FIXED BOTTOM NAVIGATION BAR -->
+    <nav id="bottom-nav">
+      <button class="nav-tab active" data-tab="dossier" id="nav-tab-dossier">
+        <span class="nav-icon">🖋️</span>
+        <span class="nav-label">Dossier</span>
+      </button>
+      <button class="nav-tab" data-tab="staff" id="nav-tab-staff">
+        <span class="nav-icon">💼</span>
+        <span class="nav-label">Staff</span>
+        <span class="nav-badge hidden" id="staff-badge">⚡</span>
+      </button>
+      <button class="nav-tab" data-tab="clearance" id="nav-tab-clearance">
+        <span class="nav-icon">🏛️</span>
+        <span class="nav-label">Clearance</span>
+        <span class="nav-badge fire-badge hidden" id="clearance-badge">🔥</span>
+      </button>
+    </nav>
 
-      <!-- Ink Splatter, Baby Powder, Gold Coins & Fume Canvas Overlay -->
-      <canvas id="fx-canvas"></canvas>
-    </main>
+    <!-- Hidden compatibility elements to guarantee backward compatibility with any queries -->
+    <div style="display:none;">
+      <div id="upgrades-drawer"></div>
+      <div id="drawer-toggle"></div>
+      <div id="drawer-icon"></div>
+      <header id="header"></header>
+      <div id="stats-panel"></div>
+    </div>
 
-    <!-- 5. MARKER FUME COMBO METER -->
-    <section id="fume-section">
-      <div class="fume-meta">
-        <div class="fume-title">
-          <span class="toxic-icon">☣</span>
-          <span>SHARPIE FUME GAUGE</span>
-        </div>
-        <div id="fume-status-text">0% (TAP FASTER!)</div>
-      </div>
-      <div class="fume-track">
-        <div id="fume-fill"></div>
-      </div>
-    </section>
-
-    <!-- 6. UPGRADE DRAWER: THE CHAOS AUTOMATION WORKFORCE -->
-    <footer id="upgrades-drawer">
-      <div class="drawer-handle-bar" id="drawer-toggle">
-        <div class="drawer-title-group">
-          <span>📂 The Redaction Department</span>
-          <span class="dept-badge">CHAOS & LOYALTY</span>
-        </div>
-        <!-- ONE-TAP QUICK-BUY (Buys most expensive affordable upgrade) -->
-        <button id="quick-buy-btn" class="quick-buy-btn locked" type="button" title="Quick-Buy Most Expensive Upgrade">
-          <span class="qb-badge">⚡ BUY</span>
-          <span id="quick-buy-icon" class="qb-icon">🖊️</span>
-          <span id="quick-buy-name" class="qb-name">Unpaid Intern</span>
-          <span id="quick-buy-cost" class="qb-cost">(15)</span>
-        </button>
-
-        <div class="drawer-actions">
-          <span id="drawer-rps-summary">Workforce: 0 RPS</span>
-          <div class="drawer-toggle-btn" id="drawer-icon">▲</div>
-        </div>
-      </div>
-      <!-- PRESTIGE BAR WITH KASH SPEAKING CHARACTER -->
-      <div class="prestige-kash-dock">
-        <div id="kash-avatar" title="Kash Patel (Redaction Chief)">👓</div>
-        <div id="kash-bubble">The Boss is watching. Clear the active targets!</div>
-      </div>
-
-      <!-- PRESTIGE BANNER CARD IN DRAWER -->
-      <div class="prestige-card" id="drawer-prestige-card">
-        <div class="prestige-card-icon">🏛️🔥</div>
-        <div class="prestige-card-content">
-          <div class="prestige-card-title">BURN THE HOOVER BUILDING</div>
-          <div class="prestige-card-sub" id="prestige-card-sub">Reset staff & balance for +1x Stacked Clearance (Tier 1)</div>
-          <div class="prestige-card-req" id="prestige-card-req">🔒 Req: 200.00M Lines (0) • 50 Clicks (0)</div>
-        </div>
-        <button class="prestige-burn-btn locked" id="drawer-prestige-btn">LOCKED</button>
-      </div>
-      <div id="upgrades-list"></div>
-    </footer>
-
-    <!-- 7. OFFLINE PROGRESS MODAL -->
+    <!-- 5. OFFLINE PROGRESS MODAL -->
     <div class="modal-backdrop" id="offline-modal">
       <div class="modal-window">
         <div class="modal-header">
-          <div class="modal-title incident">
+          <div class="modal-title">
             <span>⚠️</span> INCIDENT REPORT // CLASSIFIED
           </div>
         </div>
         <div class="modal-body">
-          <div class="incident-badge">CASE #409-OVERSIGHT-EVASION</div>
-          <div class="incident-message" id="offline-report-text">
+          <div style="font-size:9.5px; font-weight:800; color:#ef4444; letter-spacing:0.5px;">CASE #409-OVERSIGHT-EVASION</div>
+          <div id="offline-report-text" style="font-size:11px; color:#cbd5e1; line-height:1.4;">
             INCIDENT REPORT: While you were evading the House Oversight Committee for [X] minutes, your staff blacked out [Y] lines.
           </div>
-          <div class="offline-gain-display">
-            <div class="offline-gain-label">Recovered Bureau Output (80% Efficiency)</div>
-            <div class="offline-gain-val" id="offline-gain-number">+0 LINES</div>
+          <div style="background:#131c30; padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:9px; color:#94a3b8; margin-bottom:2px;">Recovered Bureau Output (80% Efficiency)</div>
+            <div id="offline-gain-number" style="font-size:16px; font-weight:900; color:#38bdf8; font-family:monospace;">+0 LINES</div>
           </div>
           <button class="modal-action-btn" id="offline-collect-btn">COLLECT AND RESUME REDACTING</button>
         </div>
       </div>
     </div>
 
-    <!-- 8. SETTINGS & DATA PURGE MODAL -->
+    <!-- 6. SETTINGS & DATA PURGE MODAL -->
     <div class="modal-backdrop" id="settings-modal">
       <div class="modal-window">
         <div class="modal-header">
-          <div class="modal-title settings">
+          <div class="modal-title">
             <span>⚙️</span> BUREAU SECURITY CLEARANCE
           </div>
           <button class="modal-close-btn" id="settings-close-btn">✕</button>
@@ -2118,11 +1592,11 @@
             <button class="icon-btn" id="settings-sound-toggle">🔊</button>
           </div>
           <div class="settings-row">
-            <span>VIPs Protected (Epstein)</span>
+            <span>VIPs Protected</span>
             <span id="settings-vips-stat" style="color:#facc15; font-weight:800;">0</span>
           </div>
           <div class="settings-row">
-            <span>Secrets Buried (The Boss)</span>
+            <span>Secrets Buried</span>
             <span id="settings-secrets-stat" style="color:#fb923c; font-weight:800;">0</span>
           </div>
           <div class="settings-row">
@@ -2143,7 +1617,7 @@
 
           <div class="settings-danger-box">
             <div class="settings-danger-title">⚠️ Danger Zone: Executive Privilege Override</div>
-            <div style="font-size:10px; color:#cbd5e1; line-height:1.3;">
+            <div style="font-size:9.5px; color:#cbd5e1; line-height:1.3;">
               Purges all classified records, resets all workforce tiers, and deletes persistent LocalStorage state.
             </div>
             <button class="danger-btn" id="wipe-data-btn">PURGE ALL BUREAU DATA</button>
@@ -2152,50 +1626,42 @@
       </div>
     </div>
 
-    <!-- 9. PRESTIGE MODAL (BURN THE HOOVER BUILDING) -->
+    <!-- 7. PRESTIGE MODAL -->
     <div class="modal-backdrop" id="prestige-modal">
       <div class="modal-window">
         <div class="modal-header">
-          <div class="modal-title" style="color: #f97316;">
-            <span>🔥</span> BURN THE HOOVER BUILDING
+          <div class="modal-title">
+            <span>🏛️🔥</span> HOOVER BUILDING CLEARANCE
           </div>
           <button class="modal-close-btn" id="prestige-close-btn">✕</button>
         </div>
         <div class="modal-body">
-          <div class="prestige-banner-hero">
-            <div class="hero-fire">🏛️🔥</div>
-            <div class="hero-title">EXECUTIVE EVIDENCE INCINERATION</div>
-            <div class="hero-desc">
-              The Grand Jury has issued immediate subpoenas. Incinerate all active evidence, dismiss your current workforce, and reset your balance to secure unprecedented Executive Immunity.
+          <div class="prestige-hero-card">
+            <div class="prestige-badge-seal">🏛️🔥</div>
+            <div class="hero-title">BURN THE HOOVER BUILDING</div>
+            <div class="hero-sub">Soft-reset bureaucratic staff to gain permanent Executive Immunity</div>
+          </div>
+
+          <div class="prestige-flow-grid">
+            <div class="flow-card">
+              <span class="flow-tag">CURRENT CLEARANCE</span>
+              <span class="flow-val" id="prestige-cur-display">TIER 0 (1x)</span>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-card">
+              <span class="flow-tag">NEXT CLEARANCE</span>
+              <span class="flow-val" id="prestige-next-display" style="color:#facc15;">TIER 1 (2x)</span>
             </div>
           </div>
 
-          <div class="prestige-compare-grid">
-            <div class="prestige-col current">
-              <span class="compare-tag">CURRENT RUN</span>
-              <span class="compare-val" id="prestige-cur-display">TIER 0 (1x)</span>
-            </div>
-            <div class="compare-arrow">➔</div>
-            <div class="prestige-col next">
-              <span class="compare-tag">STACKED BOOST</span>
-              <span class="compare-val" id="prestige-next-display">TIER 1 (2x)</span>
-            </div>
-          </div>
-
-          <!-- PRESTIGE REQUIREMENTS METER -->
-          <div class="prestige-req-box" id="prestige-req-box">
-            <div class="prestige-req-header">
-              <span class="prestige-req-title">SUBPOENA CRITERIA (REQUIREMENTS)</span>
-              <span class="prestige-req-badge locked" id="prestige-req-badge">LOCKED</span>
-            </div>
-
+          <div style="background:#131c30; padding:10px; border-radius:8px; display:flex; flex-direction:column; gap:8px;">
             <div class="prestige-req-item">
               <div class="req-label-row">
-                <span class="req-name">📄 Redaction Threshold:</span>
-                <span class="req-val" id="prestige-req-lines-val">0 / 200.00M Lines</span>
+                <span class="req-name">📁 Classified Lines Target:</span>
+                <span class="req-val" id="prestige-req-lines-val">0 / 200.00M</span>
               </div>
-              <div class="req-progress-bar">
-                <div class="req-progress-fill" id="prestige-req-lines-fill" style="width: 0%;"></div>
+              <div class="prestige-req-bar">
+                <div class="prestige-req-fill" id="prestige-req-lines-fill"></div>
               </div>
             </div>
 
@@ -2204,28 +1670,13 @@
                 <span class="req-name">🖋️ Manual Dossier Clicks:</span>
                 <span class="req-val" id="prestige-req-clicks-val">0 / 50 Clicks</span>
               </div>
-              <div class="req-progress-bar">
-                <div class="req-progress-fill" id="prestige-req-clicks-fill" style="width: 0%;"></div>
+              <div class="prestige-req-bar">
+                <div class="prestige-req-fill" id="prestige-req-clicks-fill"></div>
               </div>
             </div>
 
-            <div class="req-label-row" style="font-size: 8px; color: #94a3b8; margin-top: 1px;">
-              <span id="prestige-req-explainer">Requires aggregating 1.25x clicks of previous prestige and reaching target lines.</span>
-            </div>
-          </div>
-
-          <div class="prestige-bullet-points">
-            <div class="bullet-row">
-              <span class="bullet-icon">⚡</span>
-              <span><strong>STACKABLE +1X MULTIPLIER:</strong> Adds +1x power to all manual marker clicks permanently.</span>
-            </div>
-            <div class="bullet-row">
-              <span class="bullet-icon">⚡</span>
-              <span><strong>STACKABLE +1X WORKFORCE:</strong> Adds +1x base output to all automated staff (Interns, Rollers, Shredders, Stamps).</span>
-            </div>
-            <div class="bullet-row">
-              <span class="bullet-icon">⚡</span>
-              <span><strong>BALANCED PROGRESSION:</strong> Tier 0 = 1x, Tier 1 = 2x, Tier 2 = 3x, Tier 3 = 4x, Tier 4 = 5x...</span>
+            <div style="font-size:8px; color:#94a3b8;" id="prestige-req-explainer">
+              Requires aggregating 1.25x clicks of previous prestige and reaching target lines.
             </div>
           </div>
 
@@ -2239,6 +1690,10 @@
   </div>
 
   <script>
+    /* ==========================================================
+       KLICKASHKLIC - DUAL TARGET ENGINE & EXECUTIVE PRIVILEGE
+       ========================================================== */
+
     /* ==========================================================
        KLICKASHKLIC - DUAL TARGET ENGINE & EXECUTIVE PRIVILEGE
        ========================================================== */
@@ -2607,6 +2062,124 @@
       let isAdvancingCrisis = false;
       const canvas = document.getElementById('fx-canvas');
       const ctx = canvas.getContext('2d');
+
+      
+      // ==========================================================
+      // ADVENTURE CAPITALIST TAB NAVIGATION & BUY MULTIPLIERS
+      // ==========================================================
+      let activeTab = 'dossier';
+      let buyMultiplier = 1; // 1, 10, or 'max'
+
+      const navTabDossier = document.getElementById('nav-tab-dossier');
+      const navTabStaff = document.getElementById('nav-tab-staff');
+      const navTabClearance = document.getElementById('nav-tab-clearance');
+
+      const viewDossier = document.getElementById('view-dossier');
+      const viewStaff = document.getElementById('view-staff');
+      const viewClearance = document.getElementById('view-clearance');
+
+      const staffBadge = document.getElementById('staff-badge');
+      const clearanceBadge = document.getElementById('clearance-badge');
+
+      const careerVipsVal = document.getElementById('career-vips-val');
+      const careerSecretsVal = document.getElementById('career-secrets-val');
+      const careerLinesVal = document.getElementById('career-lines-val');
+      const careerPrestigeVal = document.getElementById('career-prestige-val');
+
+      function switchTab(tabName) {
+        activeTab = tabName;
+
+        // Update nav tabs
+        [navTabDossier, navTabStaff, navTabClearance].forEach(tab => {
+          if (tab) {
+            tab.classList.toggle('active', tab.dataset.tab === tabName);
+          }
+        });
+
+        // Update views
+        if (viewDossier) viewDossier.classList.toggle('active', tabName === 'dossier');
+        if (viewStaff) viewStaff.classList.toggle('active', tabName === 'staff');
+        if (viewClearance) viewClearance.classList.toggle('active', tabName === 'clearance');
+
+        if (tabName === 'dossier') {
+          setTimeout(resizeCanvas, 50);
+        } else if (tabName === 'staff') {
+          renderGenerators();
+        } else if (tabName === 'clearance') {
+          updateCareerRecords();
+        }
+      }
+
+      if (navTabDossier) navTabDossier.addEventListener('click', () => switchTab('dossier'));
+      if (navTabStaff) navTabStaff.addEventListener('click', () => switchTab('staff'));
+      if (navTabClearance) navTabClearance.addEventListener('click', () => switchTab('clearance'));
+
+      // If header prestige badge clicked, switch to clearance tab on mobile or open modal
+      if (headerPrestigeBadge) {
+        headerPrestigeBadge.addEventListener('click', () => {
+          if (window.innerWidth < 768) {
+            switchTab('clearance');
+          } else {
+            openPrestigeModal();
+          }
+        });
+      }
+
+      // Multiplier buttons (1x | 10x | MAX)
+      const multBtns = document.querySelectorAll('.mult-btn');
+      multBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          multBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const multVal = btn.dataset.mult;
+          buyMultiplier = (multVal === 'max') ? 'max' : parseInt(multVal, 10);
+          renderGenerators();
+        });
+      });
+
+      // Update career records in clearance tab
+      function updateCareerRecords() {
+        if (careerVipsVal) careerVipsVal.textContent = formatNumber(state.vipsProtected);
+        if (careerSecretsVal) careerSecretsVal.textContent = formatNumber(state.secretsBuried);
+        if (careerLinesVal) careerLinesVal.textContent = formatNumber(state.totalRedactedEver);
+        if (careerPrestigeVal) careerPrestigeVal.textContent = 'Tier ' + state.prestigeLevel + ' (' + getPrestigeMultiplier() + 'x)';
+      }
+
+      // Calculate batch cost & count for buy multiplier
+      function getPurchaseBatch(gen) {
+        const baseCost = gen.baseCost;
+        const rate = gen.costMult;
+        let count = 0;
+        let totalCost = 0;
+
+        if (buyMultiplier === 'max') {
+          let currentRedactions = state.redactions;
+          let testCount = gen.count;
+          while (true) {
+            const nextCost = Math.floor(baseCost * Math.pow(rate, testCount));
+            if (currentRedactions >= nextCost) {
+              currentRedactions -= nextCost;
+              totalCost += nextCost;
+              count++;
+              testCount++;
+              if (count >= 1000) break; // Safety cap
+            } else {
+              break;
+            }
+          }
+          if (count === 0) {
+            count = 1;
+            totalCost = Math.floor(baseCost * Math.pow(rate, gen.count));
+          }
+        } else {
+          count = buyMultiplier;
+          for (let i = 0; i < count; i++) {
+            totalCost += Math.floor(baseCost * Math.pow(rate, gen.count + i));
+          }
+        }
+
+        return { count, totalCost, canAfford: state.redactions >= totalCost };
+      }
 
       // 6. SYNTHESIZED AUDIO ENGINE (Zero External Assets)
       let audioCtx = null;
@@ -3849,22 +3422,43 @@
             updateUI();
             renderGenerators();
             updateQuickBuyUI();
+
+        // Check prestige ready badge
+        const reqLines = getPrestigeTargetLines();
+        const reqClicks = getPrestigeTargetClicks();
+        const canPrestige = state.totalRedactedEver >= reqLines && state.runManualClicks >= reqClicks;
+        if (typeof clearanceBadge !== 'undefined' && clearanceBadge) {
+          if (canPrestige) clearanceBadge.classList.remove('hidden');
+          else clearanceBadge.classList.add('hidden');
+        }
+        if (typeof updateCareerRecords === 'function') updateCareerRecords();
+
           }
         });
       }
 
+
       function renderGenerators() {
+        if (!upgradesList) return;
         upgradesList.innerHTML = '';
         const prestigeMult = getPrestigeMultiplier();
+        let affordableCount = 0;
+
         generators.forEach((g, index) => {
-          const cost = getGeneratorCost(g);
-          const canAfford = state.redactions >= cost;
+          const batch = getPurchaseBatch(g);
+          const singleCost = getGeneratorCost(g);
+          if (state.redactions >= singleCost) affordableCount++;
+
           const effectiveRate = g.rps * prestigeMult;
           const totalContrib = g.count * effectiveRate;
 
           const card = document.createElement('div');
-          card.className = 'upgrade-card' + (canAfford ? ' affordable' : '');
+          card.className = 'upgrade-card' + (batch.canAfford ? ' affordable' : '');
           card.dataset.index = index;
+
+          const buyLabel = (buyMultiplier === 'max' && batch.canAfford)
+            ? '+' + batch.count + ' (' + formatNumber(batch.totalCost) + ')'
+            : (buyMultiplier > 1 ? '+' + batch.count + ' ' : '') + formatNumber(batch.totalCost);
 
           card.innerHTML = `
             <div class="upgrade-left">
@@ -3880,8 +3474,8 @@
             </div>
             <div class="upgrade-action-box">
               <div class="upgrade-owned-badge">x${g.count}</div>
-              <button class="buy-btn ${canAfford ? 'can-buy' : ''}" data-index="${index}" ${!canAfford ? 'disabled' : ''}>
-                ${formatNumber(cost)}
+              <button class="buy-btn ${batch.canAfford ? 'can-buy' : ''}" data-index="${index}" ${!batch.canAfford ? 'disabled' : ''}>
+                ${buyLabel}
               </button>
             </div>
           `;
@@ -3889,28 +3483,44 @@
           const buyBtn = card.querySelector('.buy-btn');
           buyBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            buyGenerator(index);
+            buyGeneratorBatch(index);
           });
 
           upgradesList.appendChild(card);
         });
-      }
 
-      function buyGenerator(index) {
-        getAudioContext();
-        const g = generators[index];
-        const cost = getGeneratorCost(g);
-        if (state.redactions >= cost) {
-          state.redactions -= cost;
-          g.count++;
-          playPurchaseSound();
-          updateUI();
-          renderGenerators();
+        // Update staff badge on bottom nav
+        if (staffBadge) {
+          if (affordableCount > 0) {
+            staffBadge.classList.remove('hidden');
+            staffBadge.textContent = affordableCount;
+          } else {
+            staffBadge.classList.add('hidden');
+          }
         }
       }
 
+      function buyGeneratorBatch(index) {
+        getAudioContext();
+        const g = generators[index];
+        const batch = getPurchaseBatch(g);
+        if (state.redactions >= batch.totalCost && batch.count > 0) {
+          state.redactions -= batch.totalCost;
+          g.count += batch.count;
+          playPurchaseSound();
+          updateUI();
+          renderGenerators();
+          updateQuickBuyUI();
+        }
+      }
+
+      function buyGenerator(index) {
+        buyGeneratorBatch(index);
+      }
+
+
       // 11. UPGRADE DRAWER TOGGLE
-      drawerToggle.addEventListener('click', () => {
+      if (drawerToggle) drawerToggle.addEventListener('click', () => {
         if (state.drawerState === 'normal') {
           state.drawerState = 'expanded';
           upgradesDrawer.classList.remove('collapsed');
@@ -4426,6 +4036,7 @@
       requestAnimationFrame(gameLoop);
 
     })();
+  
   </script>
 </body>
 </html>
